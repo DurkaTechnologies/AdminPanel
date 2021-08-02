@@ -9,7 +9,6 @@ namespace AdminPanel.Application.Interfaces.Contexts
 {
     public interface IApplicationDbContext
     {
-        IDbConnection Connection { get; }
         bool HasChanges { get; }
 
         EntityEntry Entry(object entity);

@@ -1,11 +1,12 @@
 ﻿using AdminPanel.Application.DTOs;
 using AdminPanel.Application.Interfaces.Repositories;
-using AspNetCoreHero.EntityFrameworkCore.AuditTrail.Models;
+using AdminPanel.Application.Interfaces.Shared;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AdminPanel.Infrastructure.AuditModels;
 
 namespace AdminPanel.Infrastructure.Repositories
 {

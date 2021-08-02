@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AdminPanel.Application.Interfaces.Shared;
+using System;
 
-namespace Infrastructure.Services
+namespace AdminPanel.Infrastructure.Services
 {
-	class DateTimeService
+	public class DateTimeService : IDateTimeService
 	{
+		public DateTime NowUtc => DateTime.Now;
 	}
 }

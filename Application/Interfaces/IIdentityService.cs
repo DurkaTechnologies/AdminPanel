@@ -1,4 +1,5 @@
-﻿using AdminPanel.Application.DTOs.Identity;
+﻿using AdminPanel.Application.Common.Models;
+using AdminPanel.Application.DTOs.Identity;
 using System.Threading.Tasks;
 
 namespace AdminPanel.Application.Interfaces

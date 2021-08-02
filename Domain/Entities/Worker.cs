@@ -7,6 +7,11 @@ namespace AdminPanel.Domain.Entities
 {
     public class Worker : AuditableEntity, IHasDomainEvent
     {
+        public Worker()
+		{
+            DomainEvents = new List<DomainEvent>();
+        }
+
         public int Id { get; set; }
 
         [MaxLength(30)]
@@ -28,6 +33,6 @@ namespace AdminPanel.Domain.Entities
 
         public virtual Community Community { get; set; }
 
-        public List<DomainEvent> DomainEvents { get; set; } = new List<DomainEvent>();
+        public List<DomainEvent> DomainEvents { get; set; } 
     }
 }

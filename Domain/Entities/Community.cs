@@ -7,6 +7,11 @@ namespace AdminPanel.Domain.Entities
 {
 	public class Community : AuditableEntity, IHasDomainEvent
     {
+        public Community()
+        {
+            DomainEvents = new List<DomainEvent>();
+        }
+
         public int Id { get; set; }
 
         [MaxLength(256)]
@@ -26,6 +31,6 @@ namespace AdminPanel.Domain.Entities
 
         public int Count { get; set; }
 
-        public List<DomainEvent> DomainEvents { get; set; } = new List<DomainEvent>();
+        public List<DomainEvent> DomainEvents { get; set; }
     }
 }

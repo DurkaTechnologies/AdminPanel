@@ -1,11 +1,11 @@
-﻿using AspNetCoreHero.Boilerplate.Application.Interfaces.Repositories;
-using AspNetCoreHero.Boilerplate.Infrastructure.DbContexts;
+﻿using AdminPanel.Application.Interfaces.Repositories;
+using AdminPanel.Infrastructure.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AspNetCoreHero.Boilerplate.Infrastructure.Repositories
+namespace AdminPanel.Infrastructure.Repositories
 {
     public class RepositoryAsync<T> : IRepositoryAsync<T> where T : class
     {
