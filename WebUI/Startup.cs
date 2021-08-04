@@ -1,16 +1,16 @@
+using AdminPanel.Application.Extensions;
+using AdminPanel.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using FluentValidation.AspNetCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Reflection;
+using AdminPanel.Web.Extensions;
 
 namespace WebUI
 {
@@ -26,14 +26,26 @@ namespace WebUI
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			//services.AddDbContext<ApplicationDbContext>(options =>
-			//	options.UseSqlServer(
-			//		Configuration.GetConnectionString("DefaultConnection")));
-			services.AddDatabaseDeveloperPageExceptionFilter();
+			//services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+			//services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
+			
+			services.AddApplicationLayer();
+			services.AddInfrastructure(Configuration);
+			services.AddPersistenceContexts(Configuration);
+			services.AddRepositories();
+			services.AddSharedInfrastructure(Configuration);
 
-			//services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-			//	.AddEntityFrameworkStores<ApplicationDbContext>();
-			services.AddControllersWithViews();
+			//services.AddMultiLingualSupport();
+			services.AddControllersWithViews().AddFluentValidation(fv =>
+			{
+				fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+				fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
+			});
+			services.AddAutoMapper(Assembly.GetExecutingAssembly());
+			services.AddDistributedMemoryCache();
+			services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+			services.AddTransient<IActionContextAccessor, ActionContextAccessor>();
+			//services.AddScoped<IViewRenderService, ViewRenderService>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,7 +67,7 @@ namespace WebUI
 
 			app.UseRouting();
 
-			//app.UseAuthentication();
+			app.UseAuthentication();
 			app.UseAuthorization();
 
 			app.UseEndpoints(endpoints =>
@@ -63,7 +75,7 @@ namespace WebUI
 				endpoints.MapControllerRoute(
 					name: "default",
 					pattern: "{controller=Home}/{action=Index}/{id?}");
-				//endpoints.MapRazorPages();
+				endpoints.MapRazorPages();
 			});
 		}
 	}
