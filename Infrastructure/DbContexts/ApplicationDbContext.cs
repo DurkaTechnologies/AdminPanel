@@ -5,8 +5,6 @@ using AdminPanel.Domain.Common;
 using AdminPanel.Domain.Entities;
 using AdminPanel.Infrastructure.Identity.Models;
 using AdminPanel.Infrastructure.Persistence.Configurations;
-using IdentityServer4.EntityFramework.Options;
-using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Options;
