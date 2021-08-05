@@ -1,0 +1,38 @@
+﻿@using AdminPanel.Web.Views.Shared.Components.Footer;
+@using AdminPanel.Web.Views.Shared.Components.Title;
+@using AdminPanel.Web.Views.Shared.Components.Sidebar;
+@using AdminPanel.Web.Views.Shared.Components.Header;
+@using AdminPanel.Web.Views.Shared.Components.Logout;
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>TestOnion</title>
+	<partial name="_Styles" />
+</head>
+<body class="hold-transition sidebar-mini">
+	@*<div id="loader-wrapper">
+		<div id="loader"></div>
+		<div class="loader-section"></div>
+	</div>*@
+	<div class="wrapper">
+		@(await Component.InvokeAsync<HeaderViewComponent>())
+		@(await Component.InvokeAsync<SidebarViewComponent>())
+		<div class="content-wrapper" id="contentWrapper">
+			<div class="content">
+				<div class="container-fluid">
+					@(await Component.InvokeAsync<TitleViewComponent>())
+					@RenderBody()
+				</div>
+			</div>
+		</div>
+		@(await Component.InvokeAsync<FooterViewComponent>())
+		@(await Component.InvokeAsync<LogoutViewComponent>())
+	</div>
+	<partial name="_Scripts" />
+	@RenderSection("Scripts", required: false)
+</body>
+</html>
