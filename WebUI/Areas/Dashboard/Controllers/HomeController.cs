@@ -7,8 +7,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebUI.Models;
 
-namespace WebUI.Controllers
+namespace AdminPanel.Web.Areas.Dashboard.Controllers
 {
+	[Area("Dashboard")]
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
