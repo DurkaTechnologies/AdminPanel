@@ -1,7 +1,32 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@using WebUI.Areas.Entities.Models
+@model WorkerViewModel
 
-<h1>Salo</h1>
+<div class="card">
+    <div class="col-sm-12" style="padding:20px">
+        <a onclick="jQueryModalGet('/catalog/brand/CreateOrEdit','Create Brand')" class="btn bg-success">
+            <i class="fa fa-plus-square"></i> Create
+        </a>
+        <a id="reload" class="btn btn-primary text-white">
+            <i class="fa fas fa-bolt"></i>
+            Reload
+        </a>
+    </div>
+    <div id="viewAll" class="card-body table-responsive">
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/js/site.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#brandTable").DataTable();
+            loadData();
+            $('#reload').on('click', function () {
+                loadData();
+            });
+        });
+        function loadData() {
+            $('#viewAll').load('/entities/worker/LoadAll');
+        }</script>
+}

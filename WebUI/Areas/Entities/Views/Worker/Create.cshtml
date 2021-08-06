@@ -1,0 +1,80 @@
+﻿@model AdminPanel.Domain.Entities.Worker
+
+<div class="row">
+    <div class="col-sm-12 col-md-8 col-lg-6 mx-auto">
+        <div class="card card-dark">
+            <div class="card-header">
+                <h3 class="card-title">Працівник</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <form role="form">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label>Прізвище</label>
+                        <input type="text" class="form-control" placeholder="Введіть Прізвище" asp-for="Surname">
+                    </div>
+                    <div class="form-group">
+                        <label>Ім'я</label>
+                        <input type="text" class="form-control" placeholder="Введіть Ім'я" asp-for="Name">
+                    </div>
+                    <div class="form-group">
+                        <label>По-Батькові</label>
+                        <input type="text" class="form-control" placeholder="Введіть По-Батькові" asp-for="Lastname">
+                    </div>
+                    <div class="form-group">
+                        <label>Телефон</label>
+                        <input type="text" class="form-control" placeholder="Введіть Телефон" asp-for="Phone">
+                    </div>
+
+                    <!--File Input-->
+
+                    <div class="form-group">
+                        <label for="exampleInputFile">File input</label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="exampleInputFile">
+                                <label class="custom-file-label" for="exampleInputFile">Choose file</label>
+                            </div>
+                            <div class="input-group-append">
+                                <span class="input-group-text">Upload</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exampleInputFile">Фото працівника</label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="exampleInputFile">
+                                <label class="custom-file-label" for="exampleInputFile">log.2.txt</label>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="custom-file form-image">
+                            <input accept=".png,.jpg,.jpeg,.gif,.tif"
+                                   type="file" class="custom-file-input"
+                                   id="customFile">
+                            <label class="custom-file-label" for="customFile">Choose Image</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Громада працівника</label>
+                        <select class="form-control">
+                            <option>option 1</option>
+                            <option>option 2</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <input type="submit" class="btn btn-dark" value="Підтвердити" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

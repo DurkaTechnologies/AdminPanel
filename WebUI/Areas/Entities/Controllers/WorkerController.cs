@@ -1,89 +1,63 @@
-﻿using AdminPanel.Web.Abstractions;
+﻿using AdminPanel.Application.Interfaces.Repositories;
+using AdminPanel.Domain.Entities;
+using AdminPanel.Infrastructure.Repositories;
+using AdminPanel.Web.Abstractions;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebUI.Areas.Entities.Models;
 
 namespace WebUI.Areas.Entities.Controllers
 {
 	[Area("Entities")]
 	public class WorkerController : BaseController<WorkerController>
 	{
-		// GET: WorkerController
-		public IActionResult Index()
-		{
-			return View();
-		}
+        IWorkerRepository _workerRepository;
+        IMapper _mapper;
 
-		// GET: WorkerController/Details/5
-		public ActionResult Details(int id)
-		{
-			return View();
-		}
+        public WorkerController(IWorkerRepository workerRepository)
+        {
+            _workerRepository = workerRepository;
 
-		// GET: WorkerController/Create
-		public ActionResult Create()
-		{
-			return View();
-		}
+            IConfigurationProvider configuration = new MapperConfiguration(
+                cfg =>
+                {
+                    cfg.CreateMap<Worker, WorkerViewModel>();
+                    cfg.CreateMap<WorkerViewModel, Worker>();
+                });
 
-		// POST: WorkerController/Create
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Create(IFormCollection collection)
-		{
-			try
-			{
-				return RedirectToAction(nameof(Index));
-			}
-			catch
-			{
-				return View();
-			}
-		}
+            _mapper = new Mapper(configuration);
+        }
 
-		// GET: WorkerController/Edit/5
-		public ActionResult Edit(int id)
-		{
-			return View();
-		}
+        public IActionResult Index() 
+        {
+            return View();
+        }
 
-		// POST: WorkerController/Edit/5
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Edit(int id, IFormCollection collection)
-		{
-			try
-			{
-				return RedirectToAction(nameof(Index));
-			}
-			catch
-			{
-				return View();
-			}
-		}
+        public async Task<IActionResult> LoadAll()
+        {
+            var response = await _workerRepository.GetListAsync();
+            
+            if (response != null)
+            {
+                var viewModel = _mapper.Map<List<WorkerViewModel>>(response);
+                return PartialView("_ViewAll", viewModel);
+            }
 
-		// GET: WorkerController/Delete/5
-		public ActionResult Delete(int id)
-		{
-			return View();
-		}
+            return null;
+        }
 
-		// POST: WorkerController/Delete/5
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Delete(int id, IFormCollection collection)
-		{
-			try
-			{
-				return RedirectToAction(nameof(Index));
-			}
-			catch
-			{
-				return View();
-			}
-		}
-	}
+        public async Task<JsonResult> OnGetCreateOrEdit(int id = 0)
+        {
+            if (id == 0)
+            {
+                var productViewModel = new WorkerViewModel();
+                return new JsonResult(new { isValid = true, html = await _viewRenderer.RenderViewToStringAsync("_CreateOrEdit", workerViewModel) });
+            }
+        }
+    }
 }
