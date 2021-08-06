@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AdminPanel.Web.Abstractions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 namespace WebUI.Areas.Entities.Controllers
 {
 	[Area("Entities")]
-	public class WorkerController : Controller
+	public class WorkerController : BaseController<WorkerController>
 	{
 		// GET: WorkerController
 		public IActionResult Index()

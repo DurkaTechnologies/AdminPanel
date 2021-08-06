@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
 using AdminPanel.Web.Extensions;
+using AdminPanel.Web.Abstractions;
+using AdminPanel.Web.Services;
 
 namespace WebUI
 {
@@ -45,7 +47,7 @@ namespace WebUI
 			services.AddDistributedMemoryCache();
 			services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 			services.AddTransient<IActionContextAccessor, ActionContextAccessor>();
-			//services.AddScoped<IViewRenderService, ViewRenderService>();
+			services.AddScoped<IViewRenderService, ViewRenderService>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,7 +56,6 @@ namespace WebUI
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
-				app.UseMigrationsEndPoint();
 			}
 			else
 			{
@@ -72,10 +73,10 @@ namespace WebUI
 
 			app.UseEndpoints(endpoints =>
 			{
+				endpoints.MapRazorPages();
 				endpoints.MapControllerRoute(
 					name: "default",
 					pattern: "{area=Dashboard}/{controller=Home}/{action=Index}/{id?}");
-				endpoints.MapRazorPages();
 			});
 		}
 	}

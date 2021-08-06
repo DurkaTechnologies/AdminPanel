@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AdminPanel.Web.Abstractions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace WebUI.Areas.Entities.Controllers
 {
-	public class CommunityController : Controller
+	[Area("Entities")]
+	public class CommunityController : BaseController<CommunityController>
 	{
 		// GET: CommunityController
 		public ActionResult Index()
