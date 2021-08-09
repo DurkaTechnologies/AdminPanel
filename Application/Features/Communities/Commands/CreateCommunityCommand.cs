@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AdminPanel.Application.Common.Models;
 
-namespace TestOnion.Application.Features.Communities.Commands
+namespace AdminPanel.Application.Features.Communities.Commands
 {
 	public partial class CreateCommunityCommand : IRequest<Result<int>>
 	{

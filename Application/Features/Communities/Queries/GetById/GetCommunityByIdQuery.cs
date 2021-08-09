@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace AdminPanel.Application.Features.Communities.Queries.GetById
 {
-	public class GetBrandByIdQuery : IRequest<Result<GetCommunityByIdResponse>>
+	public class GetCommunityByIdQuery : IRequest<Result<GetCommunityByIdResponse>>
 	{
 		public int Id { get; set; }
 
-		public class GetProductByIdQueryHandler : IRequestHandler<GetBrandByIdQuery, Result<GetCommunityByIdResponse>>
+		public class GetProductByIdQueryHandler : IRequestHandler<GetCommunityByIdQuery, Result<GetCommunityByIdResponse>>
 		{
 			private readonly ICommunityCacheRepository communityCache;
 			private readonly IMapper mapper;
@@ -22,7 +22,7 @@ namespace AdminPanel.Application.Features.Communities.Queries.GetById
 				this.mapper = mapper;
 			}
 
-			public async Task<Result<GetCommunityByIdResponse>> Handle(GetBrandByIdQuery query, CancellationToken cancellationToken)
+			public async Task<Result<GetCommunityByIdResponse>> Handle(GetCommunityByIdQuery query, CancellationToken cancellationToken)
 			{
 				var product = await communityCache.GetByIdAsync(query.Id);
 				var mappedProduct = mapper.Map<GetCommunityByIdResponse>(product);
