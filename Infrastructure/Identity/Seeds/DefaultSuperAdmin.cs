@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace AdminPanel.Infrastructure.Identity.Seeds
 {
-	public static class DefaultAdminUser
+	public static class DefaultSuperAdminUser
     {
         public static async Task SeedAsync(UserManager<ApplicationUser> userManager)
         {
             var defaultUser = new ApplicationUser
             {
-                UserName = "admin",
-                Email = "admin@gmail.com",
-                FirstName = "Default",
+                UserName = "superadmin",
+                Email = "superadmin@gmail.com",
+                FirstName = "Super",
                 MiddleName = "Adminovich",
                 LastName = "Admin",
                 EmailConfirmed = true,
@@ -28,7 +28,9 @@ namespace AdminPanel.Infrastructure.Identity.Seeds
                 if (user == null)
                 {
                     await userManager.CreateAsync(defaultUser, "123Pa$$word!");
+                    await userManager.AddToRoleAsync(defaultUser, Roles.Worker.ToString());
                     await userManager.AddToRoleAsync(defaultUser, Roles.Admin.ToString());
+                    await userManager.AddToRoleAsync(defaultUser, Roles.SuperAdmin.ToString());
                 }
             }
         }

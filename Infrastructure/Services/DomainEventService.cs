@@ -1,6 +1,7 @@
 ﻿using AdminPanel.Application.Common.Models;
 using AdminPanel.Application.Interfaces;
 using AdminPanel.Domain.Common;
+using AdminPanel.Domain.Common.Models;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
