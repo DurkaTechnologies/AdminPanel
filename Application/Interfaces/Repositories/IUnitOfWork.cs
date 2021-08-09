@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 
 namespace AdminPanel.Application.Interfaces.Repositories
 {
-    public interface IUnitOfWork : IDisposable
-    {
-        Task<int> Commit(CancellationToken cancellationToken);
+	public interface IUnitOfWork : IDisposable
+	{
+		Task<int> Commit(CancellationToken cancellationToken);
 
-        Task Rollback();
-    }
+		Task Rollback();
+	}
 }

@@ -1,4 +1,4 @@
-﻿using AdminPanel.Domain.Entities;
+﻿using AdminPanel.Domain.Common.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,8 +6,8 @@ namespace AdminPanel.Application.Interfaces.CacheRepositories
 {
     public interface IWorkerCacheRepository
     {
-        Task<List<Worker>> GetCachedListAsync();
+        Task<List<IWorker>> GetCachedListAsync();
 
-        Task<Worker> GetByIdAsync(int brandId);
+        Task<IWorker> GetByIdAsync(int brandId);
     }
 }
