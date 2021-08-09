@@ -22,7 +22,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\images\" />
+    <Folder Include="Areas\Identity\Management\Views\Users\" />
+    <Folder Include="Areas\Identity\Management\Views\Roles\" />
+    <Folder Include="Controllers\" />
+    <Folder Include="wwwroot\img\" />
   </ItemGroup>
 
 </Project>
