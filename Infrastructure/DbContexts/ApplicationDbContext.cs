@@ -2,6 +2,7 @@
 using AdminPanel.Application.Interfaces.Contexts;
 using AdminPanel.Application.Interfaces.Shared;
 using AdminPanel.Domain.Common;
+using AdminPanel.Domain.Common.Models;
 using AdminPanel.Domain.Entities;
 using AdminPanel.Infrastructure.Identity.Models;
 using AdminPanel.Infrastructure.Persistence.Configurations;
@@ -40,9 +41,6 @@ namespace AdminPanel.Infrastructure.DbContexts
 
 		public DbSet<Community> Communities { get; set; }
 
-		public DbSet<Worker> Workers { get; set; }
-
-
 		public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
 		{
 			foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
@@ -70,9 +68,7 @@ namespace AdminPanel.Infrastructure.DbContexts
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
-			//builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-			builder.ApplyConfiguration(new WorkerConfiguration());
-			builder.ApplyConfiguration(new CommunityConfiguration());
+			builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 			base.OnModelCreating(builder);
 		}
 

@@ -5,18 +5,18 @@ using System.Threading.Tasks;
 
 namespace AdminPanel.Application.Interfaces.Repositories
 {
-    public interface ICommunityRepository
-    {
-        IQueryable<Community> Communities { get; }
+	public interface ICommunityRepository
+	{
+		IQueryable<Community> Communities { get; }
 
-        Task<List<Community>> GetListAsync();
+		Task<List<Community>> GetListAsync();
 
-        Task<Community> GetByIdAsync(int communityId);
+		Task<Community> GetByIdAsync(int communityId);
 
-        Task<int> InsertAsync(Community community);
+		Task<int> InsertAsync(Community community);
 
-        Task UpdateAsync(Community community);
+		Task UpdateAsync(Community community);
 
-        Task DeleteAsync(Community community);
-    }
+		Task DeleteAsync(Community community);
+	}
 }

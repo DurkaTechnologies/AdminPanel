@@ -1,4 +1,4 @@
-﻿using AdminPanel.Domain.Common;
+﻿using AdminPanel.Domain.Common.Models;
 using System.Threading.Tasks;
 
 namespace AdminPanel.Application.Interfaces

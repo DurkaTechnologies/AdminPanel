@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace AdminPanel.Infrastructure.Identity.Seeds
 {
-	public static class DefaultSuperAdminUser
+	public static class DefaultAdminUser
     {
-        public static async Task SeedAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public static async Task SeedAsync(UserManager<ApplicationUser> userManager)
         {
-            //Seed Default User
             var defaultUser = new ApplicationUser
             {
-                UserName = "superadmin",
-                Email = "superadmin@gmail.com",
-                FirstName = "Mukesh",
-                LastName = "Murugan",
+                UserName = "admin",
+                Email = "admin@gmail.com",
+                FirstName = "Default",
+                MiddleName = "Adminovich",
+                LastName = "Admin",
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
                 IsActive = true
