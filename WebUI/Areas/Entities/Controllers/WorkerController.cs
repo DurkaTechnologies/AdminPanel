@@ -50,14 +50,5 @@ namespace WebUI.Areas.Entities.Controllers
 
             return null;
         }
-
-        public async Task<JsonResult> OnGetCreateOrEdit(int id = 0)
-        {
-            if (id == 0)
-            {
-                var productViewModel = new WorkerViewModel();
-                return new JsonResult(new { isValid = true, html = await _viewRenderer.RenderViewToStringAsync("_CreateOrEdit", workerViewModel) });
-            }
-        }
     }
 }
