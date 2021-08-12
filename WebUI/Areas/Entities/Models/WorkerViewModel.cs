@@ -28,6 +28,6 @@ namespace WebUI.Areas.Entities.Models
 
         public int CommunityId { get; set; }
 
-        public virtual CommunityViewModel Community { get; set; }
+        //public virtual CommunityViewModel Community { get; set; }
     }
 }

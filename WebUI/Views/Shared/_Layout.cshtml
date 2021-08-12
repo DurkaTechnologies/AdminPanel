@@ -3,6 +3,8 @@
 @using AdminPanel.Web.Views.Shared.Components.Sidebar;
 @using AdminPanel.Web.Views.Shared.Components.Header;
 @using AdminPanel.Web.Views.Shared.Components.Logout;
+@using AdminPanel.Web.Views.Shared.Components.FormModal;
+@using AdminPanel.Web.Views.Shared.Components.ImageModal;
 
 <!DOCTYPE html>
 <html lang="en">
@@ -15,9 +17,9 @@
 </head>
 <body class="hold-transition sidebar-mini">
 	@*<div id="loader-wrapper">
-		<div id="loader"></div>
-		<div class="loader-section"></div>
-	</div>*@
+			<div id="loader"></div>
+			<div class="loader-section"></div>
+		</div>*@
 	<div class="wrapper">
 		@(await Component.InvokeAsync<HeaderViewComponent>())
 		@(await Component.InvokeAsync<SidebarViewComponent>())
@@ -31,6 +33,8 @@
 		</div>
 		@(await Component.InvokeAsync<FooterViewComponent>())
 		@(await Component.InvokeAsync<LogoutViewComponent>())
+		@(await Component.InvokeAsync<FormModalViewComponent>())
+		@(await Component.InvokeAsync<ImageModalViewComponent>())
 	</div>
 	<partial name="_Scripts" />
 	@RenderSection("Scripts", required: false)

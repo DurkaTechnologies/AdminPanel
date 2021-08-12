@@ -66,7 +66,7 @@
                         </ul>
                     </li>
                     <li class="nav-header">Редактор</li>
-                    <li is-active-route class="nav-item has-treeview">
+                    @*<li is-active-route class="nav-item has-treeview">
                         <a is-active-route asp-area="Entities" asp-controller="Worker" class="nav-link">
                             <i class="nav-icon fas fa-user"></i>
                             <p>
@@ -88,30 +88,30 @@
                                 </a>
                             </li>
                         </ul>
-                    </li>
-                    <li class="nav-item has-treeview">
-                        <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-users"></i>
-                            <p>
-                                Громади
-                                <i class="fas fa-angle-left right"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview" style="display: none;">
-                            <li class="nav-item">
-                                <a href="tables/simple.html" class="nav-link">
-                                    <i class="fas fa-table nav-icon"></i>
-                                    <p>Показати</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="tables/data.html" class="nav-link">
-                                    <i class="fas fa-plus nav-icon"></i>
-                                    <p>Додати</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+                    </li>*@
+					<li is-active-route class="nav-item has-treeview">
+						<a is-active-route asp-area="Entities" asp-controller="Community" class="nav-link">
+							<i class="nav-icon fas fa-users"></i>
+							<p>
+								Громади
+								<i class="fas fa-angle-left right"></i>
+							</p>
+						</a>
+						<ul class="nav nav-treeview" style="display: none;">
+							<li class="nav-item">
+								<a asp-area="Entities" asp-controller="Community" class="nav-link">
+									<i class="fas fa-table nav-icon"></i>
+									<p>Показати</p>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a asp-area="Entities" asp-controller="Community" asp-action="Create" class="nav-link">
+									<i class="fas fa-plus nav-icon"></i>
+									<p>Додати</p>
+								</a>
+							</li>
+						</ul>
+					</li>
                 }
             </ul>
         </nav>
