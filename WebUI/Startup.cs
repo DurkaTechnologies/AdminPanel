@@ -14,6 +14,8 @@ using AdminPanel.Web.Extensions;
 using MediatR;
 using AdminPanel.Web.Abstractions;
 using AdminPanel.Web.Services;
+using Microsoft.AspNetCore.Authorization;
+using AdminPanel.WebUI.Permission;
 
 namespace WebUI
 {
@@ -30,16 +32,15 @@ namespace WebUI
 		[System.Obsolete]
 		public void ConfigureServices(IServiceCollection services)
 		{
-			//services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
-			//services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
-			
+			services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+			services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
+
 			services.AddApplicationLayer();
 			services.AddInfrastructure(Configuration);
 			services.AddPersistenceContexts(Configuration);
 			services.AddRepositories();
 			services.AddSharedInfrastructure(Configuration);
 
-			//services.AddMultiLingualSupport();
 			services.AddControllersWithViews().AddFluentValidation(fv =>
 			{
 				fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
@@ -67,9 +68,8 @@ namespace WebUI
 			}
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
-
+			app.UseCookiePolicy();
 			app.UseRouting();
-
 			app.UseAuthentication();
 			app.UseAuthorization();
 

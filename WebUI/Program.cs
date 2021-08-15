@@ -30,8 +30,8 @@ namespace WebUI
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
                     await DefaultRoles.SeedAsync(roleManager);
-                    await DefaultSuperAdminUser.SeedAsync(userManager);
-                    await DefaultAdminUser.SeedAsync(userManager);
+                    await DefaultSuperAdminUser.SeedAsync(userManager, roleManager);
+                    await DefaultAdminUser.SeedAsync(userManager, roleManager);
                     await DefaultUser.SeedAsync(userManager);
                     logger.LogInformation("Finished Seeding Default Data");
                     logger.LogInformation("Application Starting");
