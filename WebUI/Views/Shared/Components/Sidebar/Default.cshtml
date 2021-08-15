@@ -37,7 +37,7 @@
                 {
                     <li class="nav-header">Адміністратор</li>
                     <li class="nav-item has-treeview">
-                        <a asp-controller="Identity" asp-action="Index" class="nav-link">
+                        <a asp-area="Admin" class="nav-link">
                             <i class="nav-icon fas fa-tools"></i>
                             <p>
                                 Керування
@@ -46,13 +46,13 @@
                         </a>
                         <ul class="nav nav-treeview menu-open" style="display: none;">
                             <li class="nav-item">
-                                <a asp-controller="Identity" asp-action="Users" class="nav-link">
+                                <a asp-area="Admin" asp-controller="User" asp-action="Index" class="nav-link">
                                     <i class="fas fa-users nav-icon "></i>
                                     <p>Користувачі</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a asp-controller="Identity" asp-action="Roles" class="nav-link">
+                                <a asp-area="Admin" asp-controller="Role" asp-action="Index" class="nav-link">
                                     <i class="fas fa-user-tag nav-icon"></i>
                                     <p>Ролі</p>
                                 </a>
