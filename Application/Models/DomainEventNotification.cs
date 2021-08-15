@@ -1,4 +1,4 @@
-﻿using AdminPanel.Domain.Common;
+﻿using AdminPanel.Domain.Common.Models;
 using MediatR;
 
 namespace AdminPanel.Application.Common.Models

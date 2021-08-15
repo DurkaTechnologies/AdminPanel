@@ -16,10 +16,7 @@
 	<partial name="_Styles" />
 </head>
 <body>
-	<nav id="navigationBar" class="main-header navbar navbar-expand navbar-light" style="margin:0 !important">
-
-	</nav>
-	<div class="content-wrapper mrl-zero" id="contentWrapper">
+	<div class="content-wrapper mx-0" id="contentWrapper">
 		<div class="container">
 
 			<!-- Outer Row -->
@@ -29,34 +26,27 @@
 					<div class="col-lg-6 mx-auto">
 						<div style="padding:10rem 3rem 10rem 3rem !important;">
 							<div class="text-center">
-								<h1 class="h4 text-gray-900 mb-4">Login</h1>
+                                <img src="~/images/logo.png" id="brand-logo" alt="logo" class="brand-image img-circle"
+                                     style="opacity: .8">
+								<h1 class="h4 text-gray-900 mb-4">Вхід</h1>
 							</div>
-							<form class="user" id="account" method="post">
-								<div class="form-group">
-									<input asp-for="Input.Email" type="email" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address...">
-									<small><span asp-validation-for="Input.Email" class="text-danger"></span></small>
-								</div>
-								<div class="form-group">
-									<input asp-for="Input.Password" type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
-									<small><span asp-validation-for="Input.Password" class="text-danger"></span></small>
-								</div>
-								<div class="form-group">
-									<div class="custom-control custom-checkbox">
-										<input asp-for="Input.RememberMe" class="custom-control-input" type="checkbox" id="customCheck">
-										<label for="customCheck" class="custom-control-label">Remember Me</label>
-									</div>
-								</div>
-								<button type="submit" class="btn btn-primary btn-user btn-block">
-									Login
-								</button>
-							</form>
-							<hr>
-							<div class="text-center">
-								<a asp-area="Identity" asp-page="/Account/forgotpassword" class="small">Forgot Password?</a>
-							</div>
-							<div class="text-center">
-								<a asp-area="Identity" asp-page="/Account/register" class="small">Create an Account!</a>
-							</div>
+                            <form class="user" id="account" method="post">
+                                <div class="form-group">
+                                    <input asp-for="Input.Email" type="email" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Введіть Email адресу">
+                                    <small><span asp-validation-for="Input.Email" class="text-danger"></span></small>
+                                </div>
+                                <div class="form-group">
+                                    <input asp-for="Input.Password" type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Введіть Пароль">
+                                    <small><span asp-validation-for="Input.Password" class="text-danger"></span></small>
+                                </div>
+                                <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                        <input asp-for="Input.RememberMe" class="custom-control-input" type="checkbox" id="customCheck">
+                                        <label for="customCheck" class="custom-control-label">Запам'ятати мене</label>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-user btn-block">Підтвердити</button>
+                            </form>
 						</div>
 					</div>
 				</div>
@@ -71,6 +61,8 @@
 							<div class="row no-gutters align-items-center">
 								<div class="col">
 									<b>Super Admin : </b> superadmin@gmail.com / 123Pa$$word! / Default
+									<br />
+									<b>Admin : </b> admin@gmail.com / 123Pa$$word! / Default
 									<br />
 									<b>Basic User : </b> basicuser@gmail.com / 123Pa$$word! / Default
 								</div>

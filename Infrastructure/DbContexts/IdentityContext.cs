@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace AdminPanel.Infrastructure.DbContexts
 {
@@ -13,7 +14,9 @@ namespace AdminPanel.Infrastructure.DbContexts
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             base.OnModelCreating(builder);
+
             builder.HasDefaultSchema("Identity");
             builder.Entity<ApplicationUser>(entity =>
             {
