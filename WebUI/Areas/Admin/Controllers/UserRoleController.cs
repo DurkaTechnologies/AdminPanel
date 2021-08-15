@@ -63,7 +63,7 @@ namespace WebUI.Areas.Admin.Controllers
             result = await _userManager.AddToRolesAsync(user, model.UserRoles.Where(x => x.Selected).Select(y => y.RoleName));
             var currentUser = await _userManager.GetUserAsync(User);
             await _signInManager.RefreshSignInAsync(currentUser);
-            await AdminPanel.Infrastructure.Identity.Seeds.DefaultSuperAdminUser.SeedAsync(_userManager);
+            await AdminPanel.Infrastructure.Identity.Seeds.DefaultSuperAdminUser.SeedAsync(_userManager, _roleManager);
             return RedirectToAction("Index", new { userId = id });
         }
     }

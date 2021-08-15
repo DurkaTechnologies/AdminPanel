@@ -10,11 +10,4 @@ namespace WebUI.Areas.Admin.Models
         public string Name { get; set; }
         public string Id { get; set; }
     }
-
-    public class RoleClaimsViewModel
-    {
-        public string Type { get; set; }
-        public string Value { get; set; }
-        public bool Selected { get; set; }
-    }
 }
