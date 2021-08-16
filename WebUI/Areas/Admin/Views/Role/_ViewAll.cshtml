@@ -4,14 +4,14 @@
     <thead>
         <tr>
             <th>
-                Role
+                Роль
             </th>
             <th>
-                Id
+                ІД
             </th>
 
             <th style="width:10%">
-                Actions
+                Дії
             </th>
         </tr>
     </thead>
@@ -29,20 +29,20 @@
                 <td class="text-right">
                     <div class="btn-group">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Action
+                            Дії
                         </button>
                         <div class="dropdown-menu shadow animated--grow-in">
-                            <a onclick="jQueryModalGet('/admin/role/OnGetCreate?id=@role.Id','Edit Role')" class="dropdown-item">
-                                <i class="fas fa-pencil-alt"></i>Edit
+                            <a onclick="jQueryModalGet('/admin/role/OnGetCreate?id=@role.Id','Редагувати Роль')" class="dropdown-item">
+                                <i class="fas fa-pencil-alt"></i> Редагувати
                             </a>
                             <form id="form_delete_@role.Id" asp-controller="Role" method="post" asp-action="OnPostDelete" asp-route-id="@role.Id" onsubmit="return jQueryModalDelete(this)" class="d-inline">
-                                <a href="javascript:$('#form_delete_@role.Id').submit();" class="dropdown-item"><i class="fas fa-trash-alt"></i>Delete</a>
+                                <a href="javascript:$('#form_delete_@role.Id').submit();" class="dropdown-item"><i class="fas fa-trash-alt"></i> Видалити</a>
                             </form>
                             @if (role.Name != "SuperAdmin")
                             {
 
                                 <a style='margin-right:16px' asp-controller="Permission" asp-action="Index" asp-route-roleId="@role.Id" class="dropdown-item">
-                                    <i class="fas fa-wrench"></i>Manage Permissions
+                                    <i class="fas fa-wrench"></i> Керувати Дозволами
                                 </a>
                             }
                         </div>

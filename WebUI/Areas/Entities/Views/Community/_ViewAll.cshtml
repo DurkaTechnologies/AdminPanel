@@ -10,7 +10,7 @@
 			@if ((AuthorizationService.AuthorizeAsync(User, Permissions.Communities.Delete)).Result.Succeeded
 			|| (AuthorizationService.AuthorizeAsync(User, Permissions.Communities.Edit)).Result.Succeeded)
 			{
-				<th>Actions</th>
+				<th>Дії</th>
 			}
 		</tr>
 	</thead>
@@ -30,19 +30,19 @@
 					<td text-right">
 						<div class="btn-group">
 							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								Action
+								Дії
 							</button>
 							<div class="dropdown-menu shadow animated--grow-in">
 								@if ((AuthorizationService.AuthorizeAsync(User, Permissions.Communities.Edit)).Result.Succeeded)
 								{
-									<a onclick="jQueryModalGet('/entities/community/OnGetCreateOrEdit?id=@community.Id','Edit Community')" class="dropdown-item"><i class="fas fa-pencil-alt"></i>  Edit</a>
+									<a onclick="jQueryModalGet('/entities/community/OnGetCreateOrEdit?id=@community.Id','Edit Community')" class="dropdown-item"><i class="fas fa-pencil-alt"></i>  Редагувати</a>
 
 								}
 								@if ((AuthorizationService.AuthorizeAsync(User, Permissions.Communities.Delete)).Result.Succeeded)
 
 								{
 									<form id="form_delete_@community.Id" asp-area="Entities" asp-controller="Community" method="post" asp-action="OnPostDelete" asp-route-id="@community.Id" onsubmit="return jQueryModalDelete(this)">
-										<a href="javascript:$('#form_delete_@community.Id').submit();" class="dropdown-item"><i class="fas fa-trash-alt"></i>  Delete</a>
+										<a href="javascript:$('#form_delete_@community.Id').submit();" class="dropdown-item"><i class="fas fa-trash-alt"></i>  Видалити</a>
 									</form>
 								}
 							</div>

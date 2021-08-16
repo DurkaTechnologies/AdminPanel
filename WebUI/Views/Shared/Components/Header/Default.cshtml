@@ -32,7 +32,7 @@
 					<span class="mr-2 d-none d-lg-inline text-gray-600 small"> @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName</span>
 					@if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
 					{
-						<img class="img-profile rounded-circle" style="object-fit: cover; width: 30px; height: 30px;" src="data:image/*;base64,@(UserManager.GetUserAsync(User).Result.ProfilePicture)">
+						<img class="img-profile rounded-circle" style="object-fit: cover; width: 30px; height: 30px;" src="@ENV.ImagePath@(UserManager.GetUserAsync(User).Result.ProfilePicture)">
 					}
 					else
 					{

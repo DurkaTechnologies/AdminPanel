@@ -46,8 +46,8 @@ namespace WebUI.Areas.Admin.Controllers
                 }
             }
             model.RoleClaims = _mapper.Map<List<RoleClaimsViewModel>>(allPermissions);
-            ViewData["Title"] = $"Permissions for {role.Name} Role";
-            ViewData["Caption"] = $"Manage {role.Name} Role Permissions.";
+            ViewData["Title"] = $"Права для {role.Name}";
+            ViewData["Caption"] = $"Керувати правами для {role.Name}.";
             return View(model);
         }
 

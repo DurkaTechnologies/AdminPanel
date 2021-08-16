@@ -6,25 +6,6 @@
         <span class="brand-text font-weight-light">Панель керування</span>
     </a>
     <div class="sidebar">
-        @*@if (User.Identity.IsAuthenticated)
-        {
-            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                <div class="image">
-                    <img src="~/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
-                </div>
-                <div class="info">
-                    <a href="#" class="d-block">Hi, @User.Identity.Name </a>
-                </div>
-            </div>
-        }
-        else
-        {
-            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                <div class="info">
-                    <a href="#" class="d-block">Hi, Visitor</a>
-                </div>
-            </div>
-        }*@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item">
@@ -66,52 +47,12 @@
                         </ul>
                     </li>
                     <li class="nav-header">Редактор</li>
-                    @*<li is-active-route class="nav-item has-treeview">
-                        <a is-active-route asp-area="Entities" asp-controller="Worker" class="nav-link">
-                            <i class="nav-icon fas fa-user"></i>
-                            <p>
-                                Працівники
-                                <i class="fas fa-angle-left right"></i>
-                            </p>
+                    <li class="nav-item">
+                        <a asp-area="Entities" asp-controller="Community" class="nav-link">
+                            <i class="fas fa-table nav-icon"></i>
+                            <p>Громади</p>
                         </a>
-                        <ul class="nav nav-treeview menu-open" style="display: none;">
-                            <li class="nav-item">
-                                <a asp-area="Entities" asp-controller="Worker" class="nav-link">
-                                    <i class="fas fa-table nav-icon "></i>
-                                    <p>Показати</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a asp-area="Entities" asp-controller="Worker" asp-action="Create" class="nav-link">
-                                    <i class="fas fa-user-plus nav-icon"></i>
-                                    <p>Додати</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>*@
-					<li is-active-route class="nav-item has-treeview">
-						<a is-active-route asp-area="Entities" asp-controller="Community" class="nav-link">
-							<i class="nav-icon fas fa-users"></i>
-							<p>
-								Громади
-								<i class="fas fa-angle-left right"></i>
-							</p>
-						</a>
-						<ul class="nav nav-treeview" style="display: none;">
-							<li class="nav-item">
-								<a asp-area="Entities" asp-controller="Community" class="nav-link">
-									<i class="fas fa-table nav-icon"></i>
-									<p>Показати</p>
-								</a>
-							</li>
-							<li class="nav-item">
-								<a asp-area="Entities" asp-controller="Community" asp-action="Create" class="nav-link">
-									<i class="fas fa-plus nav-icon"></i>
-									<p>Додати</p>
-								</a>
-							</li>
-						</ul>
-					</li>
+                    </li>
                 }
             </ul>
         </nav>

@@ -5,16 +5,16 @@
     <thead>
         <tr>
             <th>
-                User
+                Працівник
             </th>
             <th>
-                Email
+                Пошта
             </th>
             <th>
-                Status
+                Статус
             </th>
             <th style="width:10%">
-                Actions
+                Дії
             </th>
         </tr>
     </thead>
@@ -56,35 +56,35 @@
                     <small>
                         @if (user.EmailConfirmed)
                         {
-                            <span class="badge badge-success">Email Confirmed</span>
+                            <span class="badge badge-success">Підтверджено</span>
                         }
                         else
                         {
-                            <span class="badge badge-danger">Email Not Confirmed</span>
+                            <span class="badge badge-danger">Не підтверджено</span>
                         }
                     </small>
                 </td>
                 <td>
                     @if (user.IsActive)
                     {
-                        <span class="badge badge-success">Active</span>
+                        <span class="badge badge-success">Активний</span>
                     }
                     else
                     {
-                        <span class="badge badge-danger">Deactivated</span>
+                        <span class="badge badge-danger">Деактивований</span>
                     }
                 </td>
                 <td>
                     <div class="btn-group">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Action
+                            Дії
                         </button>
                         <div class="dropdown-menu shadow animated--grow-in">
                             <a style='margin-right:16px' asp-area="Identity" asp-page="/Profile" asp-route-userId="@user.Id" class="dropdown-item">
-                                <i class="fas fa-user"></i>Profile
+                                <i class="fas fa-user"></i> Профіль
                             </a>
                             <a style='margin-right:16px' asp-controller="UserRole" asp-action="Index" asp-route-userId="@user.Id" class="dropdown-item">
-                                <i class="fas fa-wrench"></i>Manage Roles
+                                <i class="fas fa-wrench"></i> Керування Ролями
                             </a>
                         </div>
                     </div>

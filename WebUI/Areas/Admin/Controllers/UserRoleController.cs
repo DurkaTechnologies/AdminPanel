@@ -28,8 +28,8 @@ namespace WebUI.Areas.Admin.Controllers
         {
             var viewModel = new List<UserRolesViewModel>();
             var user = await _userManager.FindByIdAsync(userId);
-            ViewData["Title"] = $"{user.UserName} - Roles";
-            ViewData["Caption"] = $"Manage {user.Email}'s Roles.";
+            ViewData["Title"] = $"{user.UserName} - Ролі";
+            ViewData["Caption"] = $"Керувати ролями {user.Email}";
             foreach (var role in _roleManager.Roles)
             {
                 var userRolesViewModel = new UserRolesViewModel

@@ -1,15 +1,15 @@
 ﻿@{
-    ViewData["Title"] = "Users";
-    ViewData["Caption"] = "Manage Users here";
+    ViewData["Title"] = "Користувачі";
+    ViewData["Caption"] = "Редагувати користувачів";
 }
 <div class="card">
     <div class="col-sm-12" style="padding:20px">
-        <a onclick="jQueryModalGet('/admin/user/OnGetCreate','Create User')" class="btn bg-success">
-            <i class="fa fa-plus-square"></i> Create
+        <a onclick="jQueryModalGet('/admin/user/OnGetCreate','Сторити Працівника')" class="btn bg-success">
+            <i class="fa fa-plus-square"></i> Створити
         </a>
         <a id="reload" class="btn btn-primary text-white">
             <i class="fa fas fa-bolt"></i>
-            Reload
+            Перевантажити
         </a>
     </div>
     <div id="viewAll" class="card-body table-responsive">

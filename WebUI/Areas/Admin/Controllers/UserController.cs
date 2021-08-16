@@ -72,7 +72,7 @@ namespace WebUI.Areas.Admin
 				var user = new ApplicationUser
 				{
 					Email = userModel.Email,
-					UserName = userModel.FirstName,
+					UserName = userModel.Email,
 					FirstName = userModel.FirstName,
 					MiddleName = userModel.MiddleName,
 					LastName = userModel.LastName,
