@@ -9,14 +9,14 @@
         </div>
     </div>
     <div class="form-group row">
-        <label class="col-md-3 col-form-label">FirstName</label>
+        <label class="col-md-3 col-form-label">MiddleName</label>
         <div class="col-md-9">
             <input type="text" asp-for="MiddleName" name="MiddleName" class="form-control">
             <span asp-validation-for="MiddleName" class="text-danger"></span>
         </div>
     </div>
     <div class="form-group row">
-        <label class="col-md-3 col-form-label">FirstName</label>
+        <label class="col-md-3 col-form-label">LastName</label>
         <div class="col-md-9">
             <input type="text" asp-for="LastName" name="LastName" class="form-control">
             <span asp-validation-for="LastName" class="text-danger"></span>
@@ -41,6 +41,15 @@
         <div class="col-md-9">
             <input type="password" asp-for="ConfirmPassword" name="ConfirmPassword" class="form-control">
             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="custom-file form-image">
+            <input accept=".png,.jpg,.jpeg,.gif,.tif"
+                   type="file" class="custom-file-input"
+                   id="customFile"
+                   name="files">
+            <label class="custom-file-label" for="customFile">Choose Image</label>
         </div>
     </div>
     <div class="form-group justify-content-between" style="margin-bottom: 0px !important">
