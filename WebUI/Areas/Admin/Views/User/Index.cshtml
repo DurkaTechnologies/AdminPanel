@@ -1,9 +1,9 @@
-﻿@{
-    ViewData["Title"] = "Користувачі";
-    ViewData["Caption"] = "Редагувати користувачів";
-}
-@using AdminPanel.Application.Constants 
+﻿@{ ViewData["Title"] = "Користувачі";
+    ViewData["Caption"] = "Редагувати користувачів"; }
+@using AdminPanel.Application.Constants
 
+@if ((AuthorizationService.AuthorizeAsync(User, Permissions.Users.View)).Result.Succeeded)
+{
 <div class="card">
     <div class="col-sm-12" style="padding:20px">
         @if ((AuthorizationService.AuthorizeAsync(User, Permissions.Users.Create)).Result.Succeeded)
@@ -20,6 +20,12 @@
     <div id="viewAll" class="card-body table-responsive">
     </div>
 </div>
+}
+else 
+{
+    <h2 class="text-center">Не доступно для вас</h2>
+}
+
 @section Scripts
 {
     <script src="~/js/site.js"></script>
