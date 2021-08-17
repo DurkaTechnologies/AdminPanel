@@ -117,5 +117,65 @@ namespace WebUI.Areas.Admin
 			}
 			return default;
 		}
+
+		[Authorize(Roles = "SuperAdmin")]
+		public async Task<JsonResult> OnPostDelete(string id)
+		{
+			var user = await _userManager.FindByIdAsync(id);
+			
+			if (user != null)
+			{
+				if (user.FirstName != "Super" && user.FirstName != "Default")
+				{
+					_notify.Success($"Користувач {user.FirstName + " " + user.LastName} був успішно видалений");
+					await _userManager.DeleteAsync(user);
+				}
+				else
+					_notify.Error($"Не можна видалити базових користувачів");
+
+			}
+			else
+				_notify.Error($"Користувача не знайдено");
+
+			var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+			var allUsersExceptCurrentUser = await _userManager.Users.Where(a => a.Id != currentUser.Id).ToListAsync();
+			var model = _mapper.Map<IEnumerable<UserViewModel>>(allUsersExceptCurrentUser);
+			var html = await _viewRenderer.RenderViewToStringAsync("_ViewAll", model);
+
+			return new JsonResult(new { isValid = true, html = html });
+		}
+
+		[Authorize(Roles = "SuperAdmin")]
+		public async Task<JsonResult> OnPostDeactivate(string id)
+		{
+			var user = await _userManager.FindByIdAsync(id);
+
+			if (user != null)
+			{
+				if (user.FirstName != "Super" && user.FirstName != "Default")
+				{
+					user.IsActive = !user.IsActive;
+
+					if (user.IsActive)
+						_notify.Success($"Користувач {user.FirstName + " " + user.LastName} активований");
+					else
+						_notify.Success($"Користувач {user.FirstName + " " + user.LastName} деактивований");
+
+					await _userManager.UpdateAsync(user);
+				}
+				else
+					_notify.Error($"Не можна деактивувати базових користувачів");
+
+			}
+			else
+				_notify.Error($"Користувача не знайдено");
+
+			var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+			var allUsersExceptCurrentUser = await _userManager.Users.Where(a => a.Id != currentUser.Id).ToListAsync();
+			var model = _mapper.Map<IEnumerable<UserViewModel>>(allUsersExceptCurrentUser);
+			var html = await _viewRenderer.RenderViewToStringAsync("_ViewAll", model);
+
+			return new JsonResult(new { isValid = true, html = html });
+		}
 	}
 }

@@ -1,6 +1,10 @@
 ﻿@using WebUI.Areas.Admin.Models
 @using WebUI
 @model IEnumerable<UserViewModel>
+@using AdminPanel.Application.Constants
+
+@if ((AuthorizationService.AuthorizeAsync(User, Permissions.Users.View)).Result.Succeeded) 
+{
 <table class="table table-striped" id="userTable">
     <thead>
         <tr>
@@ -83,9 +87,18 @@
                             <a style='margin-right:16px' asp-area="Identity" asp-page="/Profile" asp-route-userId="@user.Id" class="dropdown-item">
                                 <i class="fas fa-user"></i> Профіль
                             </a>
-                            <a style='margin-right:16px' asp-controller="UserRole" asp-action="Index" asp-route-userId="@user.Id" class="dropdown-item">
-                                <i class="fas fa-wrench"></i> Керування Ролями
-                            </a>
+                            @if (User.IsInRole("SuperAdmin"))
+                            {
+                                <a style='margin-right:16px' asp-controller="UserRole" asp-action="Index" asp-route-userId="@user.Id" class="dropdown-item">
+                                    <i class="fas fa-wrench"></i> Керування Ролями
+                                </a>
+                                <form id="form_delete_@user.Id" asp-controller="User" method="post" asp-action="OnPostDelete" asp-route-id="@user.Id" onsubmit="return jQueryModalDelete(this)" class="d-inline">
+                                    <a href="javascript:$('#form_delete_@user.Id').submit();" class="dropdown-item"><i class="fas fa-trash-alt"></i> Видалити</a>
+                                </form>
+                                <form id="form_deactivate_@user.Id" asp-controller="User" method="post" asp-action="OnPostDelete" asp-route-id="@user.Id" onsubmit="return jQueryModalDeactivate(this)" class="d-inline">
+                                    <a href="javascript:$('#form_deactivate_@user.Id').submit();" class="dropdown-item"><i class="fas fa-key"></i> Деактивувати</a>
+                                </form>
+                            }
                         </div>
                     </div>
                 </td>
@@ -93,6 +106,8 @@
         }
     </tbody>
 </table>
+}
+
 <script>
     $(document).ready(function () {
         $("#userTable").DataTable({

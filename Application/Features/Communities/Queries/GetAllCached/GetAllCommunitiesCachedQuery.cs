@@ -15,12 +15,12 @@ namespace AdminPanel.Application.Features.Communities.Queries.GetAllCached
 		}
 	}
 
-	public class GetAllBrandsCachedQueryHandler : IRequestHandler<GetAllCommunitiesCachedQuery, Result<List<GetAllCommunitiesCachedResponse>>>
+	public class GetAllCommunitiesCachedQueryHandler : IRequestHandler<GetAllCommunitiesCachedQuery, Result<List<GetAllCommunitiesCachedResponse>>>
 	{
 		private readonly ICommunityCacheRepository communityCache;
 		private readonly IMapper mapper;
 
-		public GetAllBrandsCachedQueryHandler(ICommunityCacheRepository communityCache, IMapper mapper)
+		public GetAllCommunitiesCachedQueryHandler(ICommunityCacheRepository communityCache, IMapper mapper)
 		{
 			this.communityCache = communityCache;
 			this.mapper = mapper;

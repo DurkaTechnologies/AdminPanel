@@ -1,4 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using AdminPanel.Application.Constants
+@using AdminPanel.WebUI.Areas.Entities.Models
 <aside id="sideBar" class="main-sidebar sidebar-dark-primary">
     <a href="~/Home" class="brand-link">
         <img src="~/images/logo.png" id="brand-logo" alt="logo" class="brand-image">
@@ -31,12 +33,15 @@
                                     <p>Користувачі</p>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a asp-area="Admin" asp-controller="Role" asp-action="Index" class="nav-link">
-                                    <i class="fas fa-user-tag nav-icon"></i>
-                                    <p>Ролі</p>
-                                </a>
-                            </li>
+                            @if (User.IsInRole("SuperAdmin"))
+                            {
+                                <li class="nav-item">
+                                    <a asp-area="Admin" asp-controller="Role" asp-action="Index" class="nav-link">
+                                        <i class="fas fa-user-tag nav-icon"></i>
+                                        <p>Ролі</p>
+                                    </a>
+                                </li>
+                            }
                             <li class="nav-item">
                                 <a asp-controller="Identity" asp-action="Log" class="nav-link">
                                     <i class="fas fa-list nav-icon"></i>
@@ -45,13 +50,13 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="nav-header">Редактор</li>
-                    <li class="nav-item">
-                        <a asp-area="Entities" asp-controller="Community" class="nav-link">
-                            <i class="fas fa-table nav-icon"></i>
-                            <p>Громади</p>
-                        </a>
-                    </li>
+                        <li class="nav-header">Редактор</li>
+                        <li class="nav-item">
+                            <a asp-area="Entities" asp-controller="Community" class="nav-link">
+                                <i class="fas fa-table nav-icon"></i>
+                                <p>Громади</p>
+                            </a>
+                        </li>
                 }
             </ul>
         </nav>

@@ -2,11 +2,16 @@
     ViewData["Title"] = "Користувачі";
     ViewData["Caption"] = "Редагувати користувачів";
 }
+@using AdminPanel.Application.Constants 
+
 <div class="card">
     <div class="col-sm-12" style="padding:20px">
-        <a onclick="jQueryModalGet('/admin/user/OnGetCreate','Сторити Працівника')" class="btn bg-success">
-            <i class="fa fa-plus-square"></i> Створити
-        </a>
+        @if ((AuthorizationService.AuthorizeAsync(User, Permissions.Users.Create)).Result.Succeeded)
+        {
+            <a onclick="jQueryModalGet('/admin/user/OnGetCreate','Сторити Працівника')" class="btn bg-success">
+                <i class="fa fa-plus-square"></i> Створити
+            </a>
+        }
         <a id="reload" class="btn btn-primary text-white">
             <i class="fa fas fa-bolt"></i>
             Перевантажити

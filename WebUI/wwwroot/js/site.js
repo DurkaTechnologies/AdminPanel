@@ -54,8 +54,36 @@
             console.log(ex)
         }
     }
+
     jQueryModalDelete = form => {
-        if (confirm('Are you sure to delete this record ?')) {
+        if (confirm('Ви впевнені що хочете видалити це ?')) {
+            try {
+                $.ajax({
+                    type: 'POST',
+                    url: form.action,
+                    data: new FormData(form),
+                    contentType: false,
+                    processData: false,
+                    success: function (res) {
+                        if (res.isValid) {
+                            $('#viewAll').html(res.html)
+                        }
+                    },
+                    error: function (err) {
+                        console.log(err)
+                    }
+                })
+            } catch (ex) {
+                console.log(ex)
+            }
+        }
+
+        //prevent default form submit event
+        return false;
+    }
+
+    jQueryModalDeactivate = form => {
+        if (confirm('Ви впевнені що хочете деактивувати це ?')) {
             try {
                 $.ajax({
                     type: 'POST',

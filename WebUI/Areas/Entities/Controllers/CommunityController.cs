@@ -55,26 +55,32 @@ namespace WebUI.Areas.Entities.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> OnPostCreateOrEdit(int id, CommunityViewModel brand)
+        public async Task<JsonResult> OnPostCreateOrEdit(int id, CommunityViewModel community)
         {
             if (ModelState.IsValid)
             {
                 if (id == 0)
                 {
-                    var createCommunityCommand = _mapper.Map<CreateCommunityCommand>(brand);
+                    var createCommunityCommand = _mapper.Map<CreateCommunityCommand>(community);
                     var result = await _mediator.Send(createCommunityCommand);
+
                     if (result.Succeeded)
                     {
                         id = result.Data;
+                        _notify.Success($"Громада {community.Name} створена");
                     }
+                    else
+                        _notify.Error("Помилка створення");
                 }
                 else
                 {
-                    var updateCommunityCommand = _mapper.Map<UpdateCommunityCommand>(brand);
+                    var updateCommunityCommand = _mapper.Map<UpdateCommunityCommand>(community);
                     var result = await _mediator.Send(updateCommunityCommand);
-                    //if (result.Succeeded) _notify.Information($"Brand with ID {result.Data} Updated.");
+                    if (result.Succeeded) _notify.Success($"Громада {community.Name} змінена");
                 }
+                
                 var response = await _mediator.Send(new GetAllCommunitiesCachedQuery());
+                
                 if (response.Succeeded)
                 {
                     var viewModel = _mapper.Map<List<CommunityViewModel>>(response.Data);
@@ -83,13 +89,15 @@ namespace WebUI.Areas.Entities.Controllers
                 }
                 else
                 {
-                    //_notify.Error(response.Message);
+                    _notify.Error("Помилка створення");
                     return null;
                 }
             }
             else
             {
-                var html = await _viewRenderer.RenderViewToStringAsync("_CreateOrEdit", brand);
+                
+                
+                var html = await _viewRenderer.RenderViewToStringAsync("_CreateOrEdit", community);
                 return new JsonResult(new { isValid = false, html = html });
             }
         }
@@ -97,11 +105,16 @@ namespace WebUI.Areas.Entities.Controllers
         [HttpPost]
         public async Task<JsonResult> OnPostDelete(int id)
         {
+            var byIdResponse = await _mediator.Send(new GetCommunityByIdQuery() { Id = id });
+            var community = _mapper.Map<CommunityViewModel>(byIdResponse.Data);
+
             var deleteCommand = await _mediator.Send(new DeleteCommunityCommand { Id = id });
+            
             if (deleteCommand.Succeeded)
             {
-                //_notify.Information($"Brand with Id {id} Deleted.");
+                _notify.Success($"Громада {community.Name} видалена");
                 var response = await _mediator.Send(new GetAllCommunitiesCachedQuery());
+                
                 if (response.Succeeded)
                 {
                     var viewModel = _mapper.Map<List<CommunityViewModel>>(response.Data);
@@ -110,13 +123,13 @@ namespace WebUI.Areas.Entities.Controllers
                 }
                 else
                 {
-                    //_notify.Error(response.Message);
+                    _notify.Error("Помилка видалення");
                     return null;
                 }
             }
             else
             {
-                //_notify.Error(deleteCommand.Message);
+                _notify.Error("Помилка видалення");
                 return null;
             }
         }

@@ -1,5 +1,9 @@
 ﻿@using WebUI.Areas.Admin.Models
 @model UserViewModel
+@using AdminPanel.Application.Constants
+
+@if (AuthorizationService.AuthorizeAsync(User, Permissions.Users.Edit).Result.Succeeded || AuthorizationService.AuthorizeAsync(User, Permissions.Users.Create).Result.Succeeded)
+{
 <form id="create-form" method="post" asp-area="Admin" asp-controller="User" asp-action="OnPostCreate" onsubmit="return jQueryModalPost(this);">
     <div class="form-group row">
         <label class="col-md-3 col-form-label">Ім'я</label>
@@ -69,6 +73,8 @@
         <button type="submit" class="btn btn-default close-button" data-dismiss="modal">Відміна</button>
     </div>
 </form>
+}
+
 <script type="text/javascript" language=javascript>
     $.validator.unobtrusive.parse(document);
 </script>

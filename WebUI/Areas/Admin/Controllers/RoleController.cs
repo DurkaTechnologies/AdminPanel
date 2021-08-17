@@ -2,6 +2,7 @@
 using AdminPanel.Infrastructure.Identity.Models;
 using AdminPanel.Infrastructure.Identity.Seeds;
 using AdminPanel.Web.Abstractions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ using WebUI.Areas.Admin.Models;
 namespace WebUI.Areas.Admin
 {
     [Area("Admin")]
+    [Authorize(Roles = "SuperAdmin")]
     public class RoleController : BaseController<RoleController>
     {
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -114,8 +116,8 @@ namespace WebUI.Areas.Admin
                 else 
                     _notify.Error($"Роль {existingRole.Name} використовується");
             }
-
-            _notify.Error($"Роль {existingRole.Name} не може бути видалена");
+            else
+                _notify.Error($"Роль {existingRole.Name} не може бути видаленою");
 
             var roles = await _roleManager.Roles.ToListAsync();
             var mappedRoles = _mapper.Map<IEnumerable<RoleViewModel>>(roles);
