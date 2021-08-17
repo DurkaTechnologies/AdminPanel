@@ -10,7 +10,6 @@ namespace AdminPanel.Infrastructure.Persistence.Configurations
 		{
 			builder.Ignore(e => e.DomainEvents);
 
-
 			builder.Property(t => t.Name)
 				.HasMaxLength(256)
 				.IsRequired();

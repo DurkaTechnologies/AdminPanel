@@ -22,6 +22,12 @@ namespace AdminPanel.Infrastructure.Persistence.Configurations
 
 			builder.Property(t => t.ProfilePicture)
 				.HasMaxLength(256);
+
+			builder.Property(t => t.Description)
+				.HasMaxLength(2000);
+
+			builder.Property(t => t.СommunityId)
+				.IsRequired();
 		}
 	}
 }

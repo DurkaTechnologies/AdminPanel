@@ -13,6 +13,8 @@ namespace AdminPanel.Domain.Common.Interfaces
 
 		public string ProfilePicture { get; set; }
 
+		public string Description { get; set; }
+
 		public int СommunityId { get; set; }
 
 		public Community Community { get; set; }
