@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using MediatR;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -17,5 +18,9 @@ namespace AdminPanel.Web.Abstractions
 
         //protected IMapper Mapper => _mapper ??= HttpContext.RequestServices.GetService<IMapper>();
         protected ILogger<T> Logger => _logger ??= HttpContext.RequestServices.GetService<ILogger<T>>();
+
+        private INotyfService notyf;
+
+        protected INotyfService _notyf => notyf ??= HttpContext.RequestServices.GetService<INotyfService>();
     }
 }

@@ -1,4 +1,6 @@
-﻿using AdminPanel.WebUI.Areas.Entities.Models;
+﻿using AdminPanel.Domain.Entities;
+using AdminPanel.WebUI.Areas.Entities.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,5 +35,7 @@ namespace WebUI.Areas.Admin.Models
         public int CommunityId { get; set; }
         
         public CommunityViewModel Community { get; set; }
+
+        public SelectList Communities { get; set; }
     }
 }

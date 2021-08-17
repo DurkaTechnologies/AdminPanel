@@ -1,5 +1,6 @@
 ﻿@using WebUI.Areas.Admin.Models
 @model IEnumerable<RoleViewModel>
+@using AdminPanel.Application.Enums
 <table class="table table-striped" id="roleTable">
     <thead>
         <tr>
@@ -28,24 +29,25 @@
                 </td>
                 <td class="text-right">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Дії
-                        </button>
-                        <div class="dropdown-menu shadow animated--grow-in">
-                            <a onclick="jQueryModalGet('/admin/role/OnGetCreate?id=@role.Id','Редагувати Роль')" class="dropdown-item">
-                                <i class="fas fa-pencil-alt"></i> Редагувати
-                            </a>
-                            <form id="form_delete_@role.Id" asp-controller="Role" method="post" asp-action="OnPostDelete" asp-route-id="@role.Id" onsubmit="return jQueryModalDelete(this)" class="d-inline">
-                                <a href="javascript:$('#form_delete_@role.Id').submit();" class="dropdown-item"><i class="fas fa-trash-alt"></i> Видалити</a>
-                            </form>
-                            @if (role.Name != "SuperAdmin")
-                            {
+                        @if (role.Name != Roles.SuperAdmin.ToString())
+                        {
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Дії
+                            </button>
+
+                            <div class="dropdown-menu shadow animated--grow-in">
+                                <a onclick="jQueryModalGet('/admin/role/OnGetCreate?id=@role.Id','Редагувати Роль')" class="dropdown-item">
+                                    <i class="fas fa-pencil-alt"></i> Редагувати
+                                </a>
+                                <form id="form_delete_@role.Id" asp-controller="Role" method="post" asp-action="OnPostDelete" asp-route-id="@role.Id" onsubmit="return jQueryModalDelete(this)" class="d-inline">
+                                    <a href="javascript:$('#form_delete_@role.Id').submit();" class="dropdown-item"><i class="fas fa-trash-alt"></i> Видалити</a>
+                                </form>
 
                                 <a style='margin-right:16px' asp-controller="Permission" asp-action="Index" asp-route-roleId="@role.Id" class="dropdown-item">
                                     <i class="fas fa-wrench"></i> Керувати Дозволами
                                 </a>
-                            }
-                        </div>
+                            </div>
+                         }
                     </div>
                 </td>
             </tr>

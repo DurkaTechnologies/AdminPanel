@@ -1,11 +1,14 @@
 ﻿using AdminPanel.Application.Enums;
+using AdminPanel.Application.Features.Communities.Queries.GetAllCached;
 using AdminPanel.Infrastructure.Identity.Models;
 using AdminPanel.Web.Abstractions;
+using AdminPanel.WebUI.Areas.Entities.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -53,8 +56,18 @@ namespace WebUI.Areas.Admin
 		}
 
 		public async Task<IActionResult> OnGetCreate()
-		{	
-			return new JsonResult(new { isValid = true, html = await _viewRenderer.RenderViewToStringAsync("_Create", new UserViewModel()) });
+		{
+			var response = await _mediator.Send(new GetAllCommunitiesCachedQuery());
+
+			if (response.Succeeded)
+			{
+				var data = _mapper.Map<IEnumerable<CommunityViewModel>>(response.Data);
+				var communities = new SelectList(data, nameof(CommunityViewModel.Id), nameof(CommunityViewModel.Name), null, null);
+				return new JsonResult(new { isValid = true, html = await _viewRenderer.RenderViewToStringAsync("_Create", new UserViewModel() { Communities = communities }) });
+			}
+
+			_notify.Success("Не заповнено форму");
+			return null;
 		}
 
 		[HttpPost]
@@ -80,19 +93,24 @@ namespace WebUI.Areas.Admin
 					EmailConfirmed = true,
 					IsActive = true
 				};
+
 				var result = await _userManager.CreateAsync(user, userModel.Password);
 				if (result.Succeeded)
 				{
+					
 					await _userManager.AddToRoleAsync(user, Roles.Worker.ToString());
 					var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 					var currentUser = await _userManager.GetUserAsync(HttpContext.User);
 					var allUsersExceptCurrentUser = await _userManager.Users.Where(a => a.Id != currentUser.Id).ToListAsync();
 					var users = _mapper.Map<IEnumerable<UserViewModel>>(allUsersExceptCurrentUser);
 					var htmlData = await _viewRenderer.RenderViewToStringAsync("_ViewAll", users);
+					
+					_notify.Success($"Аккаунт {user.Email} створено");
 					return new JsonResult(new { isValid = true, html = htmlData });
 				}
 				foreach (var error in result.Errors)
 				{
+					_notify.Error(error.Description);
 				}
 				var html = await _viewRenderer.RenderViewToStringAsync("_Create", userModel);
 				return new JsonResult(new { isValid = false, html = html });
