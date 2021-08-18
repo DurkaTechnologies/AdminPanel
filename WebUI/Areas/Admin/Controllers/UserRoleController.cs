@@ -1,5 +1,7 @@
-﻿using AdminPanel.Infrastructure.Identity.Models;
+﻿using AdminPanel.Application.Enums;
+using AdminPanel.Infrastructure.Identity.Models;
 using AdminPanel.Web.Abstractions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,6 +13,7 @@ using WebUI.Areas.Admin.Models;
 namespace WebUI.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "SuperAdmin")]
     public class UserRoleController : BaseController<UserRoleController>
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -28,8 +31,8 @@ namespace WebUI.Areas.Admin.Controllers
         {
             var viewModel = new List<UserRolesViewModel>();
             var user = await _userManager.FindByIdAsync(userId);
-            ViewData["Title"] = $"{user.UserName} - Roles";
-            ViewData["Caption"] = $"Manage {user.Email}'s Roles.";
+            ViewData["Title"] = $"{user.UserName} - Ролі";
+            ViewData["Caption"] = $"Керувати ролями {user.Email}";
             foreach (var role in _roleManager.Roles)
             {
                 var userRolesViewModel = new UserRolesViewModel
@@ -64,6 +67,9 @@ namespace WebUI.Areas.Admin.Controllers
             var currentUser = await _userManager.GetUserAsync(User);
             await _signInManager.RefreshSignInAsync(currentUser);
             await AdminPanel.Infrastructure.Identity.Seeds.DefaultSuperAdminUser.SeedAsync(_userManager, _roleManager);
+            
+            _notify.Error($"Ролі для {user.FirstName + " " + user.LastName} змінено");
+
             return RedirectToAction("Index", new { userId = id });
         }
     }

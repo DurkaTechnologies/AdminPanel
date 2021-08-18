@@ -1,5 +1,8 @@
-﻿using AdminPanel.Infrastructure.Identity.Models;
+﻿using AdminPanel.Application.Enums;
+using AdminPanel.Infrastructure.Identity.Models;
+using AdminPanel.Infrastructure.Identity.Seeds;
 using AdminPanel.Web.Abstractions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +15,7 @@ using WebUI.Areas.Admin.Models;
 namespace WebUI.Areas.Admin
 {
     [Area("Admin")]
+    [Authorize(Roles = "SuperAdmin")]
     public class RoleController : BaseController<RoleController>
     {
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -52,16 +56,30 @@ namespace WebUI.Areas.Admin
         [HttpPost]
         public async Task<IActionResult> OnPostCreate(RoleViewModel role)
         {
-            if (ModelState.IsValid && role.Name != "SuperAdmin" && role.Name != "Basic")
+            if (ModelState.IsValid)
             {
-                if (string.IsNullOrEmpty(role.Id))
-                    await _roleManager.CreateAsync(new IdentityRole(role.Name));
+                var result = await _roleManager.FindByNameAsync(role.Name);
+
+                if (result == null)
+                {
+                    if (string.IsNullOrEmpty(role.Id))
+                    {
+                        _notify.Success($"Роль {role.Name} створено");
+                        await _roleManager.CreateAsync(new IdentityRole(role.Name));
+                    }
+                    else
+                    {
+                        var existingRole = await _roleManager.FindByIdAsync(role.Id);
+                        existingRole.Name = role.Name;
+                        existingRole.NormalizedName = role.Name.ToUpper();
+                        await _roleManager.UpdateAsync(existingRole);
+
+                        _notify.Success($"Роль {role.Name} змінено");
+                    }
+                }
                 else
                 {
-                    var existingRole = await _roleManager.FindByIdAsync(role.Id);
-                    existingRole.Name = role.Name;
-                    existingRole.NormalizedName = role.Name.ToUpper();
-                    await _roleManager.UpdateAsync(existingRole);
+                    _notify.Error($"Роль {role.Name} вже існує");
                 }
 
                 var roles = await _roleManager.Roles.ToListAsync();
@@ -70,29 +88,36 @@ namespace WebUI.Areas.Admin
                 
                 return new JsonResult(new { isValid = true, html = html });
             }
-            else
+            else 
             {
-                var html = await _viewRenderer.RenderViewToStringAsync<RoleViewModel>("_CreateOrEdit", role);
-                return new JsonResult(new { isValid = false, html = html });
+               var html = await _viewRenderer.RenderViewToStringAsync<RoleViewModel>("_CreateOrEdit", role);
+               return new JsonResult(new { isValid = false, html = html });
             }
         }
 
         public async Task<JsonResult> OnPostDelete(string id)
         {
             var existingRole = await _roleManager.FindByIdAsync(id);
-            if (existingRole.Name != "SuperAdmin" && existingRole.Name != "Basic")
+            
+            if (existingRole.Name != Roles.SuperAdmin.ToString())
             {
-                //TODO Check if Any Users already uses this Role
                 bool roleIsNotUsed = true;
                 var allUsers = await _userManager.Users.ToListAsync();
                 
                 foreach (var user in allUsers)
                     if (await _userManager.IsInRoleAsync(user, existingRole.Name))
                         roleIsNotUsed = false;
-                
+
                 if (roleIsNotUsed)
+                {
                     await _roleManager.DeleteAsync(existingRole);
+                    _notify.Success($"Роль {existingRole.Name} видалено");
+                }
+                else 
+                    _notify.Error($"Роль {existingRole.Name} використовується");
             }
+            else
+                _notify.Error($"Роль {existingRole.Name} не може бути видаленою");
 
             var roles = await _roleManager.Roles.ToListAsync();
             var mappedRoles = _mapper.Map<IEnumerable<RoleViewModel>>(roles);

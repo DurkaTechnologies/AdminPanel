@@ -11,10 +11,10 @@
                 <thead>
                     <tr>
                         <th>
-                            RoleName
+                            Роль
                         </th>
                         <th>
-                            Status
+                            Статус
                         </th>
                     </tr>
                 </thead>
@@ -40,7 +40,7 @@
             <div class="col-sm-12" style=" padding: 20px 20px 0px 0px">
                 <button type="submit" id="save" class="btn bg-success">
                     <i class="fa fa-check"></i>
-                    Save
+                    Зберегти
                 </button>
             </div>
         </form>
@@ -50,7 +50,11 @@
 {
     <script>
         $(document).ready(function () {
-            $("#userRolesTable").DataTable();
+            $("#userRolesTable").DataTable({
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/1.10.18/i18n/Ukrainian.json"
+                },
+            });
         });
     </script>
 }

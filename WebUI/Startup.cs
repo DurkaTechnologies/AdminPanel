@@ -16,6 +16,8 @@ using AdminPanel.Web.Abstractions;
 using AdminPanel.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using AdminPanel.WebUI.Permission;
+using AspNetCoreHero.ToastNotification;
+using AspNetCoreHero.ToastNotification.Extensions;
 
 namespace WebUI
 {
@@ -34,6 +36,13 @@ namespace WebUI
 		{
 			services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
 			services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
+
+			services.AddNotyf(o =>
+			{
+				o.DurationInSeconds = 10;
+				o.IsDismissable = true;
+				o.HasRippleEffect = true;
+			});
 
 			services.AddApplicationLayer();
 			services.AddInfrastructure(Configuration);
@@ -66,6 +75,8 @@ namespace WebUI
 				// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 				app.UseHsts();
 			}
+
+			app.UseNotyf();
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 			app.UseCookiePolicy();

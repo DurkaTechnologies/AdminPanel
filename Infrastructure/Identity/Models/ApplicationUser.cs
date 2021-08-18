@@ -20,6 +20,8 @@ namespace AdminPanel.Infrastructure.Identity.Models
 
 		public int СommunityId { get; set; }
 
+		public string Description { get; set; }
+
 		public Community Community { get; set; }
 		#endregion
 

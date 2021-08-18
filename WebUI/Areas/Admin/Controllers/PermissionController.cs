@@ -8,10 +8,12 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebUI.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "SuperAdmin")]
     public class PermissionController : BaseController<PermissionController>
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -46,8 +48,8 @@ namespace WebUI.Areas.Admin.Controllers
                 }
             }
             model.RoleClaims = _mapper.Map<List<RoleClaimsViewModel>>(allPermissions);
-            ViewData["Title"] = $"Permissions for {role.Name} Role";
-            ViewData["Caption"] = $"Manage {role.Name} Role Permissions.";
+            ViewData["Title"] = $"Права для {role.Name}";
+            ViewData["Caption"] = $"Керувати правами для {role.Name}.";
             return View(model);
         }
 
@@ -65,8 +67,8 @@ namespace WebUI.Areas.Admin.Controllers
             {
                 await _roleManager.AddPermissionClaim(role, claim.Value);
             }
-            //var user = await _userManager.GetUserAsync(User);
-            //await _signInManager.RefreshSignInAsync(user);
+
+            _notify.Error($"Дозволи для ролі {role.Name} змінено");
 
             return RedirectToAction("Index", new { roleId = model.RoleId });
         }
