@@ -54,7 +54,7 @@ namespace WebUI.Areas.Identity.Pages.Account
 			[DataType(DataType.Password)]
 			public string Password { get; set; }
 
-			[Display(Name = "Remember me?")]
+			[Display(Name = "Запам'ятати")]
 			public bool RememberMe { get; set; }
 		}
 
@@ -116,13 +116,13 @@ namespace WebUI.Areas.Identity.Pages.Account
 				}
 				if (result.IsLockedOut)
 				{
-					_notyf.Warning("User account locked out.");
+					_notyf.Warning("Акаунт заблоковано");
 					_logger.LogWarning("User account locked out.");
 					return RedirectToPage("./Lockout");
 				}
 				else
 				{
-					_notyf.Error("Invalid login attempt.");
+					_notyf.Error("Помилка входу");
 					ModelState.AddModelError(string.Empty, "Invalid login attempt.");
 					return Page();
 				}

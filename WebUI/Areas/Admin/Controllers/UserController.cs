@@ -177,5 +177,35 @@ namespace WebUI.Areas.Admin
 
 			return new JsonResult(new { isValid = true, html = html });
 		}
+
+		public async Task<IActionResult> Profile(string id)
+		{
+			UserViewModel user = new UserViewModel();
+			
+			if(!String.IsNullOrEmpty(id))
+				user = _mapper.Map<UserViewModel>(await _userManager.FindByIdAsync(id));
+			else
+				user = _mapper.Map<UserViewModel>(await _userManager.GetUserAsync(HttpContext.User));
+
+			var response = await _mediator.Send(new GetAllCommunitiesCachedQuery());
+			var data = _mapper.Map<IEnumerable<CommunityViewModel>>(response.Data);
+			var communities = new SelectList(data, nameof(CommunityViewModel.Id), nameof(CommunityViewModel.Name), null, null);
+
+			user.Communities = communities;
+
+			return View(user);
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> Profile(UserViewModel user)
+		{
+			if (ModelState.IsValid) 
+			{
+				_notify.Success("Shiza");
+				await _userManager.UpdateAsync(_mapper.Map<ApplicationUser>(user));
+			}
+
+			return View(user);
+		}
 	}
 }
