@@ -80,7 +80,7 @@ namespace WebUI.Areas.Admin
         }
 
         [HttpPost]
-        public async Task<IActionResult> OnPostCreate(UserViewModel userModel)
+        public async Task<IActionResult> OnPostCreate(UserViewModel userModel, string image)
         {
             if (ModelState.IsValid)
             {

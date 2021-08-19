@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        Canvas Image Crop basic
+    </title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="css/fineCrop.css" rel="stylesheet" />
+    <link href="css/layout.css" rel="stylesheet" />
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/fineCrop.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-7 col-sm-6">
+                <h2>jQuery FineCrop</h2>
+                <p>This crop plugin is made for making crop easy. In this senario crop is made on canvas. from the
+                    <strong>Input File</strong> select an image and do the crop.</p>
+                <p>To use this plugin go to this link
+                    <a href="https://github.com/devsubhajit/fineCrop">jQuery FineCrop</a>
+                </p>
+                <p>
+                    In this plugin you can have these facilities.
+                </p>
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>viewHeight: 500</strong> Background image dynamic height.
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>cropWidth: 200</strong> Width of crop area.
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>cropHeight: 200</strong> Height of crop area.
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>cropInput: 'inputImage'</strong> This is "ID" of input image, have to provide an img with id.
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>cropOutput: 'croppedImg'</strong> Output/ Cropped image location with "ID".
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>zoomValue: 50</strong> A value to provide how much to zoom in or out.
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-8 col-md-7 col-sm-6">
+                <input type="file" id="upphoto" style="display:none;">
+                <label for="upphoto">
+                    <div class="inputLabel">
+                        click here to upload an image
+                    </div>
+                </label>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-8 col-md-7 col-sm-6">
+                <img id="croppedImg" style="border:10px solid #000; margin:auto;">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-8 col-md-7 col-sm-6">
+                Thanks for watching
+            </div>
+        </div>
+    </div>
+
+
+<!-- 
+    Div structure : Manitan a container which has class "cropHolder"
+                    Inside this, another div with the ID of "cropWrapper" and inside this use <img> with any id
+                    this have to use in this option: (cropInput: 'inputImage')
+    CropInputs    : Here you can maintain structure as you want but keep these IDs same
+                    1. "xmove" : for horizontal moving
+                    2. "ymove" : for vertical moving
+                    3. "zplus" : zoom in button
+                    4. "zminus": zoom out button
+                    5. "cropSubmit" : submitting the crop
+                    6. "closeCrop" : closing the cropping screen
+ -->
+    <div class="cropHolder">
+        <div id="cropWrapper">
+            <img id="inputImage" src="images/face.jpg">
+        </div>
+        <div class="cropInputs">
+            <div class="inputtools">
+                <p>
+                    <span>
+                        <img src="images/horizontal.png">
+                    </span>
+                    <span>horizontal movement</span>
+                </p>
+                <input type="range" class="cropRange" name="xmove" id="xmove" min="0" value="0">
+            </div>
+            <div class="inputtools">
+                <p>
+                    <span>
+                        <img src="images/vertical.png">
+                    </span>
+                    <span>vertical movement</span>
+                </p>
+                <input type="range" class="cropRange" name="ymove" id="ymove" min="0" value="0">
+            </div>
+            <br>
+            <button class="cropButtons" id="zplus">
+                <img src="images/add.png">
+            </button>
+            <button class="cropButtons" id="zminus">
+                <img src="images/minus.png">
+            </button>
+            <br>
+            <button id="cropSubmit">submit</button>
+            <button id="closeCrop">Close</button>
+        </div>
+    </div>
+    <script>
+        $("#upphoto").finecrop({
+            viewHeight: 500,
+            cropWidth: 200,
+            cropHeight: 200,
+            cropInput: 'inputImage',
+            cropOutput: 'croppedImg',
+            zoomValue: 50
+        });
+    </script>
+</body>
+
+</html>
