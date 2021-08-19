@@ -29,11 +29,11 @@ namespace WebUI
                     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-                    await DefaultRoles.SeedAsync(roleManager);
-                    await DefaultSuperAdminUser.SeedAsync(userManager, roleManager);
-                    await DefaultAdminUser.SeedAsync(userManager, roleManager);
-                    await DefaultUser.SeedAsync(userManager);
-                    logger.LogInformation("Finished Seeding Default Data");
+					await DefaultRoles.SeedAsync(roleManager);
+					await DefaultSuperAdminUser.SeedAsync(userManager, roleManager);
+					await DefaultAdminUser.SeedAsync(userManager, roleManager);
+					await DefaultUser.SeedAsync(userManager);
+					logger.LogInformation("Finished Seeding Default Data");
                     logger.LogInformation("Application Starting");
                 }
                 catch (Exception ex)

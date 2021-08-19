@@ -1,10 +1,15 @@
 ﻿@{
     ViewData["Title"] = "Громади";
 }
-@using AdminPanel.WebUI.Areas.Entities.Models
+@using WebUI.Areas.Entities.Models
 @using AdminPanel.Application.Constants
 @model CommunityViewModel
-@if ((AuthorizationService.AuthorizeAsync(User, Permissions.Communities.View)).Result.Succeeded)
+
+@{ 
+    bool view = AuthorizationService.AuthorizeAsync(User, Permissions.Communities.View).Result.Succeeded;
+}
+
+@if (view)
 {
     <div class="card">
         <div class="col-sm-12" style="padding:20px">
@@ -22,7 +27,7 @@
             </a>
         </div>
 
-        @if ((AuthorizationService.AuthorizeAsync(User, Permissions.Communities.View)).Result.Succeeded)
+        @if (view)
         {
             <div id="viewAll" class="card-body table-responsive">
             </div>
@@ -39,14 +44,18 @@ else
     <script src="~/js/site.js"></script>
     <script>
         $(document).ready(function () {
-            $("#brandTable").DataTable();
+			$("#brandTable").DataTable({
+				language: {
+					url: "//cdn.datatables.net/plug-ins/1.10.18/i18n/Ukrainian.json"
+				},
+			});
             loadData();
             $('#reload').on('click', function () {
                 loadData();
             });
         });
         function loadData() {
-            $('#viewAll').load('/entities/community/LoadAll');
+			$('#viewAll').load('/entities/community/LoadAll');
         }
     </script>
 }

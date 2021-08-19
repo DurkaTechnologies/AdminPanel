@@ -2,7 +2,7 @@
 using AdminPanel.Application.Features.Communities.Queries.GetAllCached;
 using AdminPanel.Application.Features.Communities.Queries.GetById;
 using AdminPanel.Web.Abstractions;
-using AdminPanel.WebUI.Areas.Entities.Models;
+using WebUI.Areas.Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,8 +12,8 @@ using System.Threading.Tasks;
 
 namespace WebUI.Areas.Entities.Controllers
 {
-	[Area("Entities")]
-	public class CommunityController : BaseController<CommunityController>
+    [Area("Entities")]
+    public class CommunityController : BaseController<CommunityController>
 	{
         // GET: CommunityController
         public IActionResult Index()

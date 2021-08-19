@@ -16,7 +16,7 @@ namespace AdminPanel.Infrastructure.Identity.Seeds
 
 		private static async Task SeedRoleAsync(RoleManager<IdentityRole> roleManager, IdentityRole role)
 		{
-			if (roleManager.Roles.All(r => r.Name != role.Name))
+			if (await roleManager.FindByNameAsync(role.Name) == null)
 				await roleManager.CreateAsync(role);
 		}
 	}

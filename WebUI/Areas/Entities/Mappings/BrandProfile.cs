@@ -1,10 +1,10 @@
 ﻿using AdminPanel.Application.Features.Communities.Commands;
 using AdminPanel.Application.Features.Communities.Queries.GetAllCached;
 using AdminPanel.Application.Features.Communities.Queries.GetById;
-using AdminPanel.WebUI.Areas.Entities.Models;
+using WebUI.Areas.Entities.Models;
 using AutoMapper;
 
-namespace AdminPanel.WebUI.Areas.Catalog.Mappings
+namespace WebUI.Areas.Entities.Mappings
 {
     internal class BrandProfile : Profile
     {

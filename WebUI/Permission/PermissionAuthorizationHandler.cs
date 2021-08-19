@@ -24,23 +24,32 @@ namespace AdminPanel.WebUI.Permission
             {
                 return;
             }
-            var user = await _userManager.GetUserAsync(context.User);
-            var userRoleNames = await _userManager.GetRolesAsync(user);
-            var userRoles = _roleManager.Roles.Where(x => userRoleNames.Contains(x.Name));
-            foreach (var role in userRoles)
+            var permissionss = context.User.Claims.Where(x => x.Type == "Permission" &&
+                                                             x.Value == requirement.Permission &&
+                                                             x.Issuer == "LOCAL AUTHORITY");
+            if (permissionss.Any())
             {
-                var roleClaims = await _roleManager.GetClaimsAsync(role);
-                var permissions = roleClaims.Where(x => x.Type == CustomClaimTypes.Permission &&
-                                                        x.Value == requirement.Permission &&
-                                                        x.Issuer == "LOCAL AUTHORITY")
-                                            .Select(x => x.Value);
-
-                if (permissions.Any())
-                {
-                    context.Succeed(requirement);
-                    return;
-                }
+                context.Succeed(requirement);
+                return;
             }
+
+            //var user = await _userManager.GetUserAsync(context.User);
+            //var userRoleNames = await _userManager.GetRolesAsync(user);
+            //var userRoles = _roleManager.Roles.Where(x => userRoleNames.Contains(x.Name));
+            //foreach (var role in userRoles)
+            //{
+            //    var roleClaims = await _roleManager.GetClaimsAsync(role);
+            //    var permissions = roleClaims.Where(x => x.Type == CustomClaimTypes.Permission &&
+            //                                            x.Value == requirement.Permission &&
+            //                                            x.Issuer == "LOCAL AUTHORITY")
+            //                                .Select(x => x.Value);
+
+            //    if (permissions.Any())
+            //    {
+            //        context.Succeed(requirement);
+            //        return;
+            //    }
+            //}
         }
     }
 }

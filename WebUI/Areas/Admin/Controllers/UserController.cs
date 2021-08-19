@@ -2,7 +2,6 @@
 using AdminPanel.Application.Features.Communities.Queries.GetAllCached;
 using AdminPanel.Infrastructure.Identity.Models;
 using AdminPanel.Web.Abstractions;
-using AdminPanel.WebUI.Areas.Entities.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -10,14 +9,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using WebUI.Areas.Admin.Models;
-using WebUI.Extensions;
-using WebUI.Models;
+using WebUI.Areas.Entities.Models;
 using WebUI.Services;
 
 namespace WebUI.Areas.Admin
