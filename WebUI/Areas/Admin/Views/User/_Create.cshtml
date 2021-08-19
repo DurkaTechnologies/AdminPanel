@@ -4,101 +4,100 @@
 
 @if (AuthorizationService.AuthorizeAsync(User, Permissions.Users.Edit).Result.Succeeded || AuthorizationService.AuthorizeAsync(User, Permissions.Users.Create).Result.Succeeded)
 {
-<form id="create-form" method="post" asp-area="Admin" asp-controller="User" asp-action="OnPostCreate" onsubmit="return jQueryModalPost(this);">
-    <div class="form-group row">
-        <label class="col-md-3 col-form-label">Ім'я</label>
-        <div class="col-md-9">
-            <input type="text" asp-for="FirstName" name="FirstName" class="form-control">
-            <span asp-validation-for="FirstName" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group row">
-        <label class="col-md-3 col-form-label">Прізвище</label>
-        <div class="col-md-9">
-            <input type="text" asp-for="MiddleName" name="MiddleName" class="form-control">
-            <span asp-validation-for="MiddleName" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group row">
-        <label class="col-md-3 col-form-label">По Батькові</label>
-        <div class="col-md-9">
-            <input type="text" asp-for="LastName" name="LastName" class="form-control">
-            <span asp-validation-for="LastName" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group row">
-        <label class="col-md-3 col-form-label">Пошта</label>
-        <div class="col-md-9">
-            <input type="email" asp-for="Email" name="Email" class="form-control">
-            <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
-    </div>
-    <!-- phone mask -->
-    <div class="form-group">
-        <label>US phone mask:</label>
-
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text"><i class="fas fa-phone"></i></span>
+    <form id="create-form" method="post" asp-area="Admin" asp-controller="User" asp-action="OnPostCreate" onsubmit="return jQueryModalPost(this);">
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label">Ім'я</label>
+            <div class="col-md-9">
+                <input type="text" asp-for="FirstName" name="FirstName" class="form-control">
+                <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
-            <input type="text" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask>
         </div>
-        <!-- /.input group -->
-    </div>
-    <div class="form-group">
-        <label class="col-md-3 col-form-label">Пароль</label>
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label">Прізвище</label>
+            <div class="col-md-9">
+                <input type="text" asp-for="MiddleName" name="MiddleName" class="form-control">
+                <span asp-validation-for="MiddleName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label">По Батькові</label>
+            <div class="col-md-9">
+                <input type="text" asp-for="LastName" name="LastName" class="form-control">
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label">Пошта</label>
+            <div class="col-md-9">
+                <input type="email" asp-for="Email" name="Email" class="form-control">
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label">Телефон</label>
 
-        <div class="col-md-9">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+            <div class="col-md-9">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                    </div>
+                    <input type="text" asp-for="PhoneNumber" name="PhoneNumber" class="form-control" id="phone" maxlength="14">
                 </div>
-                <input type="text" class="form-control" data-inputmask="&quot;mask&quot;: &quot;(999) 999-9999&quot;" data-mask="" inputmode="text">
             </div>
         </div>
-    </div>
-    <div class="form-group row">
-        <label class="col-md-3 col-form-label">Пароль</label>
-        <div class="col-md-9">
-            <input type="password" asp-for="Password" name="Password" class="form-control">
-            <span asp-validation-for="Password" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group row">
-        <label class="col-md-3 col-form-label">Повторіть пароль</label>
-        <div class="col-md-9">
-            <input type="password" asp-for="ConfirmPassword" name="ConfirmPassword" class="form-control">
-            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="custom-file form-image">
-            <input accept=".png,.jpg,.jpeg,.gif,.tif"
-                   type="file" class="custom-file-input"
-                   id="customFile"
-                   name="files">
-            <label class="custom-file-label" for="customFile">Виберіть картинку</label>
-        </div>
-    </div>
-
-    <div class="form-group row">
-        <label class="col-md-3 col-form-label">Громада</label>
-        <div class="col-md-9">
-            <div class="input-group">
-                <select name="CommunityId" class="form-control select2bs4" id="CommunityId" asp-for="CommunityId" asp-items="@Model.Communities">
-                </select>
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label">Пароль</label>
+            <div class="col-md-9">
+                <input type="password" asp-for="Password" name="Password" class="form-control">
+                <span asp-validation-for="Password" class="text-danger"></span>
             </div>
-            <span asp-validation-for="CommunityId" class="text-danger"></span>
         </div>
-    </div>
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label">Повторіть пароль</label>
+            <div class="col-md-9">
+                <input type="password" asp-for="ConfirmPassword" name="ConfirmPassword" class="form-control">
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label">Фото</label>
+            <div class="col-md-9">
+                <div class="custom-file form-image">
+                    <input accept=".png,.jpg,.jpeg,.gif,.tif"
+                           type="file" class="custom-file-input"
+                           id="customFile"
+                           name="files">
+                    <label class="custom-file-label" for="customFile">Виберіть картинку</label>
+                </div>
+            </div>
+        </div>
 
-    <div class="form-group justify-content-between" style="margin-bottom: 0px !important">
-        <button type="submit" class="btn btn-success">Зберегти</button>
-        <button type="submit" class="btn btn-default close-button" data-dismiss="modal">Відміна</button>
-    </div>
-</form>
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label">Громада</label>
+            <div class="col-md-9">
+                <div class="input-group">
+                    <select name="CommunityId" class="form-control select2bs4" id="CommunityId" asp-for="CommunityId" asp-items="@Model.Communities">
+                    </select>
+                </div>
+                <span asp-validation-for="CommunityId" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group justify-content-between" style="margin-bottom: 0px !important">
+            <button type="submit" class="btn btn-success">Зберегти</button>
+            <button type="submit" class="btn btn-default close-button" data-dismiss="modal">Відміна</button>
+        </div>
+    </form>
 }
 
 <script type="text/javascript" language=javascript>
     $.validator.unobtrusive.parse(document);
+
+    $(document).ready(function () {
+        $('#phone').mask("(999) 999-9999");
+    });
 </script>
+
+
+
+  

@@ -8,9 +8,13 @@
 
   <ItemGroup>
     <Compile Remove="Controllers\**" />
+    <Compile Remove="wwwroot\img\**" />
     <Content Remove="Controllers\**" />
+    <Content Remove="wwwroot\img\**" />
     <EmbeddedResource Remove="Controllers\**" />
+    <EmbeddedResource Remove="wwwroot\img\**" />
     <None Remove="Controllers\**" />
+    <None Remove="wwwroot\img\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,7 +36,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\images\users\" />
-    <Folder Include="wwwroot\img\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -33,9 +33,14 @@
                                 <span asp-validation-for="@Model.LastName" class="text-danger"></span>
                             </div>
                             <div class="form-group">
-                                <label asp-for="@Model.PhoneNumber">Номер телефону</label>
-                                <input asp-for="@Model.PhoneNumber" class="form-control" />
-                                <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
+                                <label asp-for="@Model.PhoneNumber">Телефон</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                    </div>
+                                    <input type="text" asp-for="@Model.PhoneNumber" class="form-control" id="phoneprofile" name="phoneprofile" maxlength="14">
+                                    <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label asp-for="@Model.CommunityId">Громада</label>
@@ -62,7 +67,7 @@
                             </div>
                         </div>
                         <div class="col-md-3">
-                            
+
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="form-group">
                                 <label asp-for="@Model.ProfilePicture" style="width: 100%;">Фото профілю</label>
@@ -98,4 +103,13 @@
             </div>
         </div>
     </div>
+
+    <script type="text/javascript" language=javascript>
+        $.validator.unobtrusive.parse(document);
+
+        $(document).ready(function () {
+            $('#phoneprofile').mask("(999) 999-9999");
+        });
+    </script>
 </div>
+
