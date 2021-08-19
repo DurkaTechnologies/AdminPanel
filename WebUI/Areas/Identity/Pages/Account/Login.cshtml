@@ -16,64 +16,97 @@
 	<partial name="_Styles" />
 </head>
 <body>
-	<div class="content-wrapper mx-0" id="contentWrapper">
+	<nav id="navigationBar" class="main-header navbar navbar-expand navbar-light" style="margin:0 !important">
+		<div class="custom-control custom-switch">
+			<input type="checkbox" class="custom-control-input" id="darkSwitch">
+			<label class="custom-control-label" style="font-weight:400" for="darkSwitch">Темна тема</label>
+		</div>
+	</nav>
+	<div class=" mx-0" id="contentWrapper">
 		<div class="container">
-
 			<!-- Outer Row -->
 			<div class="row justify-content-center">
 				<div class="card-body p-0 ">
 					<!-- Nested Row within Card Body -->
-					<div class="col-lg-6 mx-auto">
-						<div style="padding:10rem 3rem 10rem 3rem !important;">
+					<div class="col-lg-8 mx-auto">
+						<div style="padding:8rem 3rem 8rem 3rem !important;">
 							<div class="text-center">
-                                <img src="~/images/logo.png" id="brand-logo" alt="logo" class="brand-image img-circle"
-                                     style="opacity: .8">
+								<img src="~/images/gerb-dark.svg" id="brand-logo" alt="logo" class="brand-image"
+									 style="opacity: .8">
 								<h1 class="h4 text-gray-900 mb-4">Вхід</h1>
 							</div>
-                            <form class="user" id="account" method="post">
-                                <div class="form-group">
-                                    <input asp-for="Input.Email" type="email" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Введіть Email адресу">
-                                    <small><span asp-validation-for="Input.Email" class="text-danger"></span></small>
-                                </div>
-                                <div class="form-group">
-                                    <input asp-for="Input.Password" type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Введіть Пароль">
-                                    <small><span asp-validation-for="Input.Password" class="text-danger"></span></small>
-                                </div>
-                                <div class="form-group">
-                                    <div class="custom-control custom-switch">
-                                        <input asp-for="Input.RememberMe" class="custom-control-input" type="checkbox" id="customCheck">
-                                        <label for="customCheck" class="custom-control-label">Запам'ятати мене</label>
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-primary btn-user btn-block">Підтвердити</button>
-                            </form>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row justify-content-center">
-				<div class="col-xl-10 col-lg-12 col-md-9">
-					<div class="card">
-						<div class="card-header py-3">
-							<h6 class="m-0 text-secondary">Default Credentials</h6>
-						</div>
-						<div class="card-body">
-							<div class="row no-gutters align-items-center">
-								<div class="col">
-									<b>Super Admin : </b> superadmin@gmail.com / 123Pa$$word! / Default
-									<br />
-									<b>Admin : </b> admin@gmail.com / 123Pa$$word! / Default
-									<br />
-									<b>Basic User : </b> basicuser@gmail.com / 123Pa$$word! / Default
+							
+							<form class="user" id="account" method="post">
+								<div class="col-lg-8 mx-auto">
+									<div class="form-group">
+										<input asp-for="Input.Email" type="email" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Введіть Email адресу">
+										<small><span asp-validation-for="Input.Email" class="text-danger"></span></small>
+									</div>
+									<div class="form-group">
+										<input asp-for="Input.Password" type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Введіть Пароль">
+										<small><span asp-validation-for="Input.Password" class="text-danger"></span></small>
+									</div>
+									<div class="form-group">
+										<div class="custom-control custom-switch">
+											<input asp-for="Input.RememberMe" class="custom-control-input" type="checkbox" id="customCheck">
+											<label for="customCheck" class="custom-control-label">Запам'ятати мене</label>
+										</div>
+									</div>
+									<button type="submit" class="btn btn-primary btn-user btn-block">Підтвердити</button>
 								</div>
-							</div>
+								
+								<div class="row justify-content-center mt-1">
+									<div class="col-xl-12 col-lg-12 col-md-9 mt-4">
+										<div class="card">
+											<div class="card-header py-3">
+												<h6 class="m-0 text-secondary">Стандартні користувачі</h6>
+											</div>
+											<div class="card-body">
+												<div class="row no-gutters align-items-center">
+													<div class="col">
+														<button type="submit" class="btn btn-danger btn-user btn-block my-1" onclick="LoginBySuperAdmin()">Супер Адмін</button>
+														<b>Super Admin : </b> superadmin@gmail.com / 123Pa$$word! / Default
+														<br />
+
+														<button type="submit" class="btn btn-warning btn-user btn-block my-1" onclick="LoginByAdmin()">Адмін</button>
+														<b>Admin : </b> admin@gmail.com / 123Pa$$word! / Default
+														<br />
+
+														<button type="submit" class="btn btn-success btn-user btn-block my-1" onclick="LoginByUser()">Стандартний корситувач</button>
+														<b>Basic User : </b> basicuser@gmail.com / 123Pa$$word! / Default
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</form>
 						</div>
 					</div>
 				</div>
 			</div>
+			
 		</div>
 	</div>
 
 	<partial name="_Scripts" />
 </body>
 </html>
+@await Component.InvokeAsync("Notyf")
+<script>
+	function LoginBySuperAdmin() {
+		$("#exampleInputEmail").val("superadmin@gmail.com");
+		$("#exampleInputPassword").val("123Pa$$word!");
+	}
+
+	function LoginByAdmin() {
+		$("#exampleInputEmail").val("admin@gmail.com");
+		$("#exampleInputPassword").val("123Pa$$word!");
+	}
+
+	function LoginByAdmin() {
+		$("#exampleInputEmail").val("basicuser@gmail.com");
+		$("#exampleInputPassword").val("123Pa$$word!");
+	}
+</script>

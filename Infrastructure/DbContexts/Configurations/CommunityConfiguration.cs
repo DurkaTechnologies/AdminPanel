@@ -8,8 +8,6 @@ namespace AdminPanel.Infrastructure.Persistence.Configurations
 	{
 		public void Configure(EntityTypeBuilder<Community> builder)
 		{
-			builder.Ignore(e => e.DomainEvents);
-
 			builder.Property(t => t.Name)
 				.HasMaxLength(256)
 				.IsRequired();

@@ -1,10 +1,10 @@
 ﻿using AdminPanel.Domain.Entities;
-using AdminPanel.WebUI.Areas.Entities.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebUI.Areas.Entities.Models;
 
 namespace WebUI.Areas.Admin.Models
 {
