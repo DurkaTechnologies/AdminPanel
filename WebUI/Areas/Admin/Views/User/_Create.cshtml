@@ -33,6 +33,30 @@
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
     </div>
+    <!-- phone mask -->
+    <div class="form-group">
+        <label>US phone mask:</label>
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-phone"></i></span>
+            </div>
+            <input type="text" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask>
+        </div>
+        <!-- /.input group -->
+    </div>
+    <div class="form-group">
+        <label class="col-md-3 col-form-label">Пароль</label>
+
+        <div class="col-md-9">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                </div>
+                <input type="text" class="form-control" data-inputmask="&quot;mask&quot;: &quot;(999) 999-9999&quot;" data-mask="" inputmode="text">
+            </div>
+        </div>
+    </div>
     <div class="form-group row">
         <label class="col-md-3 col-form-label">Пароль</label>
         <div class="col-md-9">

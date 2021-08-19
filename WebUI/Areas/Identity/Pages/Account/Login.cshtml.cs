@@ -54,7 +54,7 @@ namespace WebUI.Areas.Identity.Pages.Account
 			[DataType(DataType.Password)]
 			public string Password { get; set; }
 
-			[Display(Name = "Remember me?")]
+			[Display(Name = "Запам'ятати")]
 			public bool RememberMe { get; set; }
 		}
 
@@ -95,7 +95,11 @@ namespace WebUI.Areas.Identity.Pages.Account
 
 				var user = await _userManager.FindByNameAsync(userName);
 
-
+				if (!user.IsActive)
+				{
+					_notyf.Error($"Ваш акаунт деактивовано.");
+					return RedirectToPage("./Login");
+				}
 
 				var result = await _signInManager.PasswordSignInAsync(userName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
 
@@ -110,21 +114,11 @@ namespace WebUI.Areas.Identity.Pages.Account
 
 					return LocalRedirect(returnUrl);
 				}
-				if (result.RequiresTwoFactor)
-				{
-					return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
-				}
-				if (result.IsLockedOut)
-				{
-					_notyf.Warning("User account locked out.");
-					_logger.LogWarning("User account locked out.");
-					return RedirectToPage("./Lockout");
-				}
 				else
 				{
-					_notyf.Error("Invalid login attempt.");
+					_notyf.Error("Помилка входу");
 					ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-					return Page();
+					return RedirectToPage("./Login");
 				}
 			}
 

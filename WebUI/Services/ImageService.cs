@@ -17,8 +17,8 @@ namespace WebUI.Services
 			//byte[] image = file.OptimizeImageSize(700, 700);
 
 			string name = Guid.NewGuid().ToString();
-			//string extension = Path.GetExtension(file.FileName);
-			string path = Path.Combine(upload + ENV.ImagePath, file.FileName);
+			string extension = Path.GetExtension(file.FileName);
+			string path = Path.Combine(upload + ENV.ImagePath, name + extension);
 
 			using (var fileStream = System.IO.File.Create(path))
 			{
@@ -26,7 +26,7 @@ namespace WebUI.Services
 				file.CopyTo(fileStream);
 			}
 
-			return file.FileName;
+			return name + extension;
 		}
 	}
 }
