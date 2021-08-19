@@ -101,7 +101,8 @@ namespace WebUI.Areas.Admin
                     ProfilePicture = imagePath,
                     EmailConfirmed = true,
                     IsActive = true,
-                    СommunityId = userModel.CommunityId
+                    СommunityId = userModel.CommunityId,
+                    Description = userModel.Description
                 };
 
                 var result = await _userManager.CreateAsync(user, userModel.Password);
