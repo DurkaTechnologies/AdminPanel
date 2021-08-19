@@ -15,6 +15,8 @@ using Microsoft.Extensions.Logging;
 using System.Net.Mail;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using AdminPanel.Web.Abstractions;
+using WebUI.Services;
+using Microsoft.AspNetCore.Hosting;
 
 namespace WebUI.Areas.Identity.Pages.Account
 {
@@ -24,14 +26,19 @@ namespace WebUI.Areas.Identity.Pages.Account
 		private readonly UserManager<ApplicationUser> _userManager;
 		private readonly SignInManager<ApplicationUser> _signInManager;
 		private readonly ILogger<LoginModel> _logger;
+		private readonly IWebHostEnvironment _webHostEnvironment;
 
 		public LoginModel(SignInManager<ApplicationUser> signInManager,
 			ILogger<LoginModel> logger,
-			UserManager<ApplicationUser> userManager)
+			UserManager<ApplicationUser> userManager,
+			IWebHostEnvironment webHostEnvironment)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
 			_logger = logger;
+			_webHostEnvironment = webHostEnvironment;
+
+			ImageService.RootPass = _webHostEnvironment.WebRootPath;
 		}
 
 		[BindProperty]
@@ -54,7 +61,7 @@ namespace WebUI.Areas.Identity.Pages.Account
 			[DataType(DataType.Password)]
 			public string Password { get; set; }
 
-			[Display(Name = "Remember me?")]
+			[Display(Name = "Запам'ятати")]
 			public bool RememberMe { get; set; }
 		}
 
@@ -95,6 +102,12 @@ namespace WebUI.Areas.Identity.Pages.Account
 
 				var user = await _userManager.FindByNameAsync(userName);
 
+				if (!user.IsActive)
+				{
+					_notyf.Error($"Ваш акаунт деактивовано.");
+					return RedirectToPage("./Login");
+				}
+
 				var result = await _signInManager.PasswordSignInAsync(userName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
 
 				if (result.Succeeded)
@@ -108,21 +121,11 @@ namespace WebUI.Areas.Identity.Pages.Account
 
 					return LocalRedirect(returnUrl);
 				}
-				if (result.RequiresTwoFactor)
-				{
-					return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
-				}
-				if (result.IsLockedOut)
-				{
-					_notyf.Warning("User account locked out.");
-					_logger.LogWarning("User account locked out.");
-					return RedirectToPage("./Lockout");
-				}
 				else
 				{
-					_notyf.Error("Invalid login attempt.");
+					_notyf.Error("Помилка входу");
 					ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-					return Page();
+					return RedirectToPage("./Login");
 				}
 			}
 

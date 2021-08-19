@@ -7,6 +7,6 @@ namespace WebUI
 {
     public class ENV
     {
-        public const string ImagePath = @"\images\users\";
+        public const string ImagePath = @"/images/users/";
     }
 }

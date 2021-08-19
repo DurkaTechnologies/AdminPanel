@@ -2,6 +2,8 @@
 @using WebUI
 @model IEnumerable<UserViewModel>
 @using AdminPanel.Application.Constants
+@using System.IO
+@using WebUI.Services
 
 @if ((AuthorizationService.AuthorizeAsync(User, Permissions.Users.View)).Result.Succeeded) 
 {
@@ -28,17 +30,16 @@
             <tr>
                 <td>
                     <div class="row">
-                        @if (@user.ProfilePicture != null && user.ProfilePicture.Length > 0)
+                        @if (user.ProfilePicture != null)
                         {
                             <div class="col-sm" style=" max-width: 80px;margin-right: 20px;">
                                 <img class="img-profile rounded-circle" style="height: 75px;width:75px;object-fit: cover;" src="@ENV.ImagePath@user.ProfilePicture">
                             </div>
                         }
                         else
-
                         {
                             <div class="col-sm" style="max-width:80px; margin-right: 20px;">
-                                <img class="img-profile rounded-circle" style="height: 75px;width:75px;object-fit: cover;" src="~/images/default-user.png">
+                                <img class="img-profile rounded-circle" style="height: 75px;width:75px;object-fit: cover;" src="~/images/users/default-user.png">
                             </div>
                         }
                         <div class="col-sm">
@@ -84,7 +85,7 @@
                             Дії
                         </button>
                         <div class="dropdown-menu shadow animated--grow-in">
-                            <a style='margin-right:16px' asp-area="Identity" asp-page="/Profile" asp-route-userId="@user.Id" class="dropdown-item">
+                            <a style='margin-right:16px' asp-area="Admin" asp-controller="User" asp-action="Profile" asp-route-id="@user.Id" class="dropdown-item">
                                 <i class="fas fa-user"></i> Профіль
                             </a>
                             @if (User.IsInRole("SuperAdmin"))
@@ -95,8 +96,15 @@
                                 <form id="form_delete_@user.Id" asp-controller="User" method="post" asp-action="OnPostDelete" asp-route-id="@user.Id" onsubmit="return jQueryModalDelete(this)" class="d-inline">
                                     <a href="javascript:$('#form_delete_@user.Id').submit();" class="dropdown-item"><i class="fas fa-trash-alt"></i> Видалити</a>
                                 </form>
-                                <form id="form_deactivate_@user.Id" asp-controller="User" method="post" asp-action="OnPostDelete" asp-route-id="@user.Id" onsubmit="return jQueryModalDeactivate(this)" class="d-inline">
-                                    <a href="javascript:$('#form_deactivate_@user.Id').submit();" class="dropdown-item"><i class="fas fa-key"></i> Деактивувати</a>
+                                <form id="form_deactivate_@user.Id" asp-controller="User" method="post" asp-action="OnPostDeactivate" asp-route-id="@user.Id" onsubmit="return jQueryModalDeactivate(this)" class="d-inline">
+                                    @if (user.IsActive)
+                                    {
+                                        <a href="javascript:$('#form_deactivate_@user.Id').submit();" class="dropdown-item"><i class="fas fa-key"></i> Деактивувати</a>
+                                    }
+                                    else 
+                                    {
+                                        <a href="javascript:$('#form_deactivate_@user.Id').submit();" class="dropdown-item"><i class="fas fa-key"></i> Активувати</a>
+                                    }
                                 </form>
                             }
                         </div>

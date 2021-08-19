@@ -2,6 +2,9 @@
 @using Microsoft.AspNetCore.Identity;
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
+@using System.IO
+@using WebUI.Services 
+ 
 <nav id="navigationBar" class="main-header navbar navbar-expand navbar-light">
 	<!-- Left navbar links -->
 	<ul class="navbar-nav">
@@ -36,12 +39,12 @@
 					}
 					else
 					{
-						<img class="img-profile rounded-circle" style="object-fit: cover; width: 30px; height: 30px;" src="~/images/logo-transparent-dark.png">
+						<img class="img-profile rounded-circle" style="object-fit: cover; width: 30px; height: 30px;" src="~/images/users/default-user.png">
 					}
 				</a>
 				<!-- Dropdown - User Information -->
 				<div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-					<a class="dropdown-item" asp-area="Identity" asp-page="/Profile" asp-route-userId="@UserManager.GetUserId(User)">
+					<a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="Profile">
 						<i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
 						Профіль
 					</a>
