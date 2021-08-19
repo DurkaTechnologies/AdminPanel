@@ -2,6 +2,8 @@
 @using Microsoft.AspNetCore.Identity;
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
+@using System.IO
+ 
 <nav id="navigationBar" class="main-header navbar navbar-expand navbar-light">
 	<!-- Left navbar links -->
 	<ul class="navbar-nav">
@@ -30,13 +32,13 @@
 			<li class="nav-item dropdown no-arrow">
 				<a class="nav-link" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<span class="mr-2 d-none d-lg-inline text-gray-600 small"> @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName</span>
-					@if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
+					@if (UserManager.GetUserAsync(User).Result.ProfilePicture != null && File.Exists(UserManager.GetUserAsync(User).Result.ProfilePicture))
 					{
 						<img class="img-profile rounded-circle" style="object-fit: cover; width: 30px; height: 30px;" src="@ENV.ImagePath@(UserManager.GetUserAsync(User).Result.ProfilePicture)">
 					}
 					else
 					{
-						<img class="img-profile rounded-circle" style="object-fit: cover; width: 30px; height: 30px;" src="~/images/logo.png">
+						<img class="img-profile rounded-circle" style="object-fit: cover; width: 30px; height: 30px;" src="~/images/users/default-user.png">
 					}
 				</a>
 				<!-- Dropdown - User Information -->

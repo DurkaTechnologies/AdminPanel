@@ -7,6 +7,7 @@
 @using WebUI
 @using WebUI.Areas.Admin.Models
 @model UserViewModel
+@using System.IO
 
 <div class="row">
     <div class="col-md-12">
@@ -73,13 +74,13 @@
                                     <label class="custom-file-label" for="customFile">Виберіть файл</label>
                                 </div>
                                 <span asp-validation-for="@Model.ProfilePicture" class="text-danger"></span>
-                                @if (Model.ProfilePicture != null)
+                                @if (Model.ProfilePicture != null && File.Exists(Model.ProfilePicture))
                                 {
                                     <img id="profilePicture" style="width: 100%;object-fit: cover; padding-top: 10px;" src="@ENV.ImagePath@Model.ProfilePicture">
                                 }
                                 else
                                 {
-                                    <img id="profilePicture" style="width: 100%; object-fit: cover; padding-top: 10px;" src="">
+                                    <img id="profilePicture" style="width: 100%; object-fit: cover; padding-top: 10px;" src="~/images/users/default-user.png">
                                 }
                             </div>
                         </div>
