@@ -15,6 +15,8 @@ using Microsoft.Extensions.Logging;
 using System.Net.Mail;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using AdminPanel.Web.Abstractions;
+using WebUI.Services;
+using Microsoft.AspNetCore.Hosting;
 
 namespace WebUI.Areas.Identity.Pages.Account
 {
@@ -24,14 +26,19 @@ namespace WebUI.Areas.Identity.Pages.Account
 		private readonly UserManager<ApplicationUser> _userManager;
 		private readonly SignInManager<ApplicationUser> _signInManager;
 		private readonly ILogger<LoginModel> _logger;
+		private readonly IWebHostEnvironment _webHostEnvironment;
 
 		public LoginModel(SignInManager<ApplicationUser> signInManager,
 			ILogger<LoginModel> logger,
-			UserManager<ApplicationUser> userManager)
+			UserManager<ApplicationUser> userManager,
+			IWebHostEnvironment webHostEnvironment)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
 			_logger = logger;
+			_webHostEnvironment = webHostEnvironment;
+
+			ImageService.RootPass = _webHostEnvironment.WebRootPath;
 		}
 
 		[BindProperty]

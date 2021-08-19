@@ -3,6 +3,7 @@
 @model IEnumerable<UserViewModel>
 @using AdminPanel.Application.Constants
 @using System.IO
+@using WebUI.Services
 
 @if ((AuthorizationService.AuthorizeAsync(User, Permissions.Users.View)).Result.Succeeded) 
 {
@@ -29,14 +30,13 @@
             <tr>
                 <td>
                     <div class="row">
-                        @if (@user.ProfilePicture != null && user.ProfilePicture.Length > 0 && File.Exists(user.ProfilePicture))
+                        @if (user.ProfilePicture != null)
                         {
                             <div class="col-sm" style=" max-width: 80px;margin-right: 20px;">
                                 <img class="img-profile rounded-circle" style="height: 75px;width:75px;object-fit: cover;" src="@ENV.ImagePath@user.ProfilePicture">
                             </div>
                         }
                         else
-
                         {
                             <div class="col-sm" style="max-width:80px; margin-right: 20px;">
                                 <img class="img-profile rounded-circle" style="height: 75px;width:75px;object-fit: cover;" src="~/images/users/default-user.png">
@@ -103,7 +103,7 @@
                                     }
                                     else 
                                     {
-                                <a href="javascript:$('#form_deactivate_@user.Id').submit();" class="dropdown-item"><i class="fas fa-key"></i> Активувати</a>
+                                        <a href="javascript:$('#form_deactivate_@user.Id').submit();" class="dropdown-item"><i class="fas fa-key"></i> Активувати</a>
                                     }
                                 </form>
                             }

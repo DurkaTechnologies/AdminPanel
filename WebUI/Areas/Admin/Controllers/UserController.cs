@@ -22,6 +22,7 @@ using WebUI.Areas.Admin.Models;
 using WebUI.Extensions;
 using WebUI.Models;
 using WebUI.Services;
+using System.IO;
 
 namespace WebUI.Areas.Admin
 {
@@ -44,6 +45,8 @@ namespace WebUI.Areas.Admin
             _signInManager = signInManager;
             _roleManager = roleManager;
             _webHostEnvironment = webHostEnvironment;
+
+            ImageService.RootPass = _webHostEnvironment.WebRootPath;
         }
 
         //[Authorize(Policy = Permissions.Users.View)]
@@ -57,6 +60,7 @@ namespace WebUI.Areas.Admin
             var currentUser = await _userManager.GetUserAsync(HttpContext.User);
             var allUsersExceptCurrentUser = await _userManager.Users.Where(a => a.Id != currentUser.Id).ToListAsync();
             var model = _mapper.Map<IEnumerable<UserViewModel>>(allUsersExceptCurrentUser);
+
             return PartialView("_ViewAll", model);
         }
 
@@ -83,7 +87,7 @@ namespace WebUI.Areas.Admin
                 string imagePath = null;
 
                 if (Request.Form.Files.Count > 0)
-                    imagePath = ImageService.SaveImage(Request.Form.Files, _webHostEnvironment.WebRootPath);
+                    imagePath = ImageService.SaveImage(Request.Form.Files);
 
                 MailAddress address = new MailAddress(userModel.Email);
                 string userName = address.User;
@@ -215,7 +219,7 @@ namespace WebUI.Areas.Admin
 
                 if (Request.Form.Files.Count > 0)
                 {
-                    imagePath = ImageService.SaveImage(Request.Form.Files, _webHostEnvironment.WebRootPath);
+                    imagePath = ImageService.SaveImage(Request.Form.Files);
                     user.ProfilePicture = imagePath;
                 }
 
@@ -226,6 +230,9 @@ namespace WebUI.Areas.Admin
                     appUser = await _userManager.GetUserAsync(User);
                 else
                     appUser = await _userManager.FindByIdAsync(user.Id);
+
+                if (appUser.ProfilePicture != null)
+                    ImageService.DeleteImage(appUser.ProfilePicture);
 
                 /*User Set*/
                 user.Id = null;
