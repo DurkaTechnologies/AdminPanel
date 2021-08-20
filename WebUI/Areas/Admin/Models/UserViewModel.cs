@@ -38,7 +38,7 @@ namespace WebUI.Areas.Admin.Models
         
         public int CommunityId { get; set; }
 
-        public bool DeleteImage { get; set; }
+        public string Description { get; set; }
         
         public CommunityViewModel Community { get; set; }
 
