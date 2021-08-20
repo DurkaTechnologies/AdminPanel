@@ -10,66 +10,101 @@
 @using System.IO
 @using WebUI.Services
 
-<div class="row">
-    <div class="col-md-12">
+<div class="row d-flex justify-content-center">
+    <div class="col-md-11">
         <div class="card">
             <div class="card-body">
                 <form id="profile-form" method="post" enctype="multipart/form-data">
-                    <div class="row d-flex justify-content-center">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label asp-for="@Model.FirstName">Ім'я</label>
-                                <input asp-for="@Model.FirstName" class="form-control" />
-                                <span asp-validation-for="@Model.FirstName" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="@Model.MiddleName">Прізвище</label>
-                                <input asp-for="@Model.MiddleName" class="form-control" />
-                                <span asp-validation-for="@Model.MiddleName" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="@Model.LastName">По Батькові</label>
-                                <input asp-for="@Model.LastName" class="form-control" />
-                                <span asp-validation-for="@Model.LastName" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="@Model.PhoneNumber">Телефон</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                    <div class="row d-flex justify-content-center p-2">
+                        <div class="col-md-3 p-4">
+                            <div class="position-relative">
+                                @if (Model.ProfilePicture != null)
+                                {
+                                    <img id="profilePicture" class="rounded-circle" style="width: 100%;object-fit: cover; padding-top: 10px;" src="@ENV.ImagePath@Model.ProfilePicture">
+                                }
+                                else
+                                {
+                                    <img id="profilePicture" class="rounded-circle" style="width: 100%; object-fit: cover; padding-top: 10px;" src="~/images/users/default-user.png">
+                                }
+                                <a class="btn btn-dark position-absolute btn-image" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-pencil-alt"></i> Змініти
+                                </a>
+                                <!-- Dropdown - User Information -->
+                                <div class="dropdown-menu dropdown-menu-left shadow animated--grow-in" aria-labelledby="userDropdown">
+                                    <div class="dropdown-item p-0">
+                                        <input accept=".png,.jpg,.jpeg,.gif,.tif"
+                                               asp-for="@Model.ProfilePicture"
+                                               type="file" class="custom-file-input"
+                                               onchange="document.getElementById('profilePicture').src = window.URL.createObjectURL(this.files[0])"
+                                               id="customFile">
+                                        <label class="my-file-label" for="customFile"><i class="fas fa-upload"></i> Завантажити</label>
                                     </div>
-                                    <input type="text" asp-for="@Model.PhoneNumber" class="form-control" id="phoneprofile" name="phoneprofile" maxlength="14">
-                                    <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
+                                    <div class="dropdown-item">
+                                        <button type="submit" class="dropdown-item"  asp-for="@Model.DeleteImage"><i class="fas fa-trash-alt"></i> Видалити</button>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label asp-for="@Model.CommunityId">Громада</label>
-                                <select name="CommunityId" class="form-control select2bs4" id="CommunityId" asp-for="CommunityId" asp-items="@Model.Communities">
-                                </select>
-                                <span asp-validation-for="CommunityId" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label asp-for="@Model.UserName">Ім'я користувача</label>
-                                <input asp-for="@Model.UserName" class="form-control" />
-                                <span asp-validation-for="@Model.UserName" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="@Model.Email">Пошта</label>
-                                <input asp-for="@Model.Email" class="form-control" />
-                                <span asp-validation-for="@Model.Email" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="@Model.Password">Новий пароль</label>
-                                <input asp-for="@Model.Password" class="form-control" />
-                                <span asp-validation-for="@Model.Password" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
 
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            @*<li class="nav-item dropdown no-arrow">*@
+
+                            @*</li>*@
+                        </div>
+                        <div class="col-md-9 row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="@Model.FirstName">Ім'я</label>
+                                    <input asp-for="@Model.FirstName" class="form-control" />
+                                    <span asp-validation-for="@Model.FirstName" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="@Model.MiddleName">Прізвище</label>
+                                    <input asp-for="@Model.MiddleName" class="form-control" />
+                                    <span asp-validation-for="@Model.MiddleName" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="@Model.LastName">По Батькові</label>
+                                    <input asp-for="@Model.LastName" class="form-control" />
+                                    <span asp-validation-for="@Model.LastName" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="@Model.CommunityId">Громада</label>
+                                    <select name="CommunityId" class="form-control select2bs4" id="CommunityId" asp-for="CommunityId" asp-items="@Model.Communities">
+                                    </select>
+                                    <span asp-validation-for="CommunityId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="@Model.UserName">Ім'я користувача</label>
+                                    <input asp-for="@Model.UserName" class="form-control" />
+                                    <span asp-validation-for="@Model.UserName" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="@Model.Email">Пошта</label>
+                                    <input asp-for="@Model.Email" class="form-control" />
+                                    <span asp-validation-for="@Model.Email" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="@Model.PhoneNumber">Телефон</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                        </div>
+                                        <input type="text" asp-for="@Model.PhoneNumber" class="form-control" id="phone" maxlength="14">
+                                        <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div class="col-md-4">
                             <div class="form-group">
+                                <div class="custom-control custom-switch">
+                                    <input asp-for="@Model.DeleteImage" class="custom-control-input" type="checkbox" id="customCheck">
+                                    <label for="customCheck" class="custom-control-label">Видалити фото профіл</label>
+                                </div>
+                            </div>
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>-->
+                        @*<div class="form-group">
                                 <label asp-for="@Model.ProfilePicture" style="width: 100%;">Фото профілю</label>
                                 <div class="custom-file">
                                     <input accept=".png,.jpg,.jpeg,.gif,.tif"
@@ -80,16 +115,8 @@
                                     <label class="custom-file-label" for="customFile">Виберіть файл</label>
                                 </div>
                                 <span asp-validation-for="@Model.ProfilePicture" class="text-danger"></span>
-                                @if (Model.ProfilePicture != null)
-                                {
-                                    <img id="profilePicture" style="width: 100%;object-fit: cover; padding-top: 10px;" src="@ENV.ImagePath@Model.ProfilePicture">
-                                }
-                                else
-                                {
-                                    <img id="profilePicture" style="width: 100%; object-fit: cover; padding-top: 10px;" src="~/images/users/default-user.png">
-                                }
-                            </div>
-                        </div>
+                            </div>*@
+                        <!--</div>-->
                     </div>
                     <div class="d-flex justify-content-end">
                         <button id="update-profile-button ml-auto" type="submit" class="btn btn-success btn-icon-split">
@@ -103,13 +130,4 @@
             </div>
         </div>
     </div>
-
-    <script type="text/javascript" language=javascript>
-        $.validator.unobtrusive.parse(document);
-
-        $(document).ready(function () {
-            $('#phoneprofile').mask("(999) 999-9999");
-        });
-    </script>
 </div>
-

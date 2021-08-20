@@ -36,8 +36,11 @@ namespace WebUI.Services
                 return null;
         }
 
-        public static void DeleteImage(string name) 
+        public static void DeleteImage(string name)
         {
+            if (name == "default-user.png")
+                return;
+
             string path = Path.Combine(RootPass + ENV.ImagePath, name);
 
             if (File.Exists(path))

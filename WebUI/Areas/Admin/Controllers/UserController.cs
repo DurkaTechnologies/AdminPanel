@@ -20,6 +20,7 @@ using WebUI.Areas.Admin.Models;
 using WebUI.Areas.Entities.Models;
 using WebUI.Services;
 using System.IO;
+using System;
 
 namespace WebUI.Areas.Admin
 {
@@ -214,7 +215,7 @@ namespace WebUI.Areas.Admin
                 /*Image*/
                 string imagePath = null;
 
-                if (Request.Form.Files.Count > 0)
+                if (!user.DeleteImage && Request.Form.Files.Count > 0)
                 {
                     imagePath = ImageService.SaveImage(Request.Form.Files);
                     user.ProfilePicture = imagePath;

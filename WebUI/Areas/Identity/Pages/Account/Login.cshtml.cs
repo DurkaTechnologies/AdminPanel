@@ -102,11 +102,11 @@ namespace WebUI.Areas.Identity.Pages.Account
 
 				var user = await _userManager.FindByNameAsync(userName);
 
-				if (!user.IsActive)
-				{
-					_notyf.Error($"Ваш акаунт деактивовано.");
-					return RedirectToPage("./Login");
-				}
+				//if (!user.IsActive)
+				//{
+				//	_notyf.Error($"Ваш акаунт деактивовано.");
+				//	return RedirectToPage("./Login");
+				//}
 
 				var result = await _signInManager.PasswordSignInAsync(userName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
 
