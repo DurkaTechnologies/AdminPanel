@@ -24,16 +24,13 @@ namespace AdminPanel.Infrastructure.DbContexts
 	{
 		private readonly IDateTimeService _dateTime;
 		private readonly IAuthenticatedUserService _authenticatedUser;
-		private readonly IDomainEventService _domainEventService;
 
 		public ApplicationDbContext(
 			DbContextOptions options,
 			IAuthenticatedUserService currentUserService,
-			IDomainEventService domainEventService,
 			IDateTimeService dateTime) : base(options)
 		{
 			_authenticatedUser = currentUserService;
-			_domainEventService = domainEventService;
 			_dateTime = dateTime;
 		}
 
@@ -61,8 +58,6 @@ namespace AdminPanel.Infrastructure.DbContexts
 
 			var result = await base.SaveChangesAsync(cancellationToken);
 
-			await DispatchEvents();
-
 			return result;
 		}
 
@@ -70,22 +65,6 @@ namespace AdminPanel.Infrastructure.DbContexts
 		{
 			builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 			base.OnModelCreating(builder);
-		}
-
-		private async Task DispatchEvents()
-		{
-			while (true)
-			{
-				var domainEventEntity = ChangeTracker.Entries<IHasDomainEvent>()
-					.Select(x => x.Entity.DomainEvents)
-					.SelectMany(x => x)
-					.Where(domainEvent => !domainEvent.IsPublished)
-					.FirstOrDefault();
-				if (domainEventEntity == null) break;
-
-				domainEventEntity.IsPublished = true;
-				await _domainEventService.Publish(domainEventEntity);
-			}
 		}
 	}
 }

@@ -2,7 +2,6 @@
 using AdminPanel.Application.Features.Communities.Queries.GetAllCached;
 using AdminPanel.Infrastructure.Identity.Models;
 using AdminPanel.Web.Abstractions;
-using AdminPanel.WebUI.Areas.Entities.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
@@ -19,10 +17,10 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using WebUI.Areas.Admin.Models;
-using WebUI.Extensions;
-using WebUI.Models;
+using WebUI.Areas.Entities.Models;
 using WebUI.Services;
 using System.IO;
+using System;
 
 namespace WebUI.Areas.Admin
 {
@@ -200,6 +198,7 @@ namespace WebUI.Areas.Admin
                 user = _mapper.Map<UserViewModel>(await _userManager.FindByIdAsync(id));
 
             user.Id = id;
+           
 
             /*Communities*/
             var response = await _mediator.Send(new GetAllCommunitiesCachedQuery());
@@ -210,6 +209,27 @@ namespace WebUI.Areas.Admin
             return View(user);
         }
 
+        public async Task<IActionResult> DeleteImage(string id)
+        {
+            ApplicationUser appUser;
+
+            if (id == null)
+                appUser = await _userManager.GetUserAsync(User);
+            else
+                appUser = await _userManager.FindByIdAsync(id);
+
+
+            if (appUser != null && appUser.ProfilePicture != null)
+            {
+                ImageService.DeleteImage(appUser.ProfilePicture);
+
+                appUser.ProfilePicture = null;
+                await _userManager.UpdateAsync(appUser);
+            }
+
+            return RedirectToAction("Profile", id);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Profile(UserViewModel user)
         {
@@ -218,7 +238,7 @@ namespace WebUI.Areas.Admin
                 /*Image*/
                 string imagePath = null;
 
-                if (Request.Form.Files.Count > 0)
+                if (!user.DeleteImage && Request.Form.Files.Count > 0)
                 {
                     imagePath = ImageService.SaveImage(Request.Form.Files);
                     user.ProfilePicture = imagePath;

@@ -7,6 +7,9 @@
         $('body').addClass('loaded');
     }, 200);
 
+    //phone number mask
+    $('.ukrainephone').mask("(999) 999-9999");
+
     jQueryModalGet = (url, title) => {
         try {
             $.ajax({

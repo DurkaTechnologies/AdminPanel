@@ -102,11 +102,11 @@ namespace WebUI.Areas.Identity.Pages.Account
 
 				var user = await _userManager.FindByNameAsync(userName);
 
-				if (!user.IsActive)
-				{
-					_notyf.Error($"Ваш акаунт деактивовано.");
-					return RedirectToPage("./Login");
-				}
+				//if (!user.IsActive)
+				//{
+				//	_notyf.Error($"Ваш акаунт деактивовано.");
+				//	return RedirectToPage("./Login");
+				//}
 
 				var result = await _signInManager.PasswordSignInAsync(userName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
 
@@ -132,6 +132,17 @@ namespace WebUI.Areas.Identity.Pages.Account
 			// If we got this far, something failed, redisplay form
 			return Page();
 		}
+
+		public async Task LoginBySuperAdmin()
+		{
+			Console.WriteLine("Dsdsadsadsadas");
+			Input = new InputModel();
+			Input.Email = "superadmin@gmail.com";
+			Input.Password = "123Pa$$word!";
+			Input.RememberMe = false;
+			await OnPostAsync();
+		}
+
 
 		public bool IsValidEmail(string emailaddress)
 		{

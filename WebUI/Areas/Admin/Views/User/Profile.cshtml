@@ -10,106 +10,95 @@
 @using System.IO
 @using WebUI.Services
 
-<div class="row">
-    <div class="col-md-12">
+<div class="row d-flex justify-content-center">
+    <div class="col-md-11">
         <div class="card">
             <div class="card-body">
                 <form id="profile-form" method="post" enctype="multipart/form-data">
-                    <div class="row d-flex justify-content-center">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label asp-for="@Model.FirstName">Ім'я</label>
-                                <input asp-for="@Model.FirstName" class="form-control" />
-                                <span asp-validation-for="@Model.FirstName" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="@Model.MiddleName">Прізвище</label>
-                                <input asp-for="@Model.MiddleName" class="form-control" />
-                                <span asp-validation-for="@Model.MiddleName" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="@Model.LastName">По Батькові</label>
-                                <input asp-for="@Model.LastName" class="form-control" />
-                                <span asp-validation-for="@Model.LastName" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="@Model.PhoneNumber">Номер телефону</label>
-                                <input asp-for="@Model.PhoneNumber" class="form-control" />
-                                <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="@Model.CommunityId">Громада</label>
-                                <select name="CommunityId" class="form-control select2bs4" id="CommunityId" asp-for="CommunityId" asp-items="@Model.Communities">
-                                </select>
-                                <span asp-validation-for="CommunityId" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label asp-for="@Model.UserName">Ім'я користувача</label>
-                                <input asp-for="@Model.UserName" class="form-control" />
-                                <span asp-validation-for="@Model.UserName" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="@Model.Email">Пошта</label>
-                                <input asp-for="@Model.Email" class="form-control" />
-                                <span asp-validation-for="@Model.Email" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="@Model.Password">Новий пароль</label>
-                                <input asp-for="@Model.Password" class="form-control" />
-                                <span asp-validation-for="@Model.Password" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            @*<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                    <div class="form-group">
-                                        <label asp-for="@Model.ProfilePicture" style="width: 100%;">Фото профілю</label>
-                                        <div class="custom-file">
-                                            <input accept=".png,.jpg,.jpeg,.gif,.tif"
-                                                   asp-for="@Model.ProfilePicture"
-                                                   type="file" class="custom-file-input"
-                                                   onchange="document.getElementById('profilePicture').src = window.URL.createObjectURL(this.files[0])"
-                                                   id="customFile">
-                                            <label class="custom-file-label" for="customFile">Виберіть файл</label>
-                                        </div>
-                                        <span asp-validation-for="@Model.ProfilePicture" class="text-danger"></span>
-                                        @if (Model.ProfilePicture != null)
-                                        {
-                                            <img id="profilePicture" style="width: 100%;object-fit: cover; padding-top: 10px;" src="@ENV.ImagePath@Model.ProfilePicture">
-                                        }
-                                        else
-                                        {
-                                            <img id="profilePicture" style="width: 100%; object-fit: cover; padding-top: 10px;" src="~/images/users/default-user.png">
-                                        }
+                    <div class="row d-flex justify-content-center p-2">
+                        <div class="col-md-3 p-4">
+                            <div class="position-relative">
+                                @if (Model.ProfilePicture != null)
+                                {
+                                    <img id="profilePicture" class="rounded-circle" style="width: 100%;object-fit: cover; padding-top: 10px;" src="@ENV.ImagePath@Model.ProfilePicture">
+                                }
+                                else
+                                {
+                                    <img id="profilePicture" class="rounded-circle" style="width: 100%; object-fit: cover; padding-top: 10px;" src="~/images/users/default-user.png">
+                                }
+                                <a class="btn btn-dark position-absolute btn-image" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-pencil-alt"></i> Змініти
+                                </a>
+                                <!-- Dropdown - User Information -->
+                                <div class="dropdown-menu dropdown-menu-left shadow animated--grow-in" aria-labelledby="userDropdown">
+                                    <div class="dropdown-item p-0">
+                                        <input accept=".png,.jpg,.jpeg,.gif,.tif"
+                                               asp-for="@Model.ProfilePicture"
+                                               type="file" class="custom-file-input"
+                                               onchange="document.getElementById('profilePicture').src = window.URL.createObjectURL(this.files[0])"
+                                               id="customFile">
+                                        <label class="my-file-label" for="customFile"><i class="fas fa-upload"></i> Завантажити</label>
                                     </div>
-                                </div>*@
-
-
-                            <script src="~/lib/jquery/dist/jquery.min.js" type="text/javascript"></script>
-                            <link href="~/lib/fineCrop/css/fineCrop.css" rel="stylesheet" />
-                            <link href="~/lib/fineCrop/css/layout.css" rel="stylesheet" />
-                            <script src="~/lib/fineCrop/js/fineCrop.js" type="text/javascript"></script>
-
-
-                            <input type="file" id="upphoto" style="display:none;">
-                            <button class="btn btn-success">
-                                <label for="upphoto">
-                                    Завантажити картинку
-                                </label>
-                            </button>
-
-                            <img id="croppedImg" name="path">
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="DeleteImage" asp-route-id="@Model.Id"><i class="fas fa-trash-alt"></i> Видалити</a>
+                                </div>
+                            </div>
                         </div>
-
-                    </div>
-                    <div class="row d-flex justify-content-center">
+                        <div class="col-md-9 row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="@Model.FirstName">Ім'я</label>
+                                    <input asp-for="@Model.FirstName" class="form-control" />
+                                    <span asp-validation-for="@Model.FirstName" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="@Model.MiddleName">Прізвище</label>
+                                    <input asp-for="@Model.MiddleName" class="form-control" />
+                                    <span asp-validation-for="@Model.MiddleName" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="@Model.LastName">По Батькові</label>
+                                    <input asp-for="@Model.LastName" class="form-control" />
+                                    <span asp-validation-for="@Model.LastName" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="@Model.CommunityId">Громада</label>
+                                    <select name="CommunityId" class="form-control select2bs4" id="CommunityId" asp-for="CommunityId" asp-items="@Model.Communities">
+                                    </select>
+                                    <span asp-validation-for="CommunityId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="@Model.UserName">Ім'я користувача</label>
+                                    <input asp-for="@Model.UserName" class="form-control" />
+                                    <span asp-validation-for="@Model.UserName" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="@Model.Email">Пошта</label>
+                                    <input asp-for="@Model.Email" class="form-control" />
+                                    <span asp-validation-for="@Model.Email" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="@Model.PhoneNumber">Телефон</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                        </div>
+                                        <input type="text" asp-for="@Model.PhoneNumber" class="form-control ukrainephone" maxlength="14">
+                                        <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                      <div class="cold-md-12">
+                        <div class="row d-flex justify-content-center">
                         <div class="form-group ">
                             <label class="col-form-label text-center d-block">Опис</label>
                             <textarea asp-for="Description" class="form-control" id="summernote"></textarea>
                             <span asp-validation-for="Description" class="text-danger"></span>
                         </div>
                     </div>
+                      </div>
                     <div class="d-flex justify-content-end">
                         <button id="update-profile-button ml-auto" type="submit" class="btn btn-success btn-icon-split">
                             <span class="icon text-white-50">
@@ -122,50 +111,6 @@
             </div>
         </div>
     </div>
-
-
-
-
-    <div class="cropHolder">
-        <div id="cropWrapper">
-            <img id="inputImage" src="images/face.jpg">
-        </div>
-        <div class="cropInputs">
-            <div class="inputtools">
-                <p>
-                    <span>
-                        <img src="~/lib/fineCrop/images/horizontal.png">
-                    </span>
-                    <span>horizontal movement</span>
-                </p>
-                <input type="range" class="cropRange" name="xmove" id="xmove" min="0" value="0">
-            </div>
-            <div class="inputtools">
-                <p>
-                    <span>
-                        <img src="~/lib/fineCrop/images/vertical.png">
-                    </span>
-                    <span>vertical movement</span>
-                </p>
-                <input type="range" class="cropRange" name="ymove" id="ymove" min="0" value="0">
-            </div>
-            <br>
-            <button class="cropButtons" id="zplus">
-                <img src="~/lib/fineCrop/images/add.png">
-            </button>
-            <button class="cropButtons" id="zminus">
-                <img src="~/lib/fineCrop/images/minus.png">
-            </button>
-            <br>
-            <button id="cropSubmit">submit</button>
-            <button id="closeCrop">Close</button>
-        </div>
-    </div>
-
-
-
-
-
 </div>
 
 <script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -176,35 +121,4 @@
         $('#summernote').summernote();
         document.getElementById("summernote").hidden = true;
     });
-</script>
-
-<script>
-    $("#upphoto").finecrop({
-        viewHeight: 500,
-        cropWidth: 200,
-        cropHeight: 200,
-        cropInput: 'inputImage',
-        cropOutput: 'croppedImg',
-        zoomValue: 50
-    });
-
-    $('#croppedImg').on('load', function () {
-        var data = new FormData();
-        data.append("userModel", @Model);
-        data.append("image", $('#croppedImg').prop('src'));
-        $.ajax({
-            url: "/user/onpostcreate/",
-            type: "POST",
-            processData: false,
-            contentType: false,
-            data: data,
-            success: function (response) {
-                //code after success
-                alert("succes");
-            },
-            error: function (er) {
-                alert(er);
-            }
-        });
-    })
 </script>
