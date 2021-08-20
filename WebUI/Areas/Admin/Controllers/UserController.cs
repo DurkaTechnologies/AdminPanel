@@ -238,7 +238,7 @@ namespace WebUI.Areas.Admin
                 /*Image*/
                 string imagePath = null;
 
-                if (!user.DeleteImage && Request.Form.Files.Count > 0)
+                if (Request.Form.Files.Count > 0)
                 {
                     imagePath = ImageService.SaveImage(Request.Form.Files);
                     user.ProfilePicture = imagePath;
@@ -252,12 +252,20 @@ namespace WebUI.Areas.Admin
                 else
                     appUser = await _userManager.FindByIdAsync(user.Id);
 
-                if (appUser.ProfilePicture != null)
-                    ImageService.DeleteImage(appUser.ProfilePicture);
+                if (imagePath != null)
+                {
+                    if(appUser.ProfilePicture != null)
+                        ImageService.DeleteImage(appUser.ProfilePicture);
+
+                    appUser.ProfilePicture = imagePath;
+                }
+                else
+                    user.ProfilePicture = appUser.ProfilePicture;
 
                 /*User Set*/
                 user.Id = null;
                 appUser.СommunityId = user.CommunityId;
+                appUser.Description = user.Description;
 
                 if (!String.IsNullOrEmpty(user.FirstName))
                     appUser.FirstName = user.FirstName;
@@ -273,9 +281,6 @@ namespace WebUI.Areas.Admin
                     appUser.LastName = user.LastName;
                 else
                     _notify.Error("По Батькові не може бути пустим");
-
-                if (imagePath != null)
-                    appUser.ProfilePicture = imagePath;
 
                 try
                 {
