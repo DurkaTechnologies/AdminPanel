@@ -197,6 +197,7 @@ namespace WebUI.Areas.Admin
                 user = _mapper.Map<UserViewModel>(await _userManager.FindByIdAsync(id));
 
             user.Id = id;
+           
 
             /*Communities*/
             var response = await _mediator.Send(new GetAllCommunitiesCachedQuery());
@@ -205,6 +206,27 @@ namespace WebUI.Areas.Admin
             user.Communities = communities;
 
             return View(user);
+        }
+
+        public async Task<IActionResult> DeleteImage(string id)
+        {
+            ApplicationUser appUser;
+
+            if (id == null)
+                appUser = await _userManager.GetUserAsync(User);
+            else
+                appUser = await _userManager.FindByIdAsync(id);
+
+
+            if (appUser != null && appUser.ProfilePicture != null)
+            {
+                ImageService.DeleteImage(appUser.ProfilePicture);
+
+                appUser.ProfilePicture = null;
+                await _userManager.UpdateAsync(appUser);
+            }
+
+            return RedirectToAction("Profile", id);
         }
 
         [HttpPost]

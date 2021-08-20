@@ -39,9 +39,7 @@
                                                id="customFile">
                                         <label class="my-file-label" for="customFile"><i class="fas fa-upload"></i> Завантажити</label>
                                     </div>
-                                    <div class="dropdown-item">
-                                        <button type="submit" class="dropdown-item"  asp-for="@Model.DeleteImage"><i class="fas fa-trash-alt"></i> Видалити</button>
-                                    </div>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="DeleteImage" asp-route-id="@Model.Id"><i class="fas fa-trash-alt"></i> Видалити</a>
                                 </div>
                             </div>
 
@@ -90,7 +88,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-phone"></i></span>
                                         </div>
-                                        <input type="text" asp-for="@Model.PhoneNumber" class="form-control" id="phone" maxlength="14">
+                                        <input type="text" asp-for="@Model.PhoneNumber" class="form-control ukrainephone" maxlength="14">
                                         <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
                                     </div>
                                 </div>

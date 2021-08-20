@@ -41,7 +41,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fas fa-phone"></i></span>
                     </div>
-                    <input type="text" asp-for="PhoneNumber" name="PhoneNumber" class="form-control" id="phone" maxlength="14">
+                    <input type="text" asp-for="PhoneNumber" name="PhoneNumber" class="form-control ukrainephone" maxlength="14">
                 </div>
             </div>
         </div>
@@ -89,3 +89,6 @@
         </div>
     </form>
 } 
+<script>
+    $(document).ready(function () { $('.ukrainephone').mask("(999) 999-9999"); });
+</script>
