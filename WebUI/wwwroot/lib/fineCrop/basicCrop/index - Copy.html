@@ -1,0 +1,166 @@
+<!doctype html>
+<html>
+
+<head>
+    <title> sketboard drawing </title>
+    <script src="jquery.min.js"></script>
+    <script src="jquery-ui.js"></script>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <img style="visibility:hidden; position:absolute; z-index:-1;" id="srcimg" src="">
+    <svg id="triagnleSvg" width="400px" height="400px" xmlns="http://www.w3.org/2000/svg">
+       <g id="functionArea">
+            <clipPath id="clipping">
+                <path d="M 173 41 L 229 42 C 266 147 278 355 206 361 C 148 354 142 302 142 215 C 148 127 149 76 173 41 Z"/>
+            </clipPath>
+            <g id="maskedObkect" clip-path="url(#clipping)">
+                <image preserveAspectRatio="none" x="0" y="0" width="400px" height="400px" xlink:href="Slide94.jpg"/> 
+                <image preserveAspectRatio="none" x="0" y="0" class="draggable" width="200px" height="200px" xlink:href="1496569103__candy_cane.svg"/>  
+            </g>
+        </g>     
+   </svg>
+    <img id="newsvg" src="">
+    <canvas id="canvas" style="border:1px solid black;" width="300" height="200"></canvas>
+    <button onclick="outputcanvas()">click</button>
+    <button onclick="previewcanvas()">preview1</button>
+    <button onclick="previewoutput()">preview2</button>
+    <button onclick="bigsvg()">BigSvg</button>
+
+    <canvas id="canvasForBase" style="position:absolute; z-index:-1; visibility:hidden;"></canvas>
+    <svg id="finalRender" xmlns="http://www.w3.org/2000/svg"></svg>
+
+    <script>
+        var originalSrcs = [];
+        $(function() {
+            $('.draggable')
+                .draggable()
+                .bind('mousedown', function(event, ui) {
+                    // bring target to front
+                    $(event.target.parentElement).append(event.target);
+                    $(event.target).addClass('active');
+                })
+                .bind('drag', function(event, ui) {
+                    // update coordinates manually, since top/left style props don't work on SVG
+                    event.target.setAttribute('x', ui.position.left);
+                    event.target.setAttribute('y', ui.position.top);
+                });
+            // $('.draggable').click(function() {
+            //     console.log(1);
+            //     $(this).addClass('active');
+            // })
+
+        });
+
+        function outputcanvas() {
+            var img = document.getElementById('newsvg');
+            var canvas = document.getElementById('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            canvas.getContext('2d').drawImage(img, 0, 0);
+        }
+
+        function previewoutput() {
+            var svg = document.getElementById('triagnleSvg');
+            var img = document.getElementById('newsvg');
+            // var canvas = document.getElementById('canvas');
+            // get svg data
+            var xml = new XMLSerializer().serializeToString(svg);
+            // make it base64
+            var svg64 = btoa(xml);
+            var b64Start = 'data:image/svg+xml;base64,';
+            // prepend a "header"
+            var image64 = b64Start + svg64;
+            // set it as the source of the img element
+            img.src = image64;
+            var images = document.getElementById("triagnleSvg").getElementsByTagName("image");
+            for (i = 0; i < images.length; i++) {
+                $(images[i]).attr("xlink:href", originalSrcs[i]);
+            }
+            // console.log('originalSrcs ', originalSrcs);
+        }
+
+        // ----------
+        function previewcanvas() {
+            var images = document.getElementById("triagnleSvg").getElementsByTagName("image");
+            var imageLength = images.length;
+            for (i = 0; i < imageLength; i++) {
+                console.log(i);
+                var imgsrc = images[i];
+                var pimage = document.getElementById("srcimg");
+                var originalSrc = imgsrc.getAttribute("xlink:href");
+                originalSrcs.push(originalSrc);
+                pimage.setAttribute('src', imgsrc.getAttribute("xlink:href"));
+
+                var imgext = pimage.getAttribute("src").split('.').pop();
+
+                var canvas = document.getElementById('canvasForBase');
+                var ctx = canvas.getContext('2d');
+                var dataURL;
+                canvas.height = pimage.height;
+                canvas.width = pimage.width;
+                ctx.drawImage(pimage, 0, 0);
+                if (imgext !== 'svg') {
+                    dataURL = canvas.toDataURL("image/png");
+                } else {
+                    dataURL = canvas.toDataURL("image/svg+xml");
+                }
+                $(imgsrc).attr("xlink:href", dataURL);
+                $(pimage).attr('src', '');
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                // previewoutput();
+            }
+        }
+
+        function bigsvg() {
+            var viewSvg = document.getElementById('triagnleSvg');
+            var renderSVG = document.getElementById('finalRender');
+
+            var viewWidth = parseInt($(viewSvg).attr('width'));
+            var viewHeight = parseInt($(viewSvg).attr('height'));
+            var incvalue = 1000;
+            var incrementValue = incvalue / viewWidth;
+            var renderWidth = incvalue;
+            console.log('incrementValue ', incrementValue);
+
+            renderSVG.style.width = incvalue + 'px';
+            renderSVG.style.height = (viewHeight * incrementValue) + 'px';
+
+            var clonnedObject = $("#functionArea").clone();
+
+            var clippath = $(clonnedObject).find("#clipping path").attr('d');
+            var cliparray = clippath.split(' ');
+            var updatedClipArray = cliparray.map(x => {
+                if (isNaN(x) === false) {
+                    return parseInt(x) * incrementValue;
+                } else {
+                    return x;
+                }
+            });
+            var updatedClipPath = updatedClipArray.join(' ');
+
+            $(clonnedObject).find("#clipping path").attr('d', updatedClipPath);
+            $(clonnedObject).find("#maskedObkect image").each(function() {
+                var thisWidth = parseInt($(this).attr('width'));
+                var thisHeight = parseInt($(this).attr('height'));
+                var thisX = parseInt($(this).css('left'));
+                var thisY = parseInt($(this).css('top'));
+
+                $(this).attr('width', (thisWidth * incrementValue) + 'px');
+                $(this).attr('height', (thisHeight * incrementValue) + 'px');
+                $(this).attr('x', (thisX * incrementValue) + 'px');
+                $(this).attr('y', (thisY * incrementValue) + 'px');
+            })
+
+            $(clonnedObject).find("#clipping").attr("id", "clonnedClipping");
+            $(clonnedObject).find("#maskedObkect").attr("clip-path", "url(#clonnedClipping)")
+            $(clonnedObject).find("#functionArea").attr('id', 'clonnedGroup');
+            $("#finalRender").empty();
+            $(clonnedObject).appendTo("#finalRender");
+
+        }
+    </script>
+</body>
+
+</html>
