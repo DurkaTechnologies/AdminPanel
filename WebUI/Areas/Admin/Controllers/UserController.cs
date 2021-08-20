@@ -21,6 +21,9 @@ using WebUI.Areas.Entities.Models;
 using WebUI.Services;
 using System.IO;
 using System;
+using SixLabors.ImageSharp;
+using Microsoft.Extensions.FileProviders;
+using SixLabors.ImageSharp.Processing;
 
 namespace WebUI.Areas.Admin
 {
@@ -78,7 +81,7 @@ namespace WebUI.Areas.Admin
         }
 
         [HttpPost]
-        public async Task<IActionResult> OnPostCreate(UserViewModel userModel, string image)
+        public async Task<IActionResult> OnPostCreate(UserViewModel userModel)
         {
             if (ModelState.IsValid)
             {
@@ -198,7 +201,7 @@ namespace WebUI.Areas.Admin
                 user = _mapper.Map<UserViewModel>(await _userManager.FindByIdAsync(id));
 
             user.Id = id;
-           
+
 
             /*Communities*/
             var response = await _mediator.Send(new GetAllCommunitiesCachedQuery());
@@ -231,54 +234,54 @@ namespace WebUI.Areas.Admin
         }
 
         [HttpPost]
-        public async Task<IActionResult> Profile(UserViewModel user)
+        public async Task<IActionResult> Profile(UserViewModel model, IFormFile ImageBlob)
         {
             if (ModelState.IsValid)
             {
                 /*Image*/
                 string imagePath = null;
 
-                if (Request.Form.Files.Count > 0)
+                if (model.ImageBlob != null)
                 {
-                    imagePath = ImageService.SaveImage(Request.Form.Files);
-                    user.ProfilePicture = imagePath;
+                    imagePath = ImageService.SaveImage(model.ImageBlob);
+                    model.ProfilePicture = imagePath;
                 }
 
                 /*Claims Get*/
                 ApplicationUser appUser;
 
-                if (user.Id == null)
+                if (model.Id == null)
                     appUser = await _userManager.GetUserAsync(User);
                 else
-                    appUser = await _userManager.FindByIdAsync(user.Id);
+                    appUser = await _userManager.FindByIdAsync(model.Id);
 
                 if (imagePath != null)
                 {
-                    if(appUser.ProfilePicture != null)
+                    if (appUser.ProfilePicture != null)
                         ImageService.DeleteImage(appUser.ProfilePicture);
 
                     appUser.ProfilePicture = imagePath;
                 }
                 else
-                    user.ProfilePicture = appUser.ProfilePicture;
+                    model.ProfilePicture = appUser.ProfilePicture;
 
                 /*User Set*/
-                user.Id = null;
-                appUser.СommunityId = user.CommunityId;
-                appUser.Description = user.Description;
+                model.Id = null;
+                appUser.СommunityId = model.CommunityId;
+                appUser.Description = model.Description;
 
-                if (!String.IsNullOrEmpty(user.FirstName))
-                    appUser.FirstName = user.FirstName;
+                if (!String.IsNullOrEmpty(model.FirstName))
+                    appUser.FirstName = model.FirstName;
                 else
                     _notify.Error("Ім'я не може бути пустим");
 
-                if (!String.IsNullOrEmpty(user.MiddleName))
-                    appUser.MiddleName = user.MiddleName;
+                if (!String.IsNullOrEmpty(model.MiddleName))
+                    appUser.MiddleName = model.MiddleName;
                 else
                     _notify.Error("Прізвище не може бути пустим");
 
-                if (!String.IsNullOrEmpty(user.LastName))
-                    appUser.LastName = user.LastName;
+                if (!String.IsNullOrEmpty(model.LastName))
+                    appUser.LastName = model.LastName;
                 else
                     _notify.Error("По Батькові не може бути пустим");
 
@@ -288,25 +291,25 @@ namespace WebUI.Areas.Admin
 
                     /*Other Set*/
 
-                    if (user.UserName.ToLower() != appUser.UserName.ToLower())
+                    if (model.UserName.ToLower() != appUser.UserName.ToLower())
                     {
-                        if (await _userManager.FindByNameAsync(user.UserName) == null)
-                            await _userManager.SetUserNameAsync(appUser, user.UserName);
+                        if (await _userManager.FindByNameAsync(model.UserName) == null)
+                            await _userManager.SetUserNameAsync(appUser, model.UserName);
                         else
-                            _notify.Error($"Користувач {user.UserName} вже існує");
+                            _notify.Error($"Користувач {model.UserName} вже існує");
                     }
 
-                    if (user.PhoneNumber != appUser.PhoneNumber)
-                        await _userManager.SetPhoneNumberAsync(appUser, user.PhoneNumber);
+                    if (model.PhoneNumber != appUser.PhoneNumber)
+                        await _userManager.SetPhoneNumberAsync(appUser, model.PhoneNumber);
 
-                    if (user.Email.ToLower() != appUser.Email.ToLower())
+                    if (model.Email.ToLower() != appUser.Email.ToLower())
                     {
-                        await _userManager.SetEmailAsync(appUser, user.Email);
+                        await _userManager.SetEmailAsync(appUser, model.Email);
                         appUser.EmailConfirmed = true;
                         await _userManager.UpdateAsync(appUser);
                     }
 
-                    _notify.Success($"Користувач {user.UserName} був успішно змінений");
+                    _notify.Success($"Користувач {model.UserName} був успішно змінений");
                 }
                 catch (Exception ex)
                 {
@@ -319,9 +322,40 @@ namespace WebUI.Areas.Admin
             var response = await _mediator.Send(new GetAllCommunitiesCachedQuery());
             var data = _mapper.Map<IEnumerable<CommunityViewModel>>(response.Data);
             var communities = new SelectList(data, nameof(CommunityViewModel.Id), nameof(CommunityViewModel.Name), null, null);
-            user.Communities = communities;
+            model.Communities = communities;
 
-            return View(user);
+            return View(model);
+        }
+
+
+        [HttpPost]
+        public IActionResult AddPhoto(UserViewModel model, string filename, IFormFile blob)
+        {
+            try
+            {
+                using (var image = Image.Load(blob.OpenReadStream()))
+                {
+                    string systemFileExtenstion = filename.Substring(filename.LastIndexOf('.'));
+
+                    image.Mutate(x => x.Resize(180, 180));
+                    var newfileName180 = GenerateFileName("Photo_180_180_", systemFileExtenstion);
+                    var filepath160 = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images")).Root + $@"\{newfileName180}";
+                    image.Save(filepath160);
+                }
+
+                return Json(new { Message = "OK" });
+            }
+            catch (Exception)
+            {
+                return Json(new { Message = "ERROR" });
+            }
+        }
+
+        public string GenerateFileName(string fileTypeName, string fileextenstion)
+        {
+            if (fileTypeName == null) throw new ArgumentNullException(nameof(fileTypeName));
+            if (fileextenstion == null) throw new ArgumentNullException(nameof(fileextenstion));
+            return $"{fileTypeName}_{DateTime.Now:yyyyMMddHHmmssfff}_{Guid.NewGuid():N}{fileextenstion}";
         }
     }
 }

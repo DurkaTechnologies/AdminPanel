@@ -35,6 +35,25 @@ namespace WebUI.Services
             else
                 return null;
         }
+        public static string SaveImage(IFormFile file)
+        {
+            if (RootPass != null)
+            {
+                string name = Guid.NewGuid().ToString();
+                string extension = Path.GetExtension(file.FileName);
+                string path = Path.Combine(RootPass + ENV.ImagePath, name + extension);
+
+                using (var fileStream = System.IO.File.Create(path))
+                {
+                    //fileStream.Write(image, 0, image.Length);
+                    file.CopyTo(fileStream);
+                }
+
+                return name + extension;
+            }
+            else
+                return null;
+        }
 
         public static void DeleteImage(string name)
         {
