@@ -4,104 +4,108 @@
 
 @if (AuthorizationService.AuthorizeAsync(User, Permissions.Users.Edit).Result.Succeeded || AuthorizationService.AuthorizeAsync(User, Permissions.Users.Create).Result.Succeeded)
 {
-    <form id="create-form" method="post" asp-area="Admin" asp-controller="User" asp-action="OnPostCreate" onsubmit="return jQueryModalPost(this);">
-        <div class="form-group row">
-            <label class="col-md-3 col-form-label">Ім'я</label>
-            <div class="col-md-9">
-                <input type="text" asp-for="FirstName" name="FirstName" class="form-control">
-                <span asp-validation-for="FirstName" class="text-danger"></span>
-            </div>
+<form id="create-form" method="post" asp-area="Admin" asp-controller="User" asp-action="OnPostCreate" onsubmit="return jQueryModalPost(this);">
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label">Ім'я</label>
+        <div class="col-md-9">
+            <input type="text" asp-for="FirstName" name="FirstName" class="form-control">
+            <span asp-validation-for="FirstName" class="text-danger"></span>
         </div>
-        <div class="form-group row">
-            <label class="col-md-3 col-form-label">Прізвище</label>
-            <div class="col-md-9">
-                <input type="text" asp-for="MiddleName" name="MiddleName" class="form-control">
-                <span asp-validation-for="MiddleName" class="text-danger"></span>
-            </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label">Прізвище</label>
+        <div class="col-md-9">
+            <input type="text" asp-for="MiddleName" name="MiddleName" class="form-control">
+            <span asp-validation-for="MiddleName" class="text-danger"></span>
         </div>
-        <div class="form-group row">
-            <label class="col-md-3 col-form-label">По Батькові</label>
-            <div class="col-md-9">
-                <input type="text" asp-for="LastName" name="LastName" class="form-control">
-                <span asp-validation-for="LastName" class="text-danger"></span>
-            </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label">По Батькові</label>
+        <div class="col-md-9">
+            <input type="text" asp-for="LastName" name="LastName" class="form-control">
+            <span asp-validation-for="LastName" class="text-danger"></span>
         </div>
-        <div class="form-group row">
-            <label class="col-md-3 col-form-label">Пошта</label>
-            <div class="col-md-9">
-                <input type="email" asp-for="Email" name="Email" class="form-control">
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label">Пошта</label>
+        <div class="col-md-9">
+            <input type="email" asp-for="Email" name="Email" class="form-control">
+            <span asp-validation-for="Email" class="text-danger"></span>
         </div>
-        <div class="form-group row">
-            <label class="col-md-3 col-form-label">Телефон</label>
+    </div>
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label">Телефон</label>
 
-            <div class="col-md-9">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                    </div>
-                    <input type="text" asp-for="PhoneNumber" name="PhoneNumber" class="form-control ukrainephone" maxlength="14">
+        <div class="col-md-9">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
                 </div>
-            </div>
-            <!-- /.input group -->
-        </div>
-        <div class="form-group row">
-            <label class="col-md-3 col-form-label">Пароль</label>
-            <div class="col-md-9">
-                <input type="password" asp-for="Password" name="Password" class="form-control">
-                <span asp-validation-for="Password" class="text-danger"></span>
+                <input type="text" asp-for="PhoneNumber" name="PhoneNumber" class="form-control ukrainephone" maxlength="14">
             </div>
         </div>
-        <div class="form-group row">
-            <label class="col-md-3 col-form-label">Повторіть пароль</label>
-            <div class="col-md-9">
-                <input type="password" asp-for="ConfirmPassword" name="ConfirmPassword" class="form-control">
-                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        <!-- /.input group -->
+    </div>
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label">Пароль</label>
+        <div class="col-md-9">
+            <input type="password" asp-for="Password" name="Password" class="form-control">
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label">Повторіть пароль</label>
+        <div class="col-md-9">
+            <input type="password" asp-for="ConfirmPassword" name="ConfirmPassword" class="form-control">
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label">Фото</label>
+        <div class="col-md-9">
+            <div class="custom-file form-image">
+                <input accept=".png,.jpg,.jpeg,.gif,.tif"
+                       type="file" class="custom-file-input"
+                       id="customFile"
+                       name="files">
+                <label class="custom-file-label" for="customFile">Виберіть картинку</label>
             </div>
         </div>
-        <div class="form-group row">
-            <label class="col-md-3 col-form-label">Фото</label>
-            <div class="col-md-9">
-                <div class="custom-file form-image">
-                    <input accept=".png,.jpg,.jpeg,.gif,.tif"
-                           type="file" class="custom-file-input"
-                           id="customFile"
-                           name="files">
-                    <label class="custom-file-label" for="customFile">Виберіть картинку</label>
-                </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label">Громада</label>
+        <div class="col-md-9">
+            <div class="input-group">
+                <select name="CommunityId" class="form-control select2bs4" id="CommunityId" asp-for="CommunityId" asp-items="@Model.Communities">
+                </select>
             </div>
+            <span asp-validation-for="CommunityId" class="text-danger"></span>
         </div>
-        <div class="form-group row">
-            <label class="col-md-3 col-form-label">Громада</label>
-            <div class="col-md-9">
-                <div class="input-group">
-                    <select name="CommunityId" class="form-control select2bs4" id="CommunityId" asp-for="CommunityId" asp-items="@Model.Communities">
-                    </select>
-                </div>
-                <span asp-validation-for="CommunityId" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-form-label text-center d-block">Опис</label>
-            <textarea asp-for="Description" name="Description" class="form-control" id="summernote"></textarea>
-            <span asp-validation-for="Description" class="text-danger"></span>
-        </div>
-        <div class="form-group justify-content-between" style="margin-bottom: 0px !important">
-            <button type="submit" class="btn btn-success">Зберегти</button>
-            <button type="submit" class="btn btn-default close-button" data-dismiss="modal">Відміна</button>
-        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-form-label text-center d-block">Опис</label>
+        <textarea asp-for="Description" name="Description" class="form-control" id="summernote"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="form-group justify-content-between" style="margin-bottom: 0px !important">
+        <button type="submit" class="btn btn-success">Зберегти</button>
+        <button type="submit" class="btn btn-default close-button" data-dismiss="modal">Відміна</button>
+    </div>
 
-    </form>
+    @*//asp-controller="User" asp-action="Index"*@
+
+    
+</form>
 }
-
-<script type="text/javascript" src="~/lib/summernote/summernote.min.js"></script>
-<link href="~/lib/summernote/summernote.min.css" rel="stylesheet" />
-<script>
-    $.validator.unobtrusive.parse(document);
-  
+<script type="text/javascript" language=javascript>
     $(document).ready(function () {
-        $('#summernote').summernote();
+
+        $('#summernote').summernote({
+            tabsize: 2,
+            height: 400,
+            dialogsInBody: true,
+        });
+
         $('.ukrainephone').mask("(999) 999-9999");
     });
 </script>

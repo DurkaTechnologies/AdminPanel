@@ -85,7 +85,7 @@
                             Дії
                         </button>
                         <div class="dropdown-menu shadow animated--grow-in">
-                            <a style='margin-right:16px' asp-area="Admin" asp-controller="User" asp-action="Profile" asp-route-id="@user.Id" class="dropdown-item">
+                            <a style='margin-right:16px' asp-area="Admin" asp-controller="Profile" asp-action="Index" asp-route-id="@user.Id" class="dropdown-item">
                                 <i class="fas fa-user"></i> Профіль
                             </a>
                             @if (User.IsInRole("SuperAdmin"))
