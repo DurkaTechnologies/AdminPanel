@@ -190,6 +190,42 @@ namespace WebUI.Areas.Admin
             return new JsonResult(new { isValid = true, html = html });
         }
 
+        public async Task<IActionResult> ChangeProfileImage(string id)
+		{
+            return new JsonResult(new { isValid = true, html = await _viewRenderer.RenderViewToStringAsync("_ChangeImage", id) });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeProfileImage(string id, string fileName, IFormFile blob)
+        {
+            try
+            {
+                ApplicationUser user;
+
+                if (id == null)
+                    user = await _userManager.GetUserAsync(User);
+                else
+                    user = await _userManager.FindByIdAsync(id);
+
+                string imagePath;
+                if (user != null)
+                {
+                    imagePath = ImageService.SaveImage(blob, Path.GetExtension(fileName));
+                    if (!String.IsNullOrEmpty(imagePath))
+                    {
+                        user.ProfilePicture = imagePath;
+                        await _userManager.UpdateAsync(user);
+                    }
+                    else
+                        return new JsonResult(new { isValid = false });
+                }
+                return new JsonResult(new { isValid = true});
+            }
+            catch (Exception)
+            {
+                return new JsonResult(new { isValid = false});
+            }
+        }
         public async Task<IActionResult> Profile(string id)
         {
             /*User*/
@@ -201,7 +237,6 @@ namespace WebUI.Areas.Admin
                 user = _mapper.Map<UserViewModel>(await _userManager.FindByIdAsync(id));
 
             user.Id = id;
-
 
             /*Communities*/
             var response = await _mediator.Send(new GetAllCommunitiesCachedQuery());
@@ -221,7 +256,6 @@ namespace WebUI.Areas.Admin
             else
                 appUser = await _userManager.FindByIdAsync(id);
 
-
             if (appUser != null && appUser.ProfilePicture != null)
             {
                 ImageService.DeleteImage(appUser.ProfilePicture);
@@ -234,19 +268,10 @@ namespace WebUI.Areas.Admin
         }
 
         [HttpPost]
-        public async Task<IActionResult> Profile(UserViewModel model, IFormFile ImageBlob)
+        public async Task<IActionResult> Profile(UserViewModel model)
         {
             if (ModelState.IsValid)
             {
-                /*Image*/
-                string imagePath = null;
-
-                if (model.ImageBlob != null)
-                {
-                    imagePath = ImageService.SaveImage(model.ImageBlob);
-                    model.ProfilePicture = imagePath;
-                }
-
                 /*Claims Get*/
                 ApplicationUser appUser;
 
@@ -254,16 +279,6 @@ namespace WebUI.Areas.Admin
                     appUser = await _userManager.GetUserAsync(User);
                 else
                     appUser = await _userManager.FindByIdAsync(model.Id);
-
-                if (imagePath != null)
-                {
-                    if (appUser.ProfilePicture != null)
-                        ImageService.DeleteImage(appUser.ProfilePicture);
-
-                    appUser.ProfilePicture = imagePath;
-                }
-                else
-                    model.ProfilePicture = appUser.ProfilePicture;
 
                 /*User Set*/
                 model.Id = null;
@@ -318,44 +333,12 @@ namespace WebUI.Areas.Admin
             }
 
             /*Communities Get*/
-
             var response = await _mediator.Send(new GetAllCommunitiesCachedQuery());
             var data = _mapper.Map<IEnumerable<CommunityViewModel>>(response.Data);
             var communities = new SelectList(data, nameof(CommunityViewModel.Id), nameof(CommunityViewModel.Name), null, null);
             model.Communities = communities;
 
             return View(model);
-        }
-
-
-        [HttpPost]
-        public IActionResult AddPhoto(UserViewModel model, string filename, IFormFile blob)
-        {
-            try
-            {
-                using (var image = Image.Load(blob.OpenReadStream()))
-                {
-                    string systemFileExtenstion = filename.Substring(filename.LastIndexOf('.'));
-
-                    image.Mutate(x => x.Resize(180, 180));
-                    var newfileName180 = GenerateFileName("Photo_180_180_", systemFileExtenstion);
-                    var filepath160 = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images")).Root + $@"\{newfileName180}";
-                    image.Save(filepath160);
-                }
-
-                return Json(new { Message = "OK" });
-            }
-            catch (Exception)
-            {
-                return Json(new { Message = "ERROR" });
-            }
-        }
-
-        public string GenerateFileName(string fileTypeName, string fileextenstion)
-        {
-            if (fileTypeName == null) throw new ArgumentNullException(nameof(fileTypeName));
-            if (fileextenstion == null) throw new ArgumentNullException(nameof(fileextenstion));
-            return $"{fileTypeName}_{DateTime.Now:yyyyMMddHHmmssfff}_{Guid.NewGuid():N}{fileextenstion}";
         }
     }
 }

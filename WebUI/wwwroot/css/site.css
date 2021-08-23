@@ -95,3 +95,6 @@ body {
     font-weight: 400 !important;
 }
 
+.cropper {
+    width: calc(550px ) !important;
+}
