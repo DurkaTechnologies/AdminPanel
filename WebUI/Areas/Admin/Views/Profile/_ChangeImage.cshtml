@@ -14,13 +14,13 @@
 		readFile($('#customFile'));
 		$uploadCrop = $('#cropper').croppie({
 			viewport: {
-				width: 450,
-				height: 450,
+				width: 500,
+				height: 500,
 				type: 'square'
 			},
 			boundary: {
-				width: 500,
-				height: 500
+				width: 600,
+				height: 600
 			},
 			showZoomer: false,
 			enforceBoundary: true,
@@ -46,7 +46,7 @@
 				formData.append('fileName', $('#customFile').val());
 				formData.append('blob', blob);
 				$.ajax({
-					url: '/Admin/User/ChangeProfileImage',
+					url: '/Admin/Profile/ChangeProfileImage',
 					type: 'POST',
 					data: formData,
 					contentType: false,
