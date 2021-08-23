@@ -33,11 +33,11 @@
                                         <input accept=".png,.jpg,.jpeg,.gif,.tif"
                                                asp-for="@Model.ProfilePicture"
                                                type="file" class="custom-file-input"
-                                               onchange="document.getElementById('profilePicture').src = window.URL.createObjectURL(this.files[0])"
+                                               onchange="jQueryModalGet('/admin/profile/ChangeProfileImage', 'Обріжте нове зображення профілю')"
                                                id="customFile">
                                         <label class="my-file-label" for="customFile"><i class="fas fa-upload"></i> Завантажити</label>
                                     </div>
-                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Profile" asp-action="DeleteImage" asp-route-id="@Model.Id"><i class="fas fa-trash-alt"></i> Видалити</a>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="DeleteImage" asp-route-id="@Model.Id"><i class="fas fa-trash-alt"></i> Видалити</a>
                                 </div>
                             </div>
                         </div>
@@ -88,16 +88,12 @@
                                 </div>
 
                             </div>
-                            <div class="form-group p-2">
-                                <label class="col-form-label text-center d-block">Опис</label>
-                                <textarea asp-for="Description" class="form-control note-editor" id="summernote"></textarea>
-                                <span asp-validation-for="Description" class="text-danger"></span>
-                            </div>
-
                         </div>
                     </div>
-
-                    <div class="d-flex justify-content-end">
+                    <label class="col-form-label text-center d-block">Опис</label>
+                    <textarea asp-for="Description" class="form-control note-editor" id="summernote"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                    <div class="d-flex justify-content-end pt-2">
                         <button id="update-profile-button ml-auto" type="submit" class="btn btn-success btn-icon-split">
                             <span class="icon text-white-50">
                                 <i class="fas fa-check"></i>

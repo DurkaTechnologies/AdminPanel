@@ -1,8 +1,48 @@
-﻿@*
-	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-<div class="container-fluid">
-	<script async src="https://telegram.org/js/telegram-widget.js?15" data-telegram-post="jolymemes/13702" data-width="100%"></script>
+﻿<div id="chart">
+	<!-- TradingView Widget BEGIN -->
+	<div class="tradingview-widget-container">
+		<div id="tradingview_14474"></div>
+		<div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/symbols/BTCUSDT/?exchange=BINANCE" rel="noopener" target="_blank"><span class="blue-text">BTCUSDT Chart</span></a> by TradingView</div>
+		<script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+		<script type="text/javascript">
+			new TradingView.widget(
+				{
+					"width": "auto",
+					"height": 610,
+					"symbol": "BINANCE:BTCUSDT",
+					"interval": "D",
+					"timezone": "Etc/UTC",
+					"theme": "dark",
+					"style": "1",
+					"locale": "en",
+					"toolbar_bg": "#f1f3f6",
+					"enable_publishing": false,
+					"hide_side_toolbar": false,
+					"allow_symbol_change": true,
+					"container_id": "tradingview_14474"
+				}
+			);
+		</script>
+	</div>
+	<!-- TradingView Widget END -->
+
 </div>
+<!-- TradingView Widget BEGIN -->
+<div class="tradingview-widget-container">
+	<div class="tradingview-widget-container__widget"></div>
+	<div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/symbols/BTCUSDT/technicals/" rel="noopener" target="_blank"><span class="blue-text">Technical Analysis for BTCUSDT</span></a> by TradingView</div>
+	<script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js" async>
+		  {
+		  "interval": "5m",
+		  "width": "425",
+		  "isTransparent": true,
+		  "height": "450",
+		  "symbol": "BINANCE:BTCUSDT",
+		  "showIntervalTabs": true,
+		  "locale": "en",
+		  "colorTheme": "dark"
+		}
+	</script>
+</div>
+
+<!-- TradingView Widget END -->
