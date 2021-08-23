@@ -193,13 +193,22 @@ namespace WebUI.Areas.Admin
                     imagePath = ImageService.SaveImage(blob, Path.GetExtension(fileName));
                     if (!String.IsNullOrEmpty(imagePath))
                     {
+                        string oldImage = user.ProfilePicture;
                         user.ProfilePicture = imagePath;
-                        await _userManager.UpdateAsync(user);
+						if ((await _userManager.UpdateAsync(user)).Succeeded)
+                            ImageService.DeleteImage(oldImage);
+                        else
+                            ImageService.DeleteImage(imagePath);
+
+                        _notify.Success($"Фото профілю успішно змінено");
+
+                        return Json(new { isValid = true});
                     }
                     else
                         return new JsonResult(new { isValid = false });
                 }
-                return new JsonResult(new { isValid = true });
+                return Json(new { isValid = false });
+
             }
             catch (Exception)
             {

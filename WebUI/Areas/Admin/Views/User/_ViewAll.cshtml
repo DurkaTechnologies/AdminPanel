@@ -2,8 +2,7 @@
 @using WebUI
 @model IEnumerable<UserViewModel>
 @using AdminPanel.Application.Constants
-@using System.IO
-@using WebUI.Services
+
 
 @if ((AuthorizationService.AuthorizeAsync(User, Permissions.Users.View)).Result.Succeeded) 
 {
