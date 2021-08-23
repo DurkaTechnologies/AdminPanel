@@ -21,6 +21,9 @@ using WebUI.Areas.Entities.Models;
 using WebUI.Services;
 using System.IO;
 using System;
+using SixLabors.ImageSharp;
+using Microsoft.Extensions.FileProviders;
+using SixLabors.ImageSharp.Processing;
 
 namespace WebUI.Areas.Admin
 {
@@ -78,7 +81,7 @@ namespace WebUI.Areas.Admin
         }
 
         [HttpPost]
-        public async Task<IActionResult> OnPostCreate(UserViewModel userModel, string image)
+        public async Task<IActionResult> OnPostCreate(UserViewModel userModel)
         {
             if (ModelState.IsValid)
             {

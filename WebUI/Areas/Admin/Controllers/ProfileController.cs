@@ -3,11 +3,13 @@ using AdminPanel.Application.Features.Communities.Queries.GetById;
 using AdminPanel.Infrastructure.Identity.Models;
 using AdminPanel.Web.Abstractions;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using WebUI.Areas.Admin.Models;
@@ -78,15 +80,6 @@ namespace WebUI.Areas.Admin
         {
             if (ModelState.IsValid)
             {
-                /*Image*/
-                string imagePath = null;
-
-                if (Request.Form.Files.Count > 0)
-                {
-                    imagePath = ImageService.SaveImage(Request.Form.Files);
-                    user.ProfilePicture = imagePath;
-                }
-
                 /*Claims Get*/
                 ApplicationUser appUser;
 
@@ -94,16 +87,6 @@ namespace WebUI.Areas.Admin
                     appUser = await _userManager.GetUserAsync(User);
                 else
                     appUser = await _userManager.FindByIdAsync(user.Id);
-
-                if (imagePath != null)
-                {
-                    if (appUser.ProfilePicture != null)
-                        ImageService.DeleteImage(appUser.ProfilePicture);
-
-                    appUser.ProfilePicture = imagePath;
-                }
-                else
-                    user.ProfilePicture = appUser.ProfilePicture;
 
                 /*User Set*/
                 appUser.СommunityId = user.CommunityId;
@@ -187,6 +170,41 @@ namespace WebUI.Areas.Admin
             return RedirectToAction(nameof(Index), new { Id = id });
         }
 
+        public async Task<IActionResult> ChangeProfileImage(string id)
+        {
+            return new JsonResult(new { isValid = true, html = await _viewRenderer.RenderViewToStringAsync("_ChangeImage", id) });
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> ChangeProfileImage(string id, string fileName, IFormFile blob)
+        {
+            try
+            {
+                ApplicationUser user;
+
+                if (id == null)
+                    user = await _userManager.GetUserAsync(User);
+                else
+                    user = await _userManager.FindByIdAsync(id);
+
+                string imagePath;
+                if (user != null)
+                {
+                    imagePath = ImageService.SaveImage(blob, Path.GetExtension(fileName));
+                    if (!String.IsNullOrEmpty(imagePath))
+                    {
+                        user.ProfilePicture = imagePath;
+                        await _userManager.UpdateAsync(user);
+                    }
+                    else
+                        return new JsonResult(new { isValid = false });
+                }
+                return new JsonResult(new { isValid = true });
+            }
+            catch (Exception)
+            {
+                return new JsonResult(new { isValid = false });
+            }
+        }
     }
 }

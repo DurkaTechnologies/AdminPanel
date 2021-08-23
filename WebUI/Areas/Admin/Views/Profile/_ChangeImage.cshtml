@@ -1,0 +1,65 @@
+﻿<form id="create-form">
+	<div class="form-group">
+		<img id="cropper" />
+	</div>
+	<div class="form-group justify-content-between" style="margin-bottom: 0px !important">
+		<button class="btn btn-success" id="save-btn">Зберегти</button>
+		<button type="submit" class="btn btn-default close-button" data-dismiss="modal">Відмінити</button>
+	</div>
+</form>
+<script>
+	$(function () {
+		var $uploadCrop;
+
+		readFile($('#customFile'));
+		$uploadCrop = $('#cropper').croppie({
+			viewport: {
+				width: 500,
+				height: 500,
+				type: 'square'
+			},
+			boundary: {
+				width: 600,
+				height: 600
+			},
+			showZoomer: false,
+			enforceBoundary: true,
+			enableExif: true
+		});
+
+		function readFile(input) {
+			var reader = new FileReader();
+
+			reader.onload = function (e) {
+				$uploadCrop.croppie('bind', {
+					url: e.target.result
+				}).then(function () {
+				});
+			}
+			reader.readAsDataURL(input[0].files[0]);
+		}
+
+		$("#save-btn").on('click', function () {
+			$uploadCrop.croppie('result', 'blob').then(function (blob) {
+				var formData = new FormData();
+
+				formData.append('fileName', $('#customFile').val());
+				formData.append('blob', blob);
+				$.ajax({
+					url: '/Admin/Profile/ChangeProfileImage',
+					type: 'POST',
+					data: formData,
+					contentType: false,
+					processData: false,
+					success: function (result) {
+						if (result.isValid)
+							console.log('Photo Cropped Successfully!');
+					},
+					error: function (err) {
+						console.log(err)
+					}
+				});
+			});
+		});
+	});
+</script>
