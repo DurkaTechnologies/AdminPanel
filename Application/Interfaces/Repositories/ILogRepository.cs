@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 
 namespace AdminPanel.Application.Interfaces.Repositories
 {
-    public interface ILogRepository
-    {
-        Task<List<AuditLogResponse>> GetAuditLogsAsync(string userId);
+	public interface ILogRepository
+	{
+		Task<List<AuditLogResponse>> GetAuditLogsAsync(string userId);
 
-        Task AddLogAsync(string action, string userId);
-    }
+		Task AddLogAsync(string action, string userId);
+	}
 }

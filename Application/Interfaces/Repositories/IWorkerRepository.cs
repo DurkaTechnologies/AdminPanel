@@ -7,16 +7,16 @@ namespace AdminPanel.Application.Interfaces.Repositories
 {
     public interface IWorkerRepository
     {
-        IQueryable<Worker> Workers { get; }
+        //IQueryable<Worker> Workers { get; }
 
-        Task<List<Worker>> GetListAsync();
+        //Task<List<Worker>> GetListAsync();
 
-        Task<Worker> GetByIdAsync(int workerId);
+        //Task<Worker> GetByIdAsync(int workerId);
 
-        Task<int> InsertAsync(Worker worker);
+        //Task<int> InsertAsync(Worker worker);
 
-        Task UpdateAsync(Worker worker);
+        //Task UpdateAsync(Worker worker);
 
-        Task DeleteAsync(Worker worker);
+        //Task DeleteAsync(Worker worker);
     }
 }

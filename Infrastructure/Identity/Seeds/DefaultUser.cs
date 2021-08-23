@@ -7,29 +7,26 @@ using System.Threading.Tasks;
 namespace AdminPanel.Infrastructure.Identity.Seeds
 {
 	public static class DefaultUser
-    {
-        public static async Task SeedAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
-        {
-            //Seed Default User
-            var defaultUser = new ApplicationUser
-            {
-                UserName = "basicuser",
-                Email = "basicuser@gmail.com",
-                FirstName = "John",
-                LastName = "Doe",
-                EmailConfirmed = true,
-                PhoneNumberConfirmed = true,
-                IsActive = true
-            };
-            if (userManager.Users.All(u => u.Id != defaultUser.Id))
-            {
-                var user = await userManager.FindByEmailAsync(defaultUser.Email);
-                if (user == null)
-                {
-                    await userManager.CreateAsync(defaultUser, "123Pa$$word!");
-                    await userManager.AddToRoleAsync(defaultUser, Roles.Basic.ToString());
-                }
-            }
-        }
-    }
+	{
+		public static async Task SeedAsync(UserManager<ApplicationUser> userManager)
+		{
+			var defaultUser = new ApplicationUser
+			{
+				UserName = "testUser",
+				Email = "testUser@gmail.com",
+				FirstName = "John",
+				MiddleName = "",
+				LastName = "Doe",
+				EmailConfirmed = true,
+				PhoneNumberConfirmed = true,
+				IsActive = true
+			};
+
+			if (await userManager.FindByIdAsync(defaultUser.Id) != null)
+			{
+				await userManager.CreateAsync(defaultUser, "123Pa$$word!");
+				await userManager.AddToRoleAsync(defaultUser, Roles.Worker.ToString());
+			}
+		}
+	}
 }

@@ -65,8 +65,8 @@ namespace AdminPanel.Web.Extensions
 
         public static void AddSharedInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            //services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
-            //services.Configure<CacheSettings>(configuration.GetSection("CacheSettings"));
+			//services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
+			services.Configure<CacheSettings>(configuration.GetSection("CacheSettings"));
 			//services.AddTransient<IDateTimeService, SystemDateTimeService>();
 			//services.AddTransient<IMailService, SMTPMailService>();
 			services.AddTransient<IAuthenticatedUserService, AuthenticatedUserService>();

@@ -1,91 +1,64 @@
-@using Microsoft.AspNetCore.Mvc.Localization
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using AdminPanel.Application.Constants
+@using WebUI.Areas.Entities.Models
 <aside id="sideBar" class="main-sidebar sidebar-dark-primary">
-    <a href="/" class="brand-link">
-        <img src="~/images/logo-transparent.png" id="brand-logo" alt="logo" class="brand-image img-circle"
-             style="opacity: .8">
-        <span class="brand-text font-weight-light" style="font-size:0.8em!important">ASP.NET Core Hero</span>
-    </a>
-    <div class="sidebar">
-        <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                <li class="nav-item">
-                    <a href="/" class="nav-link">
-                        <i class="nav-icon fas fa-th"></i>
-						<p>
-							Dashboard
-							<span class="right badge badge-danger">New</span>
-						</p>
-                    </a>
-                </li>
-                @if (User.IsInRole("SuperAdmin"))
-                {
-                    <li class="nav-header">Admin</li>
-                    <li is-active-route asp-area="Admin" class="nav-item has-treeview">
-                        <a is-active-route asp-area="Admin" class="nav-link">
-                            <i class="nav-icon fas fa-user"></i>
+	<a href="~/" class="brand-link">
+		<img src="~/images/gerb-dark.svg" id="brand-logo" alt="logo" class="brand-image">
+		<span class="brand-text font-weight-light">Панель керування</span>
+	</a>
+	<div class="sidebar">
+		<nav class="mt-2">
+			<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+				<li class="nav-item">
+					<a href="/" class="nav-link">
+						<i class="nav-icon fas fa-th"></i>
+						<p>Панель</p>
+					</a>
+				</li>
+				@if (User.Identity.IsAuthenticated)
+				{
+					<li class="nav-header">Адміністратор</li>
+					<li is-active-route asp-area="Admin" class="nav-item has-treeview">
+						<a is-active-route asp-area="Admin" class="nav-link">
+							<i class="nav-icon fas fa-tools"></i>
 							<p>
-								Admin Settings
-								<i class="right fas fa-angle-left"></i>
+								Керування
+								<i class="fas fa-angle-left right"></i>
 							</p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a is-active-route asp-area="Admin" asp-controller="User" class="nav-link">
-                                    <i class="far fa-user-circle nav-icon"></i>
-									<p>Users</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a is-active-route asp-area="Admin" asp-controller="Role" class="nav-link">
-                                    <i class="far fa-user-circle nav-icon"></i>
-									<p>Roles</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                }
-			<li class="nav-header">Master</li>
-                <li is-active-route asp-area="Utilities" class="nav-item has-treeview">
-                    <a is-active-route asp-area="Utilities" class="nav-link">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
-						<p>
-							Utlities
-							<i class="right fas fa-angle-left"></i>
-						</p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a is-active-route class="nav-link">
-                                <i class="far fa-file-archive nav-icon"></i>
-								<p>Document</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li is-active-route asp-area="Catalog" class="nav-item has-treeview">
-                    <a is-active-route asp-area="Catalog" class="nav-link">
-                        <i class="nav-icon fas fa-archive"></i>
-						<p>
-							Catalog
-							<i class="right fas fa-angle-left"></i>
-						</p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a is-active-route asp-area="Catalog" asp-controller="Product" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-								<p>Product</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a is-active-route asp-area="Catalog" asp-controller="Brand" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Brand</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </nav>
-    </div>
+						</a>
+						<ul class="nav nav-treeview">
+							<li class="nav-item">
+								<a is-active-route asp-area="Admin" asp-controller="User" asp-action="Index" class="nav-link">
+									<i class="fas fa-users nav-icon "></i>
+									<p>Користувачі</p>
+								</a>
+							</li>
+							@if (User.IsInRole("SuperAdmin"))
+							{
+								<li class="nav-item">
+									<a is-active-route asp-area="Admin" asp-controller="Role" asp-action="Index" class="nav-link">
+										<i class="fas fa-user-tag nav-icon"></i>
+										<p>Ролі</p>
+									</a>
+								</li>
+							}
+							<li class="nav-item">
+								<a is-active-route asp-controller="Identity" asp-action="Log" class="nav-link">
+									<i class="fas fa-list nav-icon"></i>
+									<p>Логування</p>
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li class="nav-header">Редактор</li>
+					<li class="nav-item">
+						<a asp-area="Entities" asp-controller="Community" class="nav-link">
+							<i class="fas fa-table nav-icon"></i>
+							<p>Громади</p>
+						</a>
+					</li>
+					}
+				</ul>
+		</nav>
+	</div>
 </aside>

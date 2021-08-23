@@ -3,6 +3,7 @@ using AdminPanel.Application.Interfaces.CacheRepositories;
 using AdminPanel.Application.Interfaces.Contexts;
 using AdminPanel.Application.Interfaces.Repositories;
 using AdminPanel.Application.Interfaces.Shared;
+using AdminPanel.Infrastructure.CacheRepositories;
 using AdminPanel.Infrastructure.DbContexts;
 using AdminPanel.Infrastructure.Repositories;
 using AdminPanel.Infrastructure.Services;
@@ -29,9 +30,8 @@ namespace AdminPanel.Infrastructure.Extensions
 
             services.AddTransient(typeof(IRepositoryAsync<>), typeof(RepositoryAsync<>));
             services.AddTransient<IWorkerRepository, WorkerRepository>();
-            //services.AddTransient<IProductCacheRepository, ProductCacheRepository>();
-            services.AddTransient<ICommunityRepository, CommunityRepository>();
-            //services.AddTransient<IBrandCacheRepository, BrandCacheRepository>();
+			services.AddTransient<ICommunityCacheRepository, CommunityCacheRepository>();
+			services.AddTransient<ICommunityRepository, CommunityRepository>();
             services.AddTransient<ILogRepository, LogRepository>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 
