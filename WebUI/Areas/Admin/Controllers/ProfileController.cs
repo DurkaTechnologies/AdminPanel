@@ -202,12 +202,12 @@ namespace WebUI.Areas.Admin
 
                         _notify.Success($"Фото профілю успішно змінено");
 
-                        return Json(new { isValid = true});
+                        return new JsonResult(new { isValid = true });
                     }
                     else
                         return new JsonResult(new { isValid = false });
                 }
-                return Json(new { isValid = false });
+                return new JsonResult(new { isValid = false });
 
             }
             catch (Exception)

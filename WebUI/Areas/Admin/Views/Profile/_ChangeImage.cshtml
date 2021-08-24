@@ -1,5 +1,5 @@
-﻿@using WebUI; 
-@model string 
+﻿@using WebUI;
+@model string
 <form id="create-form">
 	<div class="form-group">
 		<img id="cropper" />
@@ -51,20 +51,18 @@
 					type: 'POST',
 					url: '/Admin/Profile/ChangeProfileImage',
 					data: formData,
+					async: false,
 					contentType: false,
 					processData: false,
 					success: function (res) {
-						document.getElementById('profilePicture').attr('src', '@ENV.ImagePath'+ result.picture);
-						alert(res);
 						if (res.isValid) {
-							alert("dsdsadasd");
-							location.href = 'admin/profile/edit/@Model';
 						}
 					},
-					//document.getElementById('profilePicture').attr('src', '@ENV.ImagePath'+ result.picture);
 					error: function (err) {
 						alert(err);
 					}
+				}).done(function () {
+					window.location.href = '@(@Url.Action("Edit", "Profile"))?Id=' + '@Model';
 				});
 			});
 		});
