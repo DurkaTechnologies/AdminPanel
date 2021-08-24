@@ -1,6 +1,8 @@
 @using WebUI.Areas.Admin.Models
 @model UserViewModel
 @using AdminPanel.Application.Constants
+@using WebUI.Services
+@{ string password = PasswordGenerator.Generate(); } 
 
 @if (AuthorizationService.AuthorizeAsync(User, Permissions.Users.Edit).Result.Succeeded || AuthorizationService.AuthorizeAsync(User, Permissions.Users.Create).Result.Succeeded)
 {
@@ -49,14 +51,14 @@
     <div class="form-group row">
         <label class="col-md-3 col-form-label">Пароль</label>
         <div class="col-md-9">
-            <input type="password" asp-for="Password" name="Password" class="form-control">
+            <input type="password" asp-for="Password" name="Password" class="form-control" value="@password">
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
     </div>
     <div class="form-group row">
         <label class="col-md-3 col-form-label">Повторіть пароль</label>
         <div class="col-md-9">
-            <input type="password" asp-for="ConfirmPassword" name="ConfirmPassword" class="form-control">
+            <input type="password" asp-for="ConfirmPassword" name="ConfirmPassword" class="form-control" value="@password">
             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
         </div>
     </div>
