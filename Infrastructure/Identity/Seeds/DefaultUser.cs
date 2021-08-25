@@ -14,15 +14,15 @@ namespace AdminPanel.Infrastructure.Identity.Seeds
 			{
 				UserName = "testUser",
 				Email = "testUser@gmail.com",
-				FirstName = "John",
-				MiddleName = "",
-				LastName = "Doe",
+				FirstName = "Test",
+				MiddleName = "Testovich",
+				LastName = "User",
 				EmailConfirmed = true,
 				PhoneNumberConfirmed = true,
 				IsActive = true
 			};
 
-			if (await userManager.FindByIdAsync(defaultUser.Id) == null)
+			if (await userManager.FindByNameAsync(defaultUser.UserName) == null)
 			{
 				await userManager.CreateAsync(defaultUser, "123Pa$$word!");
 				await userManager.AddToRoleAsync(defaultUser, Roles.Worker.ToString());

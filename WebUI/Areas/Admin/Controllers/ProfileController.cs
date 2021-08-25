@@ -1,12 +1,15 @@
 ﻿using AdminPanel.Application.Features.Communities.Queries.GetAllCached;
 using AdminPanel.Application.Features.Communities.Queries.GetById;
+using AdminPanel.Infrastructure.AuditModels;
 using AdminPanel.Infrastructure.Identity.Models;
 using AdminPanel.Web.Abstractions;
+using Application.Features.Logs.Commands;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -88,6 +91,15 @@ namespace WebUI.Areas.Admin
                 else
                     appUser = await _userManager.FindByIdAsync(user.Id);
 
+                Audit audit = new Audit()
+                {
+                    Type = "Update",
+                    UserId = _userService.UserId,
+                    TableName = "Users",
+                    OldValues = JsonConvert.SerializeObject(new AuditUserModel(_mapper.Map<UserViewModel>(appUser))),
+                    NewValues = JsonConvert.SerializeObject(new AuditUserModel(user))
+                };
+
                 /*User Set*/
                 appUser.СommunityId = user.CommunityId;
                 appUser.Description = user.Description;
@@ -113,13 +125,13 @@ namespace WebUI.Areas.Admin
 
                     /*Other Set*/
 
-                    if (user.UserName.ToLower() != appUser.UserName.ToLower())
+                    /*if (user.UserName.ToLower() != appUser.UserName.ToLower())
                     {
                         if (await _userManager.FindByNameAsync(user.UserName) == null)
                             await _userManager.SetUserNameAsync(appUser, user.UserName);
                         else
                             _notify.Error($"Користувач {user.UserName} вже існує");
-                    }
+                    }*/
 
                     if (user.PhoneNumber != appUser.PhoneNumber)
                         await _userManager.SetPhoneNumberAsync(appUser, user.PhoneNumber);
@@ -132,6 +144,8 @@ namespace WebUI.Areas.Admin
                     }
 
                     _notify.Success($"Користувач {user.UserName} був успішно змінений");
+
+                    await _mediator.Send(new AddLogCommand() { Audit = audit });
                 }
                 catch (Exception ex)
                 {

@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AdminPanel.Infrastructure.AuditModels;
+using Domain.Common.Interfaces;
+using System;
 
 namespace AdminPanel.Infrastructure.Repositories
 {
@@ -21,6 +23,15 @@ namespace AdminPanel.Infrastructure.Repositories
             _repository = repository;
             _mapper = mapper;
             _dateTimeService = dateTimeService;
+        }
+
+        public async Task AddLogAsync(IAudit audit)
+        {
+            if (audit != null)
+            {
+                audit.DateTime = DateTime.Now;
+                await _repository.AddAsync(_mapper.Map<Audit>(audit));
+            }
         }
 
         public async Task AddLogAsync(string action, string userId)

@@ -4,6 +4,7 @@ using AdminPanel.Application.Interfaces.Shared;
 using AdminPanel.Domain.Common;
 using AdminPanel.Domain.Common.Models;
 using AdminPanel.Domain.Entities;
+using AdminPanel.Infrastructure.AuditModels;
 using AdminPanel.Infrastructure.Identity.Models;
 using AdminPanel.Infrastructure.Persistence.Configurations;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +21,7 @@ using System.Threading.Tasks;
 
 namespace AdminPanel.Infrastructure.DbContexts
 {
-	public class ApplicationDbContext : DbContext, IApplicationDbContext
+	public class ApplicationDbContext : AuditableContext, IApplicationDbContext
 	{
 		private readonly IDateTimeService _dateTime;
 		private readonly IAuthenticatedUserService _authenticatedUser;
@@ -32,6 +33,7 @@ namespace AdminPanel.Infrastructure.DbContexts
 		{
 			_authenticatedUser = currentUserService;
 			_dateTime = dateTime;
+			//ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 		}
 
 		public bool HasChanges => ChangeTracker.HasChanges();
@@ -56,9 +58,10 @@ namespace AdminPanel.Infrastructure.DbContexts
 				}
 			}
 
-			var result = await base.SaveChangesAsync(cancellationToken);
-
-			return result;
+			if (_authenticatedUser.UserId == null)
+				return await base.SaveChangesAsync(cancellationToken);
+			else
+				return await base.SaveChangesAsync(_authenticatedUser.UserId);
 		}
 
 		protected override void OnModelCreating(ModelBuilder builder)

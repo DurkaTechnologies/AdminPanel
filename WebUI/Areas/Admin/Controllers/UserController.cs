@@ -24,6 +24,10 @@ using System;
 using SixLabors.ImageSharp;
 using Microsoft.Extensions.FileProviders;
 using SixLabors.ImageSharp.Processing;
+using AdminPanel.Application.Features.ActivityLog.Commands;
+using Newtonsoft.Json;
+using AdminPanel.Infrastructure.AuditModels;
+using Application.Features.Logs.Commands;
 
 namespace WebUI.Areas.Admin
 {
@@ -95,7 +99,7 @@ namespace WebUI.Areas.Admin
                 var user = new ApplicationUser
                 {
                     Email = userModel.Email,
-                    UserName = userModel.Email,
+                    UserName = userModel.UserName,
                     FirstName = userModel.FirstName,
                     MiddleName = userModel.MiddleName,
                     LastName = userModel.LastName,
@@ -107,7 +111,7 @@ namespace WebUI.Areas.Admin
                 };
 
                 var result = await _userManager.CreateAsync(user, userModel.Password);
-                
+
                 if (result.Succeeded)
                 {
 
@@ -119,6 +123,19 @@ namespace WebUI.Areas.Admin
                     var htmlData = await _viewRenderer.RenderViewToStringAsync("_ViewAll", users);
 
                     _notify.Success($"Аккаунт {user.Email} створено");
+
+                    userModel.Id = user.Id;
+
+                    Audit audit = new Audit()
+                    {
+                        Type = "Create",
+                        UserId = _userService.UserId,
+                        TableName = "Users",
+                        NewValues = JsonConvert.SerializeObject(new AuditUserModel(userModel))
+                    };
+
+                    await _mediator.Send(new AddLogCommand() { Audit = audit });
+
                     return new JsonResult(new { isValid = true, html = htmlData });
                 }
                 foreach (var error in result.Errors)
@@ -142,6 +159,16 @@ namespace WebUI.Areas.Admin
                 {
                     _notify.Success($"Користувач {user.FirstName + " " + user.LastName} був успішно видалений");
                     await _userManager.DeleteAsync(user);
+
+                    Audit audit = new Audit()
+                    {
+                        Type = "Delete",
+                        UserId = _userService.UserId,
+                        TableName = "Users",
+                        OldValues = JsonConvert.SerializeObject(new AuditUserModel(_mapper.Map<UserViewModel>(user)))
+                    };
+
+                    await _mediator.Send(new AddLogCommand() { Audit = audit });
                 }
                 else
                     _notify.Error($"Не можна видалити базових користувачів");
@@ -169,12 +196,26 @@ namespace WebUI.Areas.Admin
                 {
                     user.IsActive = !user.IsActive;
 
+                    Audit audit = new Audit()
+                    {
+                        UserId = _userService.UserId,
+                        TableName = "Users",
+                        NewValues = JsonConvert.SerializeObject(new AuditUserModel(_mapper.Map<UserViewModel>(user)))
+                    };
+
                     if (user.IsActive)
+                    {
                         _notify.Success($"Користувач {user.FirstName + " " + user.LastName} активований");
+                        audit.Type = "Activated";
+                    }
                     else
+                    {
                         _notify.Success($"Користувач {user.FirstName + " " + user.LastName} деактивований");
+                        audit.Type = "Deactivated";
+                    }
 
                     await _userManager.UpdateAsync(user);
+                    await _mediator.Send(new AddLogCommand() { Audit = audit });
                 }
                 else
                     _notify.Error($"Не можна деактивувати базових користувачів");

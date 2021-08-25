@@ -6,9 +6,9 @@ using AutoMapper;
 
 namespace AdminPanel.Application.Mappings
 {
-	internal class BrandProfile : Profile
+	internal class CommunityProfile : Profile
 	{
-		public BrandProfile()
+		public CommunityProfile()
 		{
 			CreateMap<CreateCommunityCommand, Community>().ReverseMap();
 			CreateMap<GetCommunityByIdResponse, Community>().ReverseMap();

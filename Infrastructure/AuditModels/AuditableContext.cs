@@ -1,14 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AdminPanel.Infrastructure.DbContexts;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace AdminPanel.Infrastructure.AuditModels
 {
-	class AuditableContext : DbContext
+    public abstract class AuditableContext : DbContext
     {
         public AuditableContext(DbContextOptions options) : base(options)
         {
+
         }
 
         public DbSet<Audit> AuditLogs { get; set; }
@@ -100,6 +103,7 @@ namespace AdminPanel.Infrastructure.AuditModels
                 }
                 AuditLogs.Add(auditEntry.ToAudit());
             }
+
             return SaveChangesAsync();
         }
     }
