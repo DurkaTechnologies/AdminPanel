@@ -53,8 +53,8 @@ namespace AdminPanel.Web.Extensions
             }
             else
             {
-                services.AddDbContext<IdentityContext>(options => options.UseSqlServer(configuration.GetConnectionString("IdentityConnection")));
-                services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("ApplicationConnection")));
+                services.AddDbContext<IdentityContext>(options => options.UseSqlServer(configuration.GetConnectionString("TestDBApp")));
+                services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("TestDBIdentity")));
             }
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {

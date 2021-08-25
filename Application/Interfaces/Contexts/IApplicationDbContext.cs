@@ -14,6 +14,6 @@ namespace AdminPanel.Application.Interfaces.Contexts
 
 		Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 
-		DbSet<Community> Communities { get; set; }
-	}
+        DbSet<Community> Communities { get; set; }
+    }
 }

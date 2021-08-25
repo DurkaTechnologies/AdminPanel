@@ -27,14 +27,21 @@ namespace AdminPanel.Infrastructure.Identity.Models
 
 		public bool IsActive { get; set; } = false;
 
-		#region Auditable Entity
-		public DateTime Created { get; set; }
+        public List<Correspondence> Correspondences { get; set; }
+
+        #region Auditable Entity
+        public DateTime Created { get; set; }
 
 		public string CreatedBy { get; set; }
 
 		public DateTime? LastModified { get; set; }
 
 		public string LastModifiedBy { get; set; }
-		#endregion
-	}
+        #endregion
+
+        public ApplicationUser()
+        {
+            Correspondences = new List<Correspondence>();
+        }
+    }
 }

@@ -22,7 +22,7 @@ namespace AdminPanel.Infrastructure.Identity.Seeds
 				IsActive = true
 			};
 
-			if (await userManager.FindByIdAsync(defaultUser.Id) != null)
+			if (userManager.Users.All(u => u.UserName != defaultUser.UserName))
 			{
 				await userManager.CreateAsync(defaultUser, "123Pa$$word!");
 				await userManager.AddToRoleAsync(defaultUser, Roles.Worker.ToString());

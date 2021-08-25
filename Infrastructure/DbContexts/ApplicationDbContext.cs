@@ -20,51 +20,53 @@ using System.Threading.Tasks;
 
 namespace AdminPanel.Infrastructure.DbContexts
 {
-	public class ApplicationDbContext : DbContext, IApplicationDbContext
-	{
-		private readonly IDateTimeService _dateTime;
-		private readonly IAuthenticatedUserService _authenticatedUser;
+    public class ApplicationDbContext : DbContext, IApplicationDbContext
+    {
+        private readonly IDateTimeService _dateTime;
+        private readonly IAuthenticatedUserService _authenticatedUser;
 
-		public ApplicationDbContext(
-			DbContextOptions options,
-			IAuthenticatedUserService currentUserService,
-			IDateTimeService dateTime) : base(options)
-		{
-			_authenticatedUser = currentUserService;
-			_dateTime = dateTime;
-		}
+        public ApplicationDbContext(
+            DbContextOptions options,
+            IAuthenticatedUserService currentUserService,
+            IDateTimeService dateTime) : base(options)
+        {
+            _authenticatedUser = currentUserService;
+            _dateTime = dateTime;
+        }
 
-		public bool HasChanges => ChangeTracker.HasChanges();
+        public bool HasChanges => ChangeTracker.HasChanges();
 
-		public DbSet<Community> Communities { get; set; }
+        public DbSet<Community> Communities { get; set; }
+        public DbSet<Correspondence> Correspondences { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
-		public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
-		{
-			foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
-			{
-				switch (entry.State)
-				{
-					case EntityState.Added:
-						entry.Entity.CreatedBy = _authenticatedUser.UserId;
-						entry.Entity.Created = _dateTime.NowUtc;
-						break;
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+        {
+            foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.Entity.CreatedBy = _authenticatedUser.UserId;
+                        entry.Entity.Created = _dateTime.NowUtc;
+                        break;
 
-					case EntityState.Modified:
-						entry.Entity.LastModifiedBy = _authenticatedUser.UserId;
-						entry.Entity.LastModified = _dateTime.NowUtc;
-						break;
-				}
-			}
+                    case EntityState.Modified:
+                        entry.Entity.LastModifiedBy = _authenticatedUser.UserId;
+                        entry.Entity.LastModified = _dateTime.NowUtc;
+                        break;
+                }
+            }
 
-			var result = await base.SaveChangesAsync(cancellationToken);
+            var result = await base.SaveChangesAsync(cancellationToken);
 
-			return result;
-		}
+            return result;
+        }
 
-		protected override void OnModelCreating(ModelBuilder builder)
-		{
-			builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-			base.OnModelCreating(builder);
-		}
-	}
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            base.OnModelCreating(builder);
+        }
+    }
 }
