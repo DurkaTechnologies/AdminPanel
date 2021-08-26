@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Common.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AdminPanel.Infrastructure.AuditModels
 {
-	public class Audit
+	public class Audit : IAudit
 	{
         public int Id { get; set; }
         public string UserId { get; set; }

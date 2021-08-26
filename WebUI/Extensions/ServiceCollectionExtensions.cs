@@ -1,19 +1,14 @@
 ﻿using AdminPanel.Application.DTOs.Settings;
 using AdminPanel.Application.Interfaces.Shared;
 using AdminPanel.Infrastructure.DbContexts;
-using AdminPanel.Infrastructure.Identity.Models;
 using AdminPanel.Web.Services;
-//using AdminPanel.Infrastructure.Shared.Services;
-//using AdminPanel.Web.Services;
+using Infrastructure.Identity.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
-using System.Globalization;
 
 namespace AdminPanel.Web.Extensions
 {
@@ -47,14 +42,15 @@ namespace AdminPanel.Web.Extensions
             if (configuration.GetValue<bool>("UseInMemoryDatabase"))
             {
                 services.AddDbContext<IdentityContext>(options =>
-                    options.UseInMemoryDatabase("IdentityDb"));
+                    options.UseInMemoryDatabase("IdentityConnection"));
                 services.AddDbContext<ApplicationDbContext>(options =>
-                    options.UseInMemoryDatabase("ApplicationDb"));
+                    options.UseInMemoryDatabase("ApplicationConnection"));
+
             }
             else
             {
-                services.AddDbContext<IdentityContext>(options => options.UseSqlServer(configuration.GetConnectionString("IdentityConnection")));
-                services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("ApplicationConnection")));
+                services.AddDbContext<IdentityContext>(options => options.UseNpgsql(configuration.GetConnectionString("IdentityConnection")));
+                services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("ApplicationConnection")));
             }
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {

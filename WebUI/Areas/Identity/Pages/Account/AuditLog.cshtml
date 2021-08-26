@@ -1,0 +1,148 @@
+﻿@page
+@model WebUI.Areas.Identity.Pages.Account.AuditLogModel
+@using Newtonsoft.Json;
+@inject UserManager<ApplicationUser> _userManager
+
+@{ ViewData["Title"] = "Історія";
+
+    Dictionary<string, string> JsonParse(string json)
+    {
+        if (!String.IsNullOrEmpty(json))
+        {
+            try
+            {
+                var values = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                var toDelete = new List<string> { "Created", "LastModified", "ProfilePicture", "Description" };
+
+                foreach (var item in values)
+                    if (String.IsNullOrEmpty(item.Value))
+                        toDelete.Add(item.Key);
+
+                foreach (var item in toDelete)
+                    if (values.ContainsKey(item))
+                        values.Remove(item);
+
+                return values;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        return null;
+    } 
+}
+<div class="card">
+    <div id="viewAll" class="card-body table-responsive">
+        <table class="table table-striped" id="logTable">
+            <thead>
+                <tr>
+                    <th>
+                        ІД
+                    </th>
+                    <th>
+                        Дата
+                    </th>
+                    <th>
+                        Змінювач
+                    </th>
+                    <th>
+                        Дія
+                    </th>
+                    <th>
+                        Таблиця
+                    </th>
+                    <th>
+                        Старі значення
+                    </th>
+                    <th>
+                        Нові значення
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.AuditLogResponses)
+                {
+                    <tr>
+                        <td>
+                            @user.Id
+                        </td>
+                        <td>
+                            @user.DateTime.ToString()
+                        </td>
+                        <td>
+                            @user.UserId
+                        </td>
+                        <td>
+                            @switch (@user.Type)
+                            {
+                                case "Create":
+                                    <small class="badge badge-success">@user.Type</small>
+                                    break;
+                                case "Delete":
+                                    <small class="badge badge-danger">@user.Type</small>
+                                    break;
+                                case "Update":
+                                    <small class="badge badge-info">@user.Type</small>
+                                    break;
+                                case "Manage":
+                                    <small class="badge badge-primary">@user.Type</small>
+                                    break;
+                                default:
+                                    <small class="badge badge-light">@user.Type</small>
+                                    break;
+                            }
+
+                            
+                        </td>
+                        <td>
+                            @user.TableName
+                        </td>
+                        <td>
+                        @{ 
+                            var dictionaryOld = JsonParse(user.OldValues);
+
+                            if (dictionaryOld != null)
+                            {
+                                foreach (var item in dictionaryOld)
+                                {
+                                    <div>
+                                        <small class="badge badge-info">@item.Key</small> @item.Value
+                                    </div> 
+                                }
+                            }
+                        }
+                        </td>
+                        <td>
+                        @{
+                            var dictionaryNew = JsonParse(user.NewValues);
+
+                            if (dictionaryNew != null)
+                            {
+                                foreach (var item in dictionaryNew)
+                                {
+                                    <div>
+                                        <small class="badge badge-info">@item.Key</small> @item.Value
+                                    </div>
+                                }
+                            }
+                        }
+                        </td>
+                    </tr>
+                 }
+            </tbody>
+        </table>
+    </div>
+</div>
+@section Scripts
+{
+    <script src="~/js/site.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#logTable").DataTable({
+
+                "order": [[0, "desc"]]
+            });
+        });
+    </script>
+}

@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace WebUI.Areas.Entities.Controllers
 {
@@ -35,8 +36,6 @@ namespace WebUI.Areas.Entities.Controllers
 
         public async Task<JsonResult> OnGetCreateOrEdit(int id = 0)
         {
-            var communitiesResponse = await _mediator.Send(new GetAllCommunitiesCachedQuery());
-
             if (id == 0)
             {
                 var communityViewModel = new CommunityViewModel();

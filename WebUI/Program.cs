@@ -1,4 +1,4 @@
-using AdminPanel.Infrastructure.Identity.Models;
+using Infrastructure.Identity.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -34,6 +34,7 @@ namespace WebUI
 					await DefaultSuperAdminUser.SeedAsync(userManager, roleManager);
 					await DefaultAdminUser.SeedAsync(userManager, roleManager);
 					await DefaultUser.SeedAsync(userManager);
+
 					logger.LogInformation("Finished Seeding Default Data");
                     logger.LogInformation("Application Starting");
                 }

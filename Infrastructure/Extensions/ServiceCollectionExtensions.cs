@@ -28,8 +28,7 @@ namespace AdminPanel.Infrastructure.Extensions
             services.AddScoped<IDomainEventService, DomainEventService>();
             services.AddTransient<IDateTimeService, DateTimeService>();
 
-            services.AddTransient(typeof(IRepositoryAsync<>), typeof(RepositoryAsync<>));
-            services.AddTransient<IWorkerRepository, WorkerRepository>();
+            services.AddTransient(typeof(IRepositoryAsync<,>), typeof(RepositoryAsync<,>));
 			services.AddTransient<ICommunityCacheRepository, CommunityCacheRepository>();
 			services.AddTransient<ICommunityRepository, CommunityRepository>();
             services.AddTransient<ILogRepository, LogRepository>();

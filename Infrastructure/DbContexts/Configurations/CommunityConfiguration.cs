@@ -1,4 +1,4 @@
-﻿using AdminPanel.Domain.Entities;
+﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,6 +11,10 @@ namespace AdminPanel.Infrastructure.Persistence.Configurations
 			builder.Property(t => t.Name)
 				.HasMaxLength(256)
 				.IsRequired();
+
+			builder.HasOne(x => x.District)
+				.WithMany(x => x.Communities)
+				.HasForeignKey(x => x.DistrictId);
 		}
 	}
 }

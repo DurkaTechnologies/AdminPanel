@@ -27,7 +27,7 @@ namespace AdminPanel.Application.Features.ActivityLog.Commands
 		public async Task<Result<int>> Handle(AddActivityLogCommand request, CancellationToken cancellationToken)
 		{
 			await logRepository.AddLogAsync(request.Action, request.userId);
-			await unitOfWork.Commit(cancellationToken);
+			await unitOfWork.CommitApplicationDb(cancellationToken);
 			return Result<int>.Success(1);
 		}
 	}
