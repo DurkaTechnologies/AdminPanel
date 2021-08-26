@@ -1,23 +1,24 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace AdminPanel.Application.Interfaces.Repositories
 {
-	public interface IRepositoryAsync<T> where T : class
+	public interface IRepositoryAsync<TEntity, TContext> where TEntity : class where TContext : DbContext
 	{
-		IQueryable<T> Entities { get; }
+		IQueryable<TEntity> Entities { get; }
 
-		Task<T> GetByIdAsync(int id);
+		Task<TEntity> GetByIdAsync(int id);
 
-		Task<List<T>> GetAllAsync();
+		Task<List<TEntity>> GetAllAsync();
 
-		Task<List<T>> GetPagedReponseAsync(int pageNumber, int pageSize);
+		Task<List<TEntity>> GetPagedReponseAsync(int pageNumber, int pageSize);
 
-		Task<T> AddAsync(T entity);
+		Task<TEntity> AddAsync(TEntity entity);
 
-		Task UpdateAsync(T entity);
+		Task UpdateAsync(TEntity entity);
 
-		Task DeleteAsync(T entity);
+		Task DeleteAsync(TEntity entity);
 	}
 }

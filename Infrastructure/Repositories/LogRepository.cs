@@ -9,16 +9,17 @@ using System.Threading.Tasks;
 using AdminPanel.Infrastructure.AuditModels;
 using Domain.Common.Interfaces;
 using System;
+using AdminPanel.Infrastructure.DbContexts;
 
 namespace AdminPanel.Infrastructure.Repositories
 {
     public class LogRepository : ILogRepository
     {
         private readonly IMapper _mapper;
-        private readonly IRepositoryAsync<Audit> _repository;
+        private readonly IRepositoryAsync<Audit, ApplicationDbContext> _repository;
         private readonly IDateTimeService _dateTimeService;
 
-        public LogRepository(IRepositoryAsync<Audit> repository, IMapper mapper, IDateTimeService dateTimeService)
+        public LogRepository(IRepositoryAsync<Audit, ApplicationDbContext> repository, IMapper mapper, IDateTimeService dateTimeService)
         {
             _repository = repository;
             _mapper = mapper;

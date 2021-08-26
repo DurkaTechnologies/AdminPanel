@@ -1,4 +1,5 @@
 ﻿using AdminPanel.Application.Interfaces.Repositories;
+using AdminPanel.Infrastructure.DbContexts;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
@@ -10,10 +11,10 @@ namespace AdminPanel.Infrastructure.Repositories
 {
 	public class CommunityRepository : ICommunityRepository
 	{
-		private readonly IRepositoryAsync<Community> _repository;
+		private readonly IRepositoryAsync<Community, IdentityContext> _repository;
 		private readonly IDistributedCache _distributedCache;
 
-		public CommunityRepository(IDistributedCache distributedCache, IRepositoryAsync<Community> repository)
+		public CommunityRepository(IDistributedCache distributedCache, IRepositoryAsync<Community, IdentityContext> repository)
 		{
 			_distributedCache = distributedCache;
 			_repository = repository;
