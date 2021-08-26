@@ -1,7 +1,7 @@
 ﻿using AdminPanel.Application.Interfaces.CacheRepositories;
 using AdminPanel.Application.Interfaces.Repositories;
 using AdminPanel.Infrastructure.Extensions;
-using AdminPanel.Domain.Entities;
+using Domain.Entities;
 using AdminPanel.Infrastructure.CacheKeys;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Collections.Generic;

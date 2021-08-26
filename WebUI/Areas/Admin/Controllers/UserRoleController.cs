@@ -1,13 +1,11 @@
-﻿using AdminPanel.Application.Enums;
-using AdminPanel.Infrastructure.AuditModels;
-using AdminPanel.Infrastructure.Identity.Models;
+﻿using AdminPanel.Infrastructure.AuditModels;
+using Infrastructure.Identity.Models;
 using AdminPanel.Web.Abstractions;
 using Application.Features.Logs.Commands;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

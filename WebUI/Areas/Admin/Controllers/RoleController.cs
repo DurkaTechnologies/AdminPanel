@@ -1,7 +1,6 @@
 ﻿using AdminPanel.Application.Enums;
 using AdminPanel.Infrastructure.AuditModels;
-using AdminPanel.Infrastructure.Identity.Models;
-using AdminPanel.Infrastructure.Identity.Seeds;
+using Infrastructure.Identity.Models;
 using AdminPanel.Web.Abstractions;
 using Application.Features.Logs.Commands;
 using Microsoft.AspNetCore.Authorization;
@@ -11,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using WebUI.Areas.Admin.Models;
 

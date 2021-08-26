@@ -1,6 +1,5 @@
 ﻿using AdminPanel.Application.Enums;
 using AdminPanel.Application.Features.Communities.Queries.GetAllCached;
-using AdminPanel.Infrastructure.Identity.Models;
 using AdminPanel.Web.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -8,30 +7,22 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using WebUI.Areas.Admin.Models;
 using WebUI.Areas.Entities.Models;
 using WebUI.Services;
-using System.IO;
-using System;
-using SixLabors.ImageSharp;
-using Microsoft.Extensions.FileProviders;
-using SixLabors.ImageSharp.Processing;
-using AdminPanel.Application.Features.ActivityLog.Commands;
 using Newtonsoft.Json;
 using AdminPanel.Infrastructure.AuditModels;
 using Application.Features.Logs.Commands;
+using Infrastructure.Identity.Models;
 
 namespace WebUI.Areas.Admin
 {
-    [Area("Admin")]
+	[Area("Admin")]
     public class UserController : BaseController<UserController>
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -106,7 +97,7 @@ namespace WebUI.Areas.Admin
                     ProfilePicture = imagePath,
                     EmailConfirmed = true,
                     IsActive = true,
-                    СommunityId = userModel.CommunityId,
+                    CommunityId = userModel.CommunityId,
                     Description = userModel.Description
                 };
 

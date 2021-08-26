@@ -1,9 +1,9 @@
 ﻿using AdminPanel.Domain.Common.Models;
-using AdminPanel.Domain.Entities;
+using Domain.Entities;
 
 namespace AdminPanel.Domain.Common.Interfaces
 {
-	public interface IWorker : IAuditableEntity
+	public interface IWorker
 	{
 		public string FirstName { get; set; }
 
@@ -15,7 +15,7 @@ namespace AdminPanel.Domain.Common.Interfaces
 
 		public string Description { get; set; }
 
-		public int СommunityId { get; set; }
+		public int? CommunityId { get; set; }
 
 		public Community Community { get; set; }
 	}

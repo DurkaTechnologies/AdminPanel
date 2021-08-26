@@ -1,9 +1,9 @@
 ﻿using AdminPanel.Application.Features.Communities.Queries.GetAllCached;
 using AdminPanel.Application.Features.Communities.Queries.GetById;
 using AdminPanel.Infrastructure.AuditModels;
-using AdminPanel.Infrastructure.Identity.Models;
 using AdminPanel.Web.Abstractions;
 using Application.Features.Logs.Commands;
+using Infrastructure.Identity.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -13,7 +13,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using WebUI.Areas.Admin.Models;
 using WebUI.Areas.Entities.Models;
@@ -101,7 +100,7 @@ namespace WebUI.Areas.Admin
                 };
 
                 /*User Set*/
-                appUser.СommunityId = user.CommunityId;
+                appUser.CommunityId = user.CommunityId;
                 appUser.Description = user.Description;
 
                 if (!String.IsNullOrEmpty(user.FirstName))

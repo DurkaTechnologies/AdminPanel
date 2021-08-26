@@ -1,5 +1,5 @@
 ﻿using AdminPanel.Application.Constants;
-using AdminPanel.Infrastructure.Identity.Models;
+using Infrastructure.Identity.Models;
 using AdminPanel.Web.Abstractions;
 using WebUI.Areas.Admin.Models;
 using AdminPanel.WebUI.Helpers;

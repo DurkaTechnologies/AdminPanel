@@ -1,14 +1,17 @@
 ﻿using AdminPanel.Domain.Common.Interfaces;
-using AdminPanel.Domain.Common.Models;
-using AdminPanel.Domain.Entities;
+using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
-using System;
 using System.Collections.Generic;
 
-namespace AdminPanel.Infrastructure.Identity.Models
+namespace Infrastructure.Identity.Models
 {
 	public class ApplicationUser : IdentityUser, IWorker
 	{
+		public ApplicationUser()
+		{
+			Correspondences = new HashSet<Correspondence>();
+		}
+
 		#region Worker fields
 		public string FirstName { get; set; }
 
@@ -18,7 +21,7 @@ namespace AdminPanel.Infrastructure.Identity.Models
 
 		public string ProfilePicture { get; set; }
 
-		public int СommunityId { get; set; }
+		public int? CommunityId { get; set; }
 
 		public string Description { get; set; }
 
@@ -27,14 +30,6 @@ namespace AdminPanel.Infrastructure.Identity.Models
 
 		public bool IsActive { get; set; } = false;
 
-		#region Auditable Entity
-		public DateTime Created { get; set; }
-
-		public string CreatedBy { get; set; }
-
-		public DateTime? LastModified { get; set; }
-
-		public string LastModifiedBy { get; set; }
-		#endregion
-	}
+        public virtual ICollection<Correspondence> Correspondences { get; set; }
+    }
 }

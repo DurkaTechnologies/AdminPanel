@@ -1,14 +1,9 @@
-﻿using AdminPanel.Domain.Entities;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using WebUI.Areas.Entities.Models;
 
 namespace WebUI.Areas.Admin.Models
 {
-    public class UserViewModel
+	public class UserViewModel
     {
         public string Id { get; set; }
 

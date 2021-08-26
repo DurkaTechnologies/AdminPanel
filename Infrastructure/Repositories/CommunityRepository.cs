@@ -1,5 +1,5 @@
 ﻿using AdminPanel.Application.Interfaces.Repositories;
-using AdminPanel.Domain.Entities;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Collections.Generic;
