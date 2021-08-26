@@ -1,4 +1,4 @@
-﻿using AdminPanel.Infrastructure.Identity.Models;
+﻿using Infrastructure.Identity.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -25,9 +25,6 @@ namespace AdminPanel.Infrastructure.Persistence.Configurations
 
 			builder.Property(t => t.Description)
 				.HasMaxLength(2000);
-
-			builder.Property(t => t.СommunityId)
-				.IsRequired();
 		}
 	}
 }

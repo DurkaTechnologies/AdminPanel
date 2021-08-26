@@ -1,4 +1,4 @@
-﻿using AdminPanel.Infrastructure.Identity.Models;
+﻿using Infrastructure.Identity.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using System;

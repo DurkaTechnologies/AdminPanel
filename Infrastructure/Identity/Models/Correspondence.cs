@@ -1,30 +1,24 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace AdminPanel.Infrastructure.Identity.Models
+namespace Infrastructure.Identity.Models
 {
-    public class Correspondence
-    {
-        public int Id { get; set; }
+	public class Correspondence
+	{
+		public Correspondence()
+		{
+			Messages = new HashSet<Message>();
+		}
 
-        [Required]
-        public string RequestNumber { get; set; }
-        public string AskerNumber { get; set; }
+		public int Id { get; set; }
 
-        //Foreign
-        public string WorkerId { get; set; }
+		public string RequestNumber { get; set; }
 
-        //Navigation
-        public ApplicationUser Worker { get; set; }
-        public List<Message> Messages { get; set; }
-        public Correspondence()
-        {
-            Messages = new List<Message>();
-        }
-    }
+		public string AskerNumber { get; set; }
+
+		public string WorkerId { get; set; }
+
+		public virtual ApplicationUser Worker { get; set; }
+
+		public virtual ICollection<Message> Messages { get; set; }
+	}
 }

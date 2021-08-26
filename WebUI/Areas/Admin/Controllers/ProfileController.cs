@@ -1,7 +1,7 @@
 ﻿using AdminPanel.Application.Features.Communities.Queries.GetAllCached;
 using AdminPanel.Application.Features.Communities.Queries.GetById;
-using AdminPanel.Infrastructure.Identity.Models;
 using AdminPanel.Web.Abstractions;
+using Infrastructure.Identity.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using WebUI.Areas.Admin.Models;
 using WebUI.Areas.Entities.Models;
@@ -89,7 +88,7 @@ namespace WebUI.Areas.Admin
                     appUser = await _userManager.FindByIdAsync(user.Id);
 
                 /*User Set*/
-                appUser.СommunityId = user.CommunityId;
+                appUser.CommunityId = user.CommunityId;
                 appUser.Description = user.Description;
 
                 if (!String.IsNullOrEmpty(user.FirstName))

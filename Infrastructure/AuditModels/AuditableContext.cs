@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AdminPanel.Infrastructure.AuditModels
 {
-	class AuditableContext : DbContext
+    public class AuditableContext : DbContext
     {
         public AuditableContext(DbContextOptions options) : base(options)
         {

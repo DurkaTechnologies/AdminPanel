@@ -1,5 +1,5 @@
 ﻿using AdminPanel.Application.Interfaces.Repositories;
-using AdminPanel.Domain.Entities;
+using Domain.Entities;
 using AutoMapper;
 using MediatR;
 using System.Threading;

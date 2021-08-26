@@ -1,5 +1,5 @@
 ﻿using AdminPanel.Application.Enums;
-using AdminPanel.Infrastructure.Identity.Models;
+using Infrastructure.Identity.Models;
 using AdminPanel.Infrastructure.Identity.Seeds;
 using AdminPanel.Web.Abstractions;
 using Microsoft.AspNetCore.Authorization;

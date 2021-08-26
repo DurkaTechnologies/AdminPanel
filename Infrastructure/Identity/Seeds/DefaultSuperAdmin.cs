@@ -1,6 +1,6 @@
 ﻿using AdminPanel.Application.Constants;
 using AdminPanel.Application.Enums;
-using AdminPanel.Infrastructure.Identity.Models;
+using Infrastructure.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using System.Security.Claims;
@@ -39,6 +39,7 @@ namespace AdminPanel.Infrastructure.Identity.Seeds
 				FirstName = "Super",
 				MiddleName = "Adminovich",
 				LastName = "Admin",
+				CommunityId = 0,
 				EmailConfirmed = true,
 				PhoneNumberConfirmed = true,
 				IsActive = true

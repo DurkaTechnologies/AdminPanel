@@ -1,7 +1,7 @@
 ﻿using AdminPanel.Application.Features.Communities.Commands;
 using AdminPanel.Application.Features.Communities.Queries.GetAllCached;
 using AdminPanel.Application.Features.Communities.Queries.GetById;
-using AdminPanel.Domain.Entities;
+using Domain.Entities;
 using AutoMapper;
 
 namespace AdminPanel.Application.Mappings
