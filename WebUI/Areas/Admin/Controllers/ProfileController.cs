@@ -37,7 +37,7 @@ namespace WebUI.Areas.Admin
 
         public async Task<IActionResult> Index(string id)
         {
-            UserViewModel user = new UserViewModel();
+            UserViewModel user;
 
             if (id == null)
                 user = _mapper.Map<UserViewModel>(await _userManager.GetUserAsync(User));
