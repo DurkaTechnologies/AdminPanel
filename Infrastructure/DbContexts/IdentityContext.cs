@@ -23,6 +23,8 @@ namespace AdminPanel.Infrastructure.DbContexts
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            base.OnModelCreating(builder);
+
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             builder.HasDefaultSchema("Identity");
             builder.Entity<ApplicationUser>(entity =>
@@ -59,7 +61,6 @@ namespace AdminPanel.Infrastructure.DbContexts
                 entity.ToTable("UserTokens");
             });
 
-            base.OnModelCreating(builder);
         }
     }
 }

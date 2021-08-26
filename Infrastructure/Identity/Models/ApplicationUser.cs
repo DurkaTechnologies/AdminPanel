@@ -21,11 +21,11 @@ namespace Infrastructure.Identity.Models
 
 		public string ProfilePicture { get; set; }
 
-		public int CommunityId { get; set; }
+		public int? CommunityId { get; set; }
 
 		public string Description { get; set; }
 
-		public virtual Community Community { get; set; }
+		public Community Community { get; set; }
 		#endregion
 
 		public bool IsActive { get; set; } = false;

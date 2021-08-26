@@ -17,7 +17,7 @@ namespace AdminPanel.Infrastructure.Identity.Seeds
 				FirstName = "John",
 				MiddleName = "",
 				LastName = "Doe",
-				CommunityId = 0,
+				CommunityId = null,
 				EmailConfirmed = true,
 				PhoneNumberConfirmed = true,
 				IsActive = true

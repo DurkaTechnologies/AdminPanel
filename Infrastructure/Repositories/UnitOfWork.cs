@@ -10,10 +10,10 @@ namespace AdminPanel.Infrastructure.Repositories
     public class UnitOfWork : IUnitOfWork
     {
         private readonly IAuthenticatedUserService _authenticatedUserService;
-        private readonly ApplicationDbContext _dbContext;
+        private readonly IdentityContext _dbContext;
         private bool disposed;
 
-        public UnitOfWork(ApplicationDbContext dbContext, IAuthenticatedUserService authenticatedUserService)
+        public UnitOfWork(IdentityContext dbContext, IAuthenticatedUserService authenticatedUserService)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _authenticatedUserService = authenticatedUserService;

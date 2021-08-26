@@ -23,7 +23,7 @@ namespace AdminPanel.Infrastructure.Identity.Seeds
 				FirstName = "Default",
 				MiddleName = "Adminovich",
 				LastName = "Admin",
-				CommunityId = 0,
+				CommunityId = null,
 				EmailConfirmed = true,
 				PhoneNumberConfirmed = true,
 				IsActive = true

@@ -25,6 +25,7 @@ namespace AdminPanel.Infrastructure.Persistence.Configurations
 
 			builder.Property(t => t.Description)
 				.HasMaxLength(2000);
+
 		}
 	}
 }
