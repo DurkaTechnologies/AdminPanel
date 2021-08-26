@@ -1,10 +1,11 @@
-﻿using AdminPanel.Application.Enums;
-using AdminPanel.Infrastructure.Identity.Models;
+﻿using AdminPanel.Infrastructure.AuditModels;
+using Infrastructure.Identity.Models;
 using AdminPanel.Web.Abstractions;
+using Application.Features.Logs.Commands;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -67,8 +68,18 @@ namespace WebUI.Areas.Admin.Controllers
             var currentUser = await _userManager.GetUserAsync(User);
             await _signInManager.RefreshSignInAsync(currentUser);
             await AdminPanel.Infrastructure.Identity.Seeds.DefaultSuperAdminUser.SeedAsync(_userManager, _roleManager);
-            
+
             _notify.Error($"Ролі для {user.FirstName + " " + user.LastName} змінено");
+
+            Audit audit = new Audit()
+            {
+                Type = "Manage Roles",
+                UserId = _userService.UserId,
+                TableName = "Users",
+                NewValues = JsonConvert.SerializeObject(new AuditUserModel(_mapper.Map<UserViewModel>(user)))
+            };
+
+            await _mediator.Send(new AddLogCommand() { Audit = audit });
 
             return RedirectToAction("Index", new { userId = id });
         }

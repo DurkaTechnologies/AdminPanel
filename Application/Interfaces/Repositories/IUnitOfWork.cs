@@ -8,6 +8,8 @@ namespace AdminPanel.Application.Interfaces.Repositories
 	{
 		Task<int> Commit(CancellationToken cancellationToken);
 
+		Task<int> CommitApplicationDb(CancellationToken cancellationToken);
+
 		Task Rollback();
 	}
 }

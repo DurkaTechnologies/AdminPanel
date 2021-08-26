@@ -1,0 +1,42 @@
+﻿@{
+	ViewData["Title"] = $"Чати працівника {Model.FirstName} {Model.LastName}";
+}
+
+@using WebUI
+@using WebUI.Areas.Admin.Models
+
+@model UserViewModel
+
+<aside class="container-fluid px-0">
+	<div class="col-sm-12 py-3">
+		<a id="reload" class="btn btn-primary text-white">
+			<i class="fa fas fa-bolt"></i>
+			Перезавантижити
+		</a>
+	</div>
+	<div class="float-right " style="width: 50%; height: 80vh">
+		<div class="sidebar" >
+			<partial name="_Chat" />
+		</div>
+	</div>
+	<div class="wrapper">
+		
+		<div id="chatView" class="row">
+		</div>
+	</div>
+</aside>
+
+@section Scripts
+{
+	<script>
+		$(function () {
+			loadData();
+			$('#reload').on('click', function () {
+				loadData();
+			});
+		});
+		function loadData() {
+			$('#chatView').load('/admin/chat/LoadAll?id=@Model.Id');
+		}
+	</script>
+}

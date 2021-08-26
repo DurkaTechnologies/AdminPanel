@@ -1,4 +1,5 @@
-﻿using AdminPanel.Infrastructure.Identity.Models;
+﻿using Domain.Entities;
+using Infrastructure.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -12,11 +13,19 @@ namespace AdminPanel.Infrastructure.DbContexts
         {
         }
 
+        public DbSet<Correspondence> Correspondences { get; set; }
+
+        public DbSet<Community> Communities { get; set; }
+
+        public DbSet<District> Districts { get; set; }
+
+        public DbSet<Message> Messages { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             base.OnModelCreating(builder);
 
+            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             builder.HasDefaultSchema("Identity");
             builder.Entity<ApplicationUser>(entity =>
             {
@@ -51,6 +60,7 @@ namespace AdminPanel.Infrastructure.DbContexts
             {
                 entity.ToTable("UserTokens");
             });
+
         }
     }
 }

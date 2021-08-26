@@ -1,5 +1,5 @@
 ﻿using AdminPanel.Application.Constants;
-using AdminPanel.Infrastructure.Identity.Models;
+using Infrastructure.Identity.Models;
 using AdminPanel.Web.Abstractions;
 using WebUI.Areas.Admin.Models;
 using AdminPanel.WebUI.Helpers;
@@ -9,6 +9,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Application.Features.Logs.Commands;
+using AdminPanel.Infrastructure.AuditModels;
+using Newtonsoft.Json;
 
 namespace WebUI.Areas.Admin.Controllers
 {
@@ -19,7 +22,6 @@ namespace WebUI.Areas.Admin.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-
         public PermissionController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _roleManager = roleManager;
@@ -69,6 +71,16 @@ namespace WebUI.Areas.Admin.Controllers
             }
 
             _notify.Error($"Дозволи для ролі {role.Name} змінено");
+
+            Audit audit = new Audit()
+            {
+                Type = "Manage Permission",
+                UserId = _userService.UserId,
+                TableName = "Roles",
+                NewValues = JsonConvert.SerializeObject(_mapper.Map<RoleViewModel>(role))
+            };
+
+            await _mediator.Send(new AddLogCommand() { Audit = audit });
 
             return RedirectToAction("Index", new { roleId = model.RoleId });
         }

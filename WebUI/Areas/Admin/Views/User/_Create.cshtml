@@ -29,6 +29,13 @@
     <div class="form-group row">
         <label class="col-md-3 col-form-label">Пошта</label>
         <div class="col-md-9">
+            <input type="text" asp-for="UserName" name="UserName" class="form-control">
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label">Пошта</label>
+        <div class="col-md-9">
             <input type="email" asp-for="Email" name="Email" class="form-control">
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
@@ -94,7 +101,7 @@
 
     @*//asp-controller="User" asp-action="Index"*@
 
-    
+
 </form>
 }
 <script type="text/javascript" language=javascript>
