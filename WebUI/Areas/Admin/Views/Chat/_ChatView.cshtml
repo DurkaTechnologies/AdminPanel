@@ -1,0 +1,31 @@
+﻿@using WebUI.Areas.Admin.Models
+@using WebUI
+@model IEnumerable<ChatViewModel>
+
+@foreach (var item in Model)
+{
+	<div class="col" style="width: 18rem;">
+		<div class="info-box bg-green">
+			<span class="info-box-icon"><i class="fas fa-comments"></i></span>
+
+			<div class="info-box-content text">
+				<span class="text-bold">
+					<i class="far fa-user"></i>
+					@item.AnonymousIndex
+				</span>
+				<span> 
+					<i class="far fa-envelope text-bold"></i>
+					@item.MessagesQuantity
+					повідомлень
+				</span>
+				<span class="text-bold">
+					Остані зміни:
+				</span>
+				<span class="info-box-text">
+					<i class="far fa-clock"></i>
+					@item.LastMessageTime
+				</span>
+			</div>
+		</div>
+	</div>
+}
