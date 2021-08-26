@@ -1,4 +1,4 @@
-﻿using AdminPanel.Infrastructure.Identity.Models;
+﻿using Infrastructure.Identity.Models;
 using AdminPanel.Web.Abstractions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
