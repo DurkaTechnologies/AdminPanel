@@ -112,6 +112,7 @@ namespace WebUI.Areas.Identity.Pages.Account
 				{
 					string fullName = user.MiddleName + " " + user.FirstName + " " + user.LastName + " увійшов";
 					await _mediator.Send(new AddActivityLogCommand() { userId = user.Id, Action =  fullName});
+					
 					_logger.LogInformation("User logged in.");
 
 					if (user.FirstName == null || user.LastName == null)

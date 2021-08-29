@@ -44,9 +44,6 @@
                         Дата
                     </th>
                     <th>
-                        Змінювач
-                    </th>
-                    <th>
                         Дія
                     </th>
                     <th>
@@ -71,9 +68,6 @@
                             @user.DateTime.ToString()
                         </td>
                         <td>
-                            @user.UserId
-                        </td>
-                        <td>
                             @switch (@user.Type)
                             {
                                 case "Create":
@@ -92,8 +86,6 @@
                                     <small class="badge badge-light">@user.Type</small>
                                     break;
                             }
-
-                            
                         </td>
                         <td>
                             @user.TableName

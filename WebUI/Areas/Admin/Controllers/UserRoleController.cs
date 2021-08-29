@@ -34,7 +34,8 @@ namespace WebUI.Areas.Admin.Controllers
             var user = await _userManager.FindByIdAsync(userId);
             ViewData["Title"] = $"{user.UserName} - Ролі";
             ViewData["Caption"] = $"Керувати ролями {user.Email}";
-            foreach (var role in _roleManager.Roles)
+
+            foreach (var role in _roleManager.Roles.ToList())
             {
                 var userRolesViewModel = new UserRolesViewModel
                 {
@@ -69,17 +70,17 @@ namespace WebUI.Areas.Admin.Controllers
             await _signInManager.RefreshSignInAsync(currentUser);
             await AdminPanel.Infrastructure.Identity.Seeds.DefaultSuperAdminUser.SeedAsync(_userManager, _roleManager);
 
-            _notify.Error($"Ролі для {user.FirstName + " " + user.LastName} змінено");
+            _notify.Success($"Ролі для {user.FirstName + " " + user.LastName} змінено");
 
-            Audit audit = new Audit()
+            Log log = new Log()
             {
-                Type = "Manage Roles",
                 UserId = _userService.UserId,
+                Action = "Manage Roles",
                 TableName = "Users",
-                NewValues = JsonConvert.SerializeObject(new AuditUserModel(_mapper.Map<UserViewModel>(user)))
+                OldValues = roles,
             };
 
-            await _mediator.Send(new AddLogCommand() { Audit = audit });
+            await _mediator.Send(new AddLogCommand() { Log = log });
 
             return RedirectToAction("Index", new { userId = id });
         }

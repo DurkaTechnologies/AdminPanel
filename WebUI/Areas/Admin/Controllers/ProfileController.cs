@@ -90,13 +90,13 @@ namespace WebUI.Areas.Admin
                 else
                     appUser = await _userManager.FindByIdAsync(user.Id);
 
-                Audit audit = new Audit()
+                Log log = new Log()
                 {
-                    Type = "Update",
                     UserId = _userService.UserId,
+                    Action = "Update",
                     TableName = "Users",
-                    OldValues = JsonConvert.SerializeObject(new AuditUserModel(_mapper.Map<UserViewModel>(appUser))),
-                    NewValues = JsonConvert.SerializeObject(new AuditUserModel(user))
+                    OldValues = new AuditUserModel(_mapper.Map<UserViewModel>(appUser)),
+                    NewValues = new AuditUserModel(user)
                 };
 
                 /*User Set*/
@@ -144,7 +144,7 @@ namespace WebUI.Areas.Admin
 
                     _notify.Success($"Користувач {user.UserName} був успішно змінений");
 
-                    await _mediator.Send(new AddLogCommand() { Audit = audit });
+                    await _mediator.Send(new AddLogCommand() { Log = log });
                 }
                 catch (Exception ex)
                 {
