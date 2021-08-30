@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Application.Features.Logs.Commands;
+using AdminPanel.Infrastructure.AuditModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace WebUI.Areas.Entities.Controllers
@@ -80,6 +82,16 @@ namespace WebUI.Areas.Entities.Controllers
                     if (result.Succeeded)
                     {
                         id = result.Data;
+
+                        Log log = new Log()
+                        {
+                            UserId = _userService.UserId,
+                            Action = "Create",
+                            NewValues = community
+                        };
+
+                        await _mediator.Send(new AddLogCommand() { Log = log });
+
                         _notify.Success($"Громада {community.Name} створена");
                     }
                     else
@@ -87,8 +99,26 @@ namespace WebUI.Areas.Entities.Controllers
                 }
                 else
                 {
+                    var old = await _mediator.Send(new GetCommunityByIdQuery() { Id = id });
+
+                    Log log = new Log()
+                    {
+                        UserId = _userService.UserId,
+                        Action = "Update",
+                        OldValues = old.Data
+                    };
+
                     var updateCommunityCommand = _mapper.Map<UpdateCommunityCommand>(community);
                     var result = await _mediator.Send(updateCommunityCommand);
+
+                    if (result.Succeeded)
+                    {
+                        log.NewValues = community;
+
+                        await _mediator.Send(new AddLogCommand() { Log = log });
+                        _notify.Success($"Громада {community.Name} змінена");
+                    }
+                    
                     if (result.Succeeded) 
                         _notify.Success($"Громада {community.Name} змінена");
                 }
@@ -129,6 +159,15 @@ namespace WebUI.Areas.Entities.Controllers
                 
                 if (response.Succeeded)
                 {
+                    Log log = new Log()
+                    {
+                        UserId = _userService.UserId,
+                        Action = "Delete",
+                        OldValues = community
+                    };
+
+                    await _mediator.Send(new AddLogCommand() { Log = log });
+
                     var viewModel = _mapper.Map<List<CommunityViewModel>>(response.Data);
                     var html = await _viewRenderer.RenderViewToStringAsync("_ViewAll", viewModel);
                     return new JsonResult(new { isValid = true, html = html });

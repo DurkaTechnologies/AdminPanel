@@ -11,6 +11,6 @@ namespace AdminPanel.Application.Interfaces.Repositories
 
 		Task AddLogAsync(string action, string userId);
 
-		Task AddLogAsync(IAudit audit);
+		Task AddLogAsync(ILog log);
 	}
 }
