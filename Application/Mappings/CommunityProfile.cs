@@ -11,6 +11,7 @@ namespace AdminPanel.Application.Mappings
 		public CommunityProfile()
 		{
 			CreateMap<CreateCommunityCommand, Community>().ReverseMap();
+			CreateMap<UpdateCommunityCommand, Community>().ReverseMap();
 			CreateMap<GetCommunityByIdResponse, Community>().ReverseMap();
 			CreateMap<GetAllCommunitiesCachedResponse, Community>().ReverseMap();
 		}

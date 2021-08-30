@@ -2,7 +2,6 @@
 using AdminPanel.Application.Interfaces.Repositories;
 using AdminPanel.Infrastructure.Extensions;
 using Domain.Entities;
-using AdminPanel.Infrastructure.CacheKeys;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -22,7 +21,7 @@ namespace AdminPanel.Infrastructure.CacheRepositories
 
 		public async Task<Community> GetByIdAsync(int communityId)
 		{
-			string cacheKey = CommunityCacheKeys.GetKey(communityId);
+			string cacheKey = CacheKeys.CommunityCacheKeys.GetKey(communityId);
 			var brand = await distributedCache.GetAsync<Community>(cacheKey);
 			if (brand == null)
 			{
@@ -34,7 +33,7 @@ namespace AdminPanel.Infrastructure.CacheRepositories
 
 		public async Task<List<Community>> GetCachedListAsync()
 		{
-			string cacheKey = CommunityCacheKeys.ListKey;
+			string cacheKey = CacheKeys.CommunityCacheKeys.ListKey;
 			var brandList = await distributedCache.GetAsync<List<Community>>(cacheKey);
 			if (brandList == null)
 			{

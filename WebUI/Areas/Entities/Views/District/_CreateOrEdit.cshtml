@@ -1,27 +1,17 @@
 ﻿@using WebUI.Areas.Entities.Models
-@model CommunityViewModel
+@model DistrictViewModel
 @using AdminPanel.Application.Constants
 
 @*@if (AuthorizationService.AuthorizeAsync(User, Permissions.Communities.Edit).Result.Succeeded || AuthorizationService.AuthorizeAsync(User, Permissions.Communities.Create).Result.Succeeded)
 	{*@
-<form id="create-form" method="post" asp-controller="Community" asp-action="OnPostCreateOrEdit" asp-route-id="@Model.Id" onsubmit="return jQueryModalPost(this);" enctype="multipart/form-data">
+<form id="create-form" method="post" asp-controller="District" asp-action="OnPostCreateOrEdit" asp-route-id="@Model.Id" onsubmit="return jQueryModalPost(this);" enctype="multipart/form-data">
 	<div class="row">
 		<div class="col-md-12">
 			<div class="form-group row">
-				<label class="col-md-3 col-form-label">Ім'я громади</label>
+				<label class="col-md-3 col-form-label">Ім'я району</label>
 				<div class="col-md-9">
 					<input type="text" asp-for="Name" name="Name" class="form-control">
 					<span asp-validation-for="Name" class="text-danger"></span>
-				</div>
-			</div>
-			<div class="form-group row">
-				<label class="col-md-3 col-form-label">Район</label>
-				<div class="col-md-9">
-					<div class="input-group">
-						<select name="DistrictId" class="form-control select2bs4" id="DistrictId" asp-for="DistrictId" asp-items="@Model.Districts">
-						</select>
-					</div>
-					<span asp-validation-for="DistrictId" class="text-danger"></span>
 				</div>
 			</div>
 			<div class="form-group row">
