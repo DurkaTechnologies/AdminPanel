@@ -18,7 +18,8 @@
                             <div class="position-relative p-4">
                                 @if (Model.ProfilePicture != null)
                                 {
-                                    <img id="profilePicture" class="rounded-circle" style="width: 100%;object-fit: cover; padding-top: 10px;" src="@ENV.ImagePath@Model.ProfilePicture">
+                                    <img id="profilePicture" class="img-circle" style="width: 100%; object-fit: cover; margin-top: 10px;" src="@ENV.ImagePath@Model.ProfilePicture"
+                                         onerror="this.onerror = null; this.src = '@Url.Content("~/images/users/default-user.png")';">
                                 }
                                 else
                                 {

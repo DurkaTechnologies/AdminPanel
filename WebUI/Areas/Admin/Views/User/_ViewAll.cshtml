@@ -31,7 +31,8 @@
                         @if (user.ProfilePicture != null)
                         {
                             <div class="col-sm" style=" max-width: 80px;margin-right: 20px;">
-                                <img class="img-profile rounded-circle" style="height: 75px;width:75px;object-fit: cover;" src="@ENV.ImagePath@user.ProfilePicture">
+                                <img class="img-profile rounded-circle" style="height: 75px; width:75px; object-fit: cover;" src="@ENV.ImagePath@user.ProfilePicture"
+                                     onerror="this.onerror = null; this.src = '@Url.Content("~/images/users/default-user.png")';">
                             </div>
                         }
                         else

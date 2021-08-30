@@ -140,7 +140,9 @@
     <script>
         $(document).ready(function () {
             $("#logTable").DataTable({
-
+				language: {
+					url: "//cdn.datatables.net/plug-ins/1.10.18/i18n/Ukrainian.json"
+				},
                 "order": [[0, "desc"]]
             });
         });

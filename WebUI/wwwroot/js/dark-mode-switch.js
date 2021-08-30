@@ -26,7 +26,9 @@ function initTheme() {
     darkSwitch.checked = darkThemeSelected;
     if (darkThemeSelected) {
         document.body.setAttribute('data-theme', 'dark');
+        $('body').addClass('dark-mode');
         $('#navigationBar').addClass('navbar-dark').removeClass('navbar-light');
+        $('#navigationBar').removeClass('navbar-white');
         $('#sideBar').addClass('sidebar-dark-primary').removeClass('sidebar-light-primary');
         $('.content-wrapper').attr('style', 'background-color: #111');
         $('.card').attr('style', 'background-color: #212121');
@@ -39,8 +41,10 @@ function initTheme() {
     }
     else {
         document.body.removeAttribute('data-theme');
+        $('body').removeClass('dark-mode');
         $('#sideBar').addClass('sidebar-light-primary').removeClass('sidebar-dark-primary');
         $('#navigationBar').removeClass('navbar-dark').addClass('navbar-light');
+        $('#navigationBar').addClass('navbar-white');
         $('.content-wrapper').attr('style', 'background-color: #f4f6f9');
         $('.card').attr('style', 'background-color: #ffffff');
         $('.main-footer').attr('style', 'background-color: #ffffff');
@@ -60,8 +64,10 @@ function initTheme() {
 function resetTheme() {
     if (darkSwitch.checked) {
         document.body.setAttribute('data-theme', 'dark');
+        $('body').addClass('dark-mode');
         $('#sideBar').addClass('sidebar-dark-primary').removeClass('sidebar-light-primary');
         $('#navigationBar').addClass('navbar-dark').removeClass('navbar-light');
+        $('#navigationBar').addClass('navbar-black').removeClass('navbar-white');
         $('.content-wrapper').attr('style', 'background-color: #111');
         $('.card').attr('style', 'background-color: #212121');
         $('.main-footer').attr('style', 'background-color: #212121');
@@ -72,8 +78,10 @@ function resetTheme() {
         localStorage.setItem('darkSwitch', 'dark');
     } else {
         document.body.removeAttribute('data-theme');
+        $('body').removeClass('dark-mode');
         $('#sideBar').addClass('sidebar-light-primary').removeClass('sidebar-dark-primary');
         $('#navigationBar').removeClass('navbar-dark').addClass('navbar-light');
+        $('#navigationBar').addClass('navbar-white');
         $('.content-wrapper').attr('style', 'background-color: #f4f6f9');
         $('.card').attr('style', 'background-color: ##ffffff');
         $('.main-footer').attr('style', 'background-color: #ffffff');
