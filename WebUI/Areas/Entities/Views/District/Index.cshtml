@@ -18,7 +18,7 @@
 
             @if ((AuthorizationService.AuthorizeAsync(User, Permissions.Districts.Create)).Result.Succeeded)
             {
-                <a onclick="jQueryModalGet('/entities/district/OnGetCreateOrEdit','Створити район')" class="btn bg-success">
+                <a onclick="jQueryModalGet('/entities/district/OnGetCreateOrEdit','Створити район')" class="btn bg-success mr-2">
                     <i class="fa fa-plus-square"></i> Створити
                 </a>
             }

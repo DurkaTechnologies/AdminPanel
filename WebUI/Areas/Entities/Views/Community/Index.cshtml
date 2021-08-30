@@ -19,7 +19,7 @@
 
 				@if ((AuthorizationService.AuthorizeAsync(User, Permissions.Communities.Create)).Result.Succeeded)
 				{
-					<a onclick="jQueryModalGet('/entities/community/OnGetCreateOrEdit','Створити Громаду')" class="btn bg-success">
+					<a onclick="jQueryModalGet('/entities/community/OnGetCreateOrEdit','Створити Громаду')" class="btn bg-success mr-2">
 						<i class="fa fa-plus-square"></i> Створити
 					</a>
 				}
@@ -34,7 +34,7 @@
 				<div style="text-align: right;">
 					<label class="text-nowrap" style="text-align: left;">
 						Район:
-						<select class="form-control select2bs4 d-inline w-auto" id="districtFilter">
+						<select class="form-control select2bs4 d-inline w-auto ml-1" id="districtFilter">
 							<option value=""></option>
 						</select>
 					</label>
