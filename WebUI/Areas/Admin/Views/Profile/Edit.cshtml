@@ -8,7 +8,7 @@
 @using System.IO
 @using WebUI.Services
 
-<div class="row d-flex justify-content-center" id="editProfile">
+<div class="row d-flex justify-content-center">
     <div class="col-md-11">
         <div class="card">
             <div class="card-body">
@@ -34,11 +34,11 @@
                                         <input accept=".png,.jpg,.jpeg,.gif,.tif"
                                                asp-for="@Model.ProfilePicture"
                                                type="file" class="custom-file-input"
-                                               onchange="jQueryModalGet('/admin/profile/ChangeProfileImage?id=@Model.Id', 'Обріжте нове зображення профілю')"
+                                               onchange="jQueryModalGet('/admin/profile/ChangeProfileImage', 'Обріжте нове зображення профілю')"
                                                id="customFile">
                                         <label class="my-file-label" for="customFile"><i class="fas fa-upload"></i> Завантажити</label>
                                     </div>
-                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Profile" asp-action="DeleteImage" asp-route-id="@Model.Id"><i class="fas fa-trash-alt"></i> Видалити</a>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="DeleteImage" asp-route-id="@Model.Id"><i class="fas fa-trash-alt"></i> Видалити</a>
                                 </div>
                             </div>
                         </div>

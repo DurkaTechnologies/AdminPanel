@@ -37,7 +37,7 @@ namespace WebUI.Areas.Admin
 
         public async Task<IActionResult> Index(string id)
         {
-            UserViewModel user;
+            UserViewModel user = new UserViewModel();
 
             if (id == null)
                 user = _mapper.Map<UserViewModel>(await _userManager.GetUserAsync(User));
@@ -206,22 +206,13 @@ namespace WebUI.Areas.Admin
                     imagePath = ImageService.SaveImage(blob, Path.GetExtension(fileName));
                     if (!String.IsNullOrEmpty(imagePath))
                     {
-                        string oldImage = user.ProfilePicture;
                         user.ProfilePicture = imagePath;
-						if ((await _userManager.UpdateAsync(user)).Succeeded)
-                            ImageService.DeleteImage(oldImage);
-                        else
-                            ImageService.DeleteImage(imagePath);
-
-                        _notify.Success($"Фото профілю успішно змінено");
-
-                        return new JsonResult(new { isValid = true });
+                        await _userManager.UpdateAsync(user);
                     }
                     else
                         return new JsonResult(new { isValid = false });
                 }
-                return new JsonResult(new { isValid = false });
-
+                return new JsonResult(new { isValid = true });
             }
             catch (Exception)
             {

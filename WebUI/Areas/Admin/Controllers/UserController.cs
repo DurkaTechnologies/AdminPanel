@@ -71,7 +71,7 @@ namespace WebUI.Areas.Admin
                 return new JsonResult(new { isValid = true, html = await _viewRenderer.RenderViewToStringAsync("_Create", new UserViewModel() { Communities = communities }) });
             }
 
-            _notify.Error("Не заповнено форму");
+            _notify.Success("Не заповнено форму");
             return null;
         }
 
@@ -102,10 +102,8 @@ namespace WebUI.Areas.Admin
                 };
 
                 var result = await _userManager.CreateAsync(user, userModel.Password);
-
                 if (result.Succeeded)
                 {
-
                     await _userManager.AddToRoleAsync(user, Roles.Worker.ToString());
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var currentUser = await _userManager.GetUserAsync(HttpContext.User);

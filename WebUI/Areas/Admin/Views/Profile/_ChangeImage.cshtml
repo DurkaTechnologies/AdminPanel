@@ -1,6 +1,4 @@
-﻿@using WebUI;
-@model string
-<form id="create-form">
+﻿<form id="create-form">
 	<div class="form-group">
 		<img id="cropper" />
 	</div>
@@ -44,25 +42,22 @@
 		$("#save-btn").on('click', function () {
 			$uploadCrop.croppie('result', 'blob').then(function (blob) {
 				var formData = new FormData();
-				formData.append('id', '@Model');
+
 				formData.append('fileName', $('#customFile').val());
 				formData.append('blob', blob);
 				$.ajax({
-					type: 'POST',
 					url: '/Admin/Profile/ChangeProfileImage',
+					type: 'POST',
 					data: formData,
-					async: false,
 					contentType: false,
 					processData: false,
-					success: function (res) {
-						if (res.isValid) {
-						}
+					success: function (result) {
+						if (result.isValid)
+							console.log('Photo Cropped Successfully!');
 					},
 					error: function (err) {
-						alert(err);
+						console.log(err)
 					}
-				}).done(function () {
-					window.location.href = '@(@Url.Action("Edit", "Profile"))?Id=' + '@Model';
 				});
 			});
 		});
