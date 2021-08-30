@@ -52,13 +52,19 @@
 					</li>
 					<li class="nav-header">Редактор</li>
 					<li class="nav-item">
-						<a asp-area="Entities" asp-controller="Community" class="nav-link">
+						<a is-active-route asp-area="Entities" asp-controller="Community" asp-action="Index" class="nav-link">
 							<i class="fas fa-table nav-icon"></i>
 							<p>Громади</p>
 						</a>
 					</li>
-					}
-				</ul>
+					<li class="nav-item">
+						<a is-active-route asp-area="Entities" asp-controller="District" asp-action="Index" class="nav-link">
+							<i class="fas fa-table nav-icon"></i>
+							<p>Райони</p>
+						</a>
+					</li>
+				}
+			</ul>
 		</nav>
 	</div>
 </aside>

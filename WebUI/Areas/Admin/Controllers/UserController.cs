@@ -97,7 +97,7 @@ namespace WebUI.Areas.Admin
                     ProfilePicture = imagePath,
                     EmailConfirmed = true,
                     IsActive = true,
-                    CommunityId = userModel.CommunityId,
+                    CommunityId = userModel.CommunityId == 0 ? null : userModel.CommunityId,
                     Description = userModel.Description
                 };
 

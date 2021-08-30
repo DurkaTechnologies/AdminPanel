@@ -23,10 +23,10 @@ namespace AdminPanel.Application.Features.Communities.Commands
 
 			public async Task<Result<int>> Handle(DeleteCommunityCommand command, CancellationToken cancellationToken)
 			{
-				var product = await communityRepository.GetByIdAsync(command.Id);
-				await communityRepository.DeleteAsync(product);
+				var community = await communityRepository.GetByIdAsync(command.Id);
+				await communityRepository.DeleteAsync(community);
 				await unitOfWork.Commit(cancellationToken);
-				return Result<int>.Success(product.Id);
+				return Result<int>.Success(community.Id);
 			}
 		}
 	}

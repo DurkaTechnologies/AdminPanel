@@ -10,7 +10,7 @@ namespace Domain.Entities
 
 		public string Name { get; set; }
 
-		public int DistrictId { get; set; }
+		public int? DistrictId { get; set; }
 
 		public virtual District District { get; set; }
 	}

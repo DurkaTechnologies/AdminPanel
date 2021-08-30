@@ -1,0 +1,74 @@
+﻿@using WebUI.Areas.Entities.Models
+@using AdminPanel.Application.Constants
+
+@model IEnumerable<DistrictViewModel>
+
+@{
+	bool delete = AuthorizationService.AuthorizeAsync(User, Permissions.Districts.Delete).Result.Succeeded;
+	bool edit = AuthorizationService.AuthorizeAsync(User, Permissions.Districts.Edit).Result.Succeeded;
+}
+
+@if (AuthorizationService.AuthorizeAsync(User, Permissions.Districts.View).Result.Succeeded)
+{
+	<style>
+		#districtTable > tr > th {
+			border-top-width: 0
+		}
+	</style>
+	<table id="districtTable" class="table table-striped" width="100%" cellspacing="0">
+		<thead>
+			<tr >
+				<th>ІД</th>
+				<th>Ім'я</th>
+				@if (delete || edit)
+				{
+					<th>Дії</th>
+				}
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var district in Model)
+			{
+				<tr>
+					<td>
+						@district.Id
+					</td>
+					<td>
+						@district.Name Район
+					</td>
+					@if (delete || edit)
+					{
+						<td text-right">
+							<div class="btn-group">
+								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									Дії
+								</button>
+								<div class="dropdown-menu shadow animated--grow-in">
+									@if (edit)
+									{
+										<a onclick="jQueryModalGet('/entities/district/OnGetCreateOrEdit?id=@district.Id','Редагування району')" class="dropdown-item"><i class="fas fa-pencil-alt"></i>  Редагувати</a>
+									}
+									@if (delete)
+									{
+										<form id="form_delete_@district.Id" asp-area="Entities" asp-controller="District" method="post" asp-action="OnPostDelete" asp-route-id="@district.Id" onsubmit="return jQueryModalDelete(this)">
+											<a href="javascript:$('#form_delete_@district.Id').submit();" class="dropdown-item"><i class="fas fa-trash-alt"></i>  Видалити</a>
+										</form>
+									}
+								</div>
+							</div>
+						</td>
+					}
+				</tr>
+			}
+		</tbody>
+	</table>
+}
+<script>
+	$(document).ready(function () {
+		$("#districtTable").DataTable({
+			language: {
+				url: "//cdn.datatables.net/plug-ins/1.10.18/i18n/Ukrainian.json"
+			},
+		});;
+	});
+</script>
