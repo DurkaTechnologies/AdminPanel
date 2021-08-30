@@ -134,17 +134,6 @@ namespace WebUI.Areas.Identity.Pages.Account
 			return Page();
 		}
 
-		public async Task LoginBySuperAdmin()
-		{
-			Console.WriteLine("Dsdsadsadsadas");
-			Input = new InputModel();
-			Input.Email = "superadmin@gmail.com";
-			Input.Password = "123Pa$$word!";
-			Input.RememberMe = false;
-			await OnPostAsync();
-		}
-
-
 		public bool IsValidEmail(string emailaddress)
 		{
 			try

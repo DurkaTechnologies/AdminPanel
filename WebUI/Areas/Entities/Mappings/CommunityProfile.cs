@@ -6,9 +6,9 @@ using AutoMapper;
 
 namespace WebUI.Areas.Entities.Mappings
 {
-    internal class BrandProfile : Profile
+    internal class CommunityProfile : Profile
     {
-        public BrandProfile()
+        public CommunityProfile()
         {
             CreateMap<GetAllCommunitiesCachedResponse, CommunityViewModel>().ReverseMap();
             CreateMap<GetCommunityByIdResponse, CommunityViewModel>().ReverseMap();

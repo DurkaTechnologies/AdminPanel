@@ -38,6 +38,5 @@ namespace WebUI.Areas.Admin.Models
         public CommunityViewModel Community { get; set; }
 
         public SelectList Communities { get; set; }
-        public Microsoft.AspNetCore.Http.IFormFile ImageBlob { get; set; }
     }
 }

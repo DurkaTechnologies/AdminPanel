@@ -1,48 +1,50 @@
 ﻿@{ ViewData["Title"] = "Користувачі";
-    ViewData["Caption"] = "Редагувати користувачів"; }
+	ViewData["Caption"] = "Редагувати користувачів";
+}
+
 @using AdminPanel.Application.Constants
 
 @if ((AuthorizationService.AuthorizeAsync(User, Permissions.Users.View)).Result.Succeeded)
 {
-<div class="card">
-    <div class="col-sm-12" style="padding:20px">
-        @if ((AuthorizationService.AuthorizeAsync(User, Permissions.Users.Create)).Result.Succeeded)
-        {
-            <a onclick="jQueryModalGet('/admin/user/OnGetCreate','Сторити Працівника')" class="btn bg-success">
-                <i class="fa fa-plus-square"></i> Створити
-            </a>
-        }
-        <a id="reload" class="btn btn-primary text-white">
-            <i class="fa fas fa-bolt"></i>
-            Перевантажити
-        </a>
-    </div>
-    <div id="viewAll" class="card-body table-responsive">
-    </div>
-</div>
+	<div class="card">
+		<div class="col-sm-12" style="padding:20px">
+			@if ((AuthorizationService.AuthorizeAsync(User, Permissions.Users.Create)).Result.Succeeded)
+			{
+				<a onclick="jQueryModalGet('/admin/user/OnGetCreate','Сторити Працівника')" class="btn bg-success">
+					<i class="fa fa-plus-square"></i> Створити
+				</a>
+			}
+			<a id="reload" class="btn btn-primary text-white">
+				<i class="fa fas fa-bolt"></i>
+				Перевантажити
+			</a>
+		</div>
+		<div id="viewAll" class="card-body table-responsive">
+		</div>
+	</div>
 }
-else 
+else
 {
-    <h2 class="text-center">Не доступно для вас</h2>
+	<h2 class="text-center">Не доступно для вас</h2>
 }
 
 @section Scripts
 {
-    <script src="~/js/site.js"></script>
-    <script>
-        $(document).ready(function () {
-            $("#userTable").DataTable({
-                language: {
-                    url: "//cdn.datatables.net/plug-ins/1.10.18/i18n/Ukrainian.json"
-                },
-            });
-            loadData();
-            $('#reload').on('click', function () {
-                loadData();
-            });
-        });
-        function loadData() {
-            $('#viewAll').load('/admin/user/LoadAll');
-        }
-    </script>
+	<script src="~/js/site.js"></script>
+	<script>
+		$(document).ready(function () {
+			$("#userTable").DataTable({
+				language: {
+					url: "//cdn.datatables.net/plug-ins/1.10.18/i18n/Ukrainian.json"
+				},
+			});
+			loadData();
+			$('#reload').on('click', function () {
+				loadData();
+			});
+		});
+		function loadData() {
+			$('#viewAll').load('/admin/user/LoadAll');
+		}
+	</script>
 }

@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Application.Features.Logs.Commands;
 using AdminPanel.Infrastructure.AuditModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace WebUI.Areas.Entities.Controllers
 {
@@ -38,21 +39,34 @@ namespace WebUI.Areas.Entities.Controllers
 
         public async Task<JsonResult> OnGetCreateOrEdit(int id = 0)
         {
-            if (id == 0)
+            var result = await _mediator.Send(new GetAllDistrictsCachedQuery());
+
+            if (result.Succeeded)
             {
-                var communityViewModel = new CommunityViewModel();
-                return new JsonResult(new { isValid = true, html = await _viewRenderer.RenderViewToStringAsync("_CreateOrEdit", communityViewModel) });
-            }
-            else
-            {
-                var response = await _mediator.Send(new GetCommunityByIdQuery() { Id = id });
-                if (response.Succeeded)
+                var data = _mapper.Map<IEnumerable<DistrictViewModel>>(result.Data);
+                var districts = new SelectList(data, nameof(DistrictViewModel.Id), nameof(DistrictViewModel.Name), null, null);
+
+                if (id == 0)
                 {
-                    var communityViewModel = _mapper.Map<CommunityViewModel>(response.Data);
+                    var communityViewModel = new CommunityViewModel() { Districts = districts };
                     return new JsonResult(new { isValid = true, html = await _viewRenderer.RenderViewToStringAsync("_CreateOrEdit", communityViewModel) });
                 }
-                return null;
+                else
+                {
+                    var response = await _mediator.Send(new GetCommunityByIdQuery() { Id = id });
+                    if (response.Succeeded)
+                    {
+                        var communityViewModel = _mapper.Map<CommunityViewModel>(response.Data);
+                        communityViewModel.Districts = districts;
+                        return new JsonResult(new { isValid = true, html = await _viewRenderer.RenderViewToStringAsync("_CreateOrEdit", communityViewModel) });
+                    }
+                    _notify.Error("Громаду не знайдено");
+                    return null;
+                }
             }
+
+            _notify.Error("Не заповнено форму");
+            return null;
         }
 
         [HttpPost]
@@ -104,6 +118,9 @@ namespace WebUI.Areas.Entities.Controllers
                         await _mediator.Send(new AddLogCommand() { Log = log });
                         _notify.Success($"Громада {community.Name} змінена");
                     }
+                    
+                    if (result.Succeeded) 
+                        _notify.Success($"Громада {community.Name} змінена");
                 }
                 
                 var response = await _mediator.Send(new GetAllCommunitiesCachedQuery());
@@ -122,8 +139,6 @@ namespace WebUI.Areas.Entities.Controllers
             }
             else
             {
-                
-                
                 var html = await _viewRenderer.RenderViewToStringAsync("_CreateOrEdit", community);
                 return new JsonResult(new { isValid = false, html = html });
             }
