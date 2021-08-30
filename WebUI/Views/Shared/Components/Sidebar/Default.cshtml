@@ -1,9 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Localization
 @using AdminPanel.Application.Constants
 @using WebUI.Areas.Entities.Models
-<aside id="sideBar" class="main-sidebar sidebar-dark-primary">
+<aside id="sideBar" class="main-sidebar sidebar-light-primary elevation-4">
 	<a href="~/" class="brand-link">
-		<img src="~/images/gerb-dark.svg" id="brand-logo" alt="logo" class="brand-image">
+		<img src="~/images/gerb-dark.svg" id="brand-logo" alt="logo" class="brand-image" style="width: 33px !important; object-fit: contain; ">
 		<span class="brand-text font-weight-light">Панель керування</span>
 	</a>
 	<div class="sidebar">
@@ -18,8 +18,8 @@
 				@if (User.Identity.IsAuthenticated)
 				{
 					<li class="nav-header">Адміністратор</li>
-					<li is-active-route asp-area="Admin" class="nav-item has-treeview">
-						<a is-active-route asp-area="Admin" class="nav-link">
+					<li is-active-route class="nav-item has-treeview">
+						<a is-active-route class="nav-link">
 							<i class="nav-icon fas fa-tools"></i>
 							<p>
 								Керування
@@ -52,13 +52,19 @@
 					</li>
 					<li class="nav-header">Редактор</li>
 					<li class="nav-item">
-						<a asp-area="Entities" asp-controller="Community" class="nav-link">
+						<a is-active-route asp-area="Entities" asp-controller="Community" asp-action="Index" class="nav-link">
 							<i class="fas fa-table nav-icon"></i>
 							<p>Громади</p>
 						</a>
 					</li>
-					}
-				</ul>
+					<li class="nav-item">
+						<a is-active-route asp-area="Entities" asp-controller="District" asp-action="Index" class="nav-link">
+							<i class="fas fa-table nav-icon"></i>
+							<p>Райони</p>
+						</a>
+					</li>
+				}
+			</ul>
 		</nav>
 	</div>
 </aside>

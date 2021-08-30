@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebUI.Areas.Entities.Models
 {
@@ -9,5 +10,11 @@ namespace WebUI.Areas.Entities.Models
 
 		[Display(Name = "Назва")]
 		public string Name { get; set; }
+
+		public int? DistrictId { get; set; }
+
+		public DistrictViewModel District { get; set; }
+
+		public SelectList Districts { get; set; }
 	}
 }

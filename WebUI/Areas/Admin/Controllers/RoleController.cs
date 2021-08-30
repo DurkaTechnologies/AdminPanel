@@ -68,27 +68,27 @@ namespace WebUI.Areas.Admin
                         _notify.Success($"Роль {role.Name} створено");
                         await _roleManager.CreateAsync(new IdentityRole(role.Name));
 
-                        Audit audit = new Audit()
+                        Log log = new Log()
                         {
-                            Type = "Create",
                             UserId = _userService.UserId,
+                            Action = "Create",
                             TableName = "Roles",
-                            NewValues = JsonConvert.SerializeObject(role)
+                            NewValues = role
                         };
 
-                        await _mediator.Send(new AddLogCommand() { Audit = audit });
+                        await _mediator.Send(new AddLogCommand() { Log = log });
                     }
                     else
                     {
                         var existingRole = await _roleManager.FindByIdAsync(role.Id);
 
-                        Audit audit = new Audit()
+                        Log log = new Log()
                         {
-                            Type = "Update",
                             UserId = _userService.UserId,
+                            Action = "Update",
                             TableName = "Roles",
-                            OldValues = JsonConvert.SerializeObject(_mapper.Map<RoleViewModel>(existingRole)),
-                            NewValues = JsonConvert.SerializeObject(role)
+                            OldValues = _mapper.Map<RoleViewModel>(existingRole),
+                            NewValues = role
                         };
 
                         existingRole.Name = role.Name;
@@ -96,7 +96,7 @@ namespace WebUI.Areas.Admin
                         await _roleManager.UpdateAsync(existingRole);
 
                         _notify.Success($"Роль {role.Name} змінено");
-                        await _mediator.Send(new AddLogCommand() { Audit = audit });
+                        await _mediator.Send(new AddLogCommand() { Log = log });
                     }
                 }
                 else
@@ -134,15 +134,15 @@ namespace WebUI.Areas.Admin
                 {
                     await _roleManager.DeleteAsync(existingRole);
 
-                    Audit audit = new Audit()
+                    Log log = new Log()
                     {
-                        Type = "Delete",
                         UserId = _userService.UserId,
+                        Action = "Delete",
                         TableName = "Roles",
-                        OldValues = JsonConvert.SerializeObject(_mapper.Map<RoleViewModel>(existingRole))
+                        OldValues = _mapper.Map<RoleViewModel>(existingRole)
                     };
 
-                    await _mediator.Send(new AddLogCommand() { Audit = audit });
+                    await _mediator.Send(new AddLogCommand() { Log = log });
                     _notify.Success($"Роль {existingRole.Name} видалено");
                 }
                 else 

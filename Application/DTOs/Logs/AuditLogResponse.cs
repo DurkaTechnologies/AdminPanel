@@ -11,5 +11,6 @@ namespace AdminPanel.Application.DTOs
         public DateTime DateTime { get; set; }
         public string OldValues { get; set; }
         public string NewValues { get; set; }
+        public string PrimaryKey { get; set; }
     }
 }

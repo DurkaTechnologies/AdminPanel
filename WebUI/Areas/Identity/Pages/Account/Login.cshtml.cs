@@ -112,6 +112,7 @@ namespace WebUI.Areas.Identity.Pages.Account
 				{
 					string fullName = user.MiddleName + " " + user.FirstName + " " + user.LastName + " увійшов";
 					await _mediator.Send(new AddActivityLogCommand() { userId = user.Id, Action =  fullName});
+					
 					_logger.LogInformation("User logged in.");
 
 					if (user.FirstName == null || user.LastName == null)
@@ -132,17 +133,6 @@ namespace WebUI.Areas.Identity.Pages.Account
 			// If we got this far, something failed, redisplay form
 			return Page();
 		}
-
-		public async Task LoginBySuperAdmin()
-		{
-			Console.WriteLine("Dsdsadsadsadas");
-			Input = new InputModel();
-			Input.Email = "superadmin@gmail.com";
-			Input.Password = "123Pa$$word!";
-			Input.RememberMe = false;
-			await OnPostAsync();
-		}
-
 
 		public bool IsValidEmail(string emailaddress)
 		{

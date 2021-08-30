@@ -36,7 +36,7 @@ namespace AdminPanel.Infrastructure.Repositories
 
 		public async Task<List<Community>> GetListAsync()
 		{
-			return await _repository.Entities.ToListAsync();
+			return await _repository.Entities.Include(c => c.District).ToListAsync();
 		}
 
 		public async Task<int> InsertAsync(Community community)

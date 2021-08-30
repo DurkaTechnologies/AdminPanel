@@ -1,31 +1,47 @@
 ﻿@{
-    ViewData["Title"] = "Громади";
+	ViewData["Title"] = "Громади";
+	ViewData["Caption"] = "Редагування громад";
 }
+
 @using WebUI.Areas.Entities.Models
 @using AdminPanel.Application.Constants
 @model CommunityViewModel
 
 @{ 
-    bool view = AuthorizationService.AuthorizeAsync(User, Permissions.Communities.View).Result.Succeeded;
+	bool view = AuthorizationService.AuthorizeAsync(User, Permissions.Communities.View).Result.Succeeded;
 }
 
 @if (view)
 {
     <div class="card">
-        <div class="col-sm-12" style="padding:20px">
+		<div class="row">
+			<div class="col-sm-12 col-md-6" style="padding: 20px 0 20px 20px ">
 
-            @if ((AuthorizationService.AuthorizeAsync(User, Permissions.Communities.Create)).Result.Succeeded)
-            {
-                <a onclick="jQueryModalGet('/entities/community/OnGetCreateOrEdit','Створити Громаду')" class="btn bg-success">
-                    <i class="fa fa-plus-square"></i> Створити
-                </a>
-            }
+				@if ((AuthorizationService.AuthorizeAsync(User, Permissions.Communities.Create)).Result.Succeeded)
+				{
+					<a onclick="jQueryModalGet('/entities/community/OnGetCreateOrEdit','Створити Громаду')" class="btn bg-success mr-2">
+						<i class="fa fa-plus-square"></i> Створити
+					</a>
+				}
 
-            <a id="reload" class="btn btn-primary text-white">
-                <i class="fa fas fa-bolt"></i>
-                Перевантажити
-            </a>
-        </div>
+				<a id="reload" class="btn btn-primary text-white">
+					<i class="fa fas fa-bolt"></i>
+					Перевантажити
+				</a>
+
+			</div>
+			<div class="col-sm-12 col-md-6" style="padding: 20px 20px 20px 0">
+				<div style="text-align: right;">
+					<label class="text-nowrap" style="text-align: left;">
+						Район:
+						<select class="form-control select2bs4 d-inline w-auto ml-1" id="districtFilter">
+							<option value=""></option>
+						</select>
+					</label>
+				</div>
+			</div>
+		</div>
+		
 
         @if (view)
         {

@@ -10,6 +10,7 @@ using AdminPanel.Infrastructure.AuditModels;
 using Domain.Common.Interfaces;
 using System;
 using AdminPanel.Infrastructure.DbContexts;
+using Newtonsoft.Json;
 
 namespace AdminPanel.Infrastructure.Repositories
 {
@@ -26,11 +27,21 @@ namespace AdminPanel.Infrastructure.Repositories
             _dateTimeService = dateTimeService;
         }
 
-        public async Task AddLogAsync(IAudit audit)
+        public async Task AddLogAsync(ILog log)
         {
-            if (audit != null)
+            if (log != null)
             {
-                audit.DateTime = DateTime.Now;
+                Audit audit = new Audit()
+                {
+                    DateTime = DateTime.Now,
+                    Type = log.Action,
+                    TableName = log.TableName,
+                    UserId = log.UserId,
+                    OldValues = ConvertValues(log.OldValues),
+                    NewValues = ConvertValues(log.NewValues),
+                    PrimaryKey = log.Key
+                };
+
                 await _repository.AddAsync(_mapper.Map<Audit>(audit));
             }
         }
@@ -51,6 +62,25 @@ namespace AdminPanel.Infrastructure.Repositories
             var logs = await _repository.Entities.Where(a => a.UserId == userId).OrderByDescending(a => a.Id).Take(250).ToListAsync();
             var mappedLogs = _mapper.Map<List<AuditLogResponse>>(logs);
             return mappedLogs;
+        }
+
+        private string ConvertValues(object values) 
+        {
+            if (values != null)
+            {
+                if (values is List<string>)
+                {
+                    Dictionary<string, string> dictionary = new Dictionary<string, string>();
+
+                    foreach (var item in values as IList<string>)
+                        dictionary.Add(item, " ");
+
+                   return JsonConvert.SerializeObject(dictionary);
+                }
+                else
+                    return JsonConvert.SerializeObject(values);
+            }
+            return null;
         }
     }
 

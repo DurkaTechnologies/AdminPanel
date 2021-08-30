@@ -30,7 +30,9 @@ namespace AdminPanel.Infrastructure.Extensions
 
             services.AddTransient(typeof(IRepositoryAsync<,>), typeof(RepositoryAsync<,>));
 			services.AddTransient<ICommunityCacheRepository, CommunityCacheRepository>();
-			services.AddTransient<ICommunityRepository, CommunityRepository>();
+			services.AddTransient<IDistrictCacheRepository, DistrictCacheRepository>();
+            services.AddTransient<ICommunityRepository, CommunityRepository>();
+            services.AddTransient<IDistrictRepository, DistrictRepository>();
             services.AddTransient<ILogRepository, LogRepository>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 

@@ -30,5 +30,13 @@ namespace AdminPanel.Application.Constants
 			public const string Edit = "Permissions.Communities.Edit";
 			public const string Delete = "Permissions.Communities.Delete";
 		}
+		
+		public static class Districts
+		{
+			public const string View = "Permissions.Districts.View";
+			public const string Create = "Permissions.Districts.Create";
+			public const string Edit = "Permissions.Districts.Edit";
+			public const string Delete = "Permissions.Districts.Delete";
+		}
 	}
 }

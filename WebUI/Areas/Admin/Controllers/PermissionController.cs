@@ -72,16 +72,6 @@ namespace WebUI.Areas.Admin.Controllers
 
             _notify.Error($"Дозволи для ролі {role.Name} змінено");
 
-            Audit audit = new Audit()
-            {
-                Type = "Manage Permission",
-                UserId = _userService.UserId,
-                TableName = "Roles",
-                NewValues = JsonConvert.SerializeObject(_mapper.Map<RoleViewModel>(role))
-            };
-
-            await _mediator.Send(new AddLogCommand() { Audit = audit });
-
             return RedirectToAction("Index", new { roleId = model.RoleId });
         }
     }

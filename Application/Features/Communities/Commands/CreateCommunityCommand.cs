@@ -12,6 +12,8 @@ namespace AdminPanel.Application.Features.Communities.Commands
 	{
 		public string Name { get; set; }
 
+		public int? DistrictId { get; set; }
+
 		public class CreateCommunityCommandHandler : IRequestHandler<CreateCommunityCommand, Result<int>>
 		{
 			private readonly ICommunityRepository communityRepository;
@@ -28,10 +30,10 @@ namespace AdminPanel.Application.Features.Communities.Commands
 
 			public async Task<Result<int>> Handle(CreateCommunityCommand request, CancellationToken cancellationToken)
 			{
-				var product = mapper.Map<Community>(request);
-				await communityRepository.InsertAsync(product);
+				var community = mapper.Map<Community>(request);
+				await communityRepository.InsertAsync(community);
 				await unitOfWork.Commit(cancellationToken);
-				return Result<int>.Success(product.Id);
+				return Result<int>.Success(community.Id);
 			}
 		}
 	}
