@@ -26,5 +26,6 @@ namespace Domain.Common.Interfaces
         public string TableName { get; set; }
         public object OldValues { get; set; }
         public object NewValues { get; set; }
+        public string Key { get; set; }
     } 
 }

@@ -72,16 +72,6 @@ namespace WebUI.Areas.Admin.Controllers
 
             _notify.Error($"Дозволи для ролі {role.Name} змінено");
 
-            Log log = new Log()
-            {
-                UserId = _userService.UserId,
-                Action = "Manage Permission",
-                TableName = "Roles",
-                NewValues = _mapper.Map<RoleViewModel>(role)
-            };
-
-            await _mediator.Send(new AddLogCommand() { Log = log });
-
             return RedirectToAction("Index", new { roleId = model.RoleId });
         }
     }

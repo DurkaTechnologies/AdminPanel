@@ -50,6 +50,9 @@
                         Таблиця
                     </th>
                     <th>
+                        Ключ
+                    </th>
+                    <th>
                         Старі значення
                     </th>
                     <th>
@@ -60,38 +63,41 @@
             <tbody>
                 @foreach (var user in Model.AuditLogResponses)
                 {
-                    <tr>
-                        <td>
-                            @user.Id
-                        </td>
-                        <td>
-                            @user.DateTime.ToString()
-                        </td>
-                        <td>
-                            @switch (@user.Type)
-                            {
-                                case "Create":
-                                    <small class="badge badge-success">@user.Type</small>
-                                    break;
-                                case "Delete":
-                                    <small class="badge badge-danger">@user.Type</small>
-                                    break;
-                                case "Update":
-                                    <small class="badge badge-info">@user.Type</small>
-                                    break;
-                                case "Manage":
-                                    <small class="badge badge-primary">@user.Type</small>
-                                    break;
-                                default:
-                                    <small class="badge badge-light">@user.Type</small>
-                                    break;
-                            }
-                        </td>
-                        <td>
-                            @user.TableName
-                        </td>
-                        <td>
-                        @{ 
+                <tr>
+                    <td>
+                        @user.Id
+                    </td>
+                    <td>
+                        @user.DateTime.ToString()
+                    </td>
+                    <td>
+                        @switch (@user.Type)
+                        {
+                            case "Create":
+                                <small class="badge badge-success">@user.Type</small>
+                                break;
+                            case "Delete":
+                                <small class="badge badge-danger">@user.Type</small>
+                                break;
+                            case "Update":
+                                <small class="badge badge-info">@user.Type</small>
+                                break;
+                            case "Manage":
+                                <small class="badge badge-primary">@user.Type</small>
+                                break;
+                            default:
+                                <small class="badge badge-light">@user.Type</small>
+                                break;
+                        }
+                    </td>
+                    <td>
+                        @user.TableName
+                    </td>
+                    <td>
+                        @user.PrimaryKey
+                    </td>
+                    <td>
+                        @{
                             var dictionaryOld = JsonParse(user.OldValues);
 
                             if (dictionaryOld != null)
@@ -100,12 +106,12 @@
                                 {
                                     <div>
                                         <small class="badge badge-info">@item.Key</small> @item.Value
-                                    </div> 
+                                    </div>
                                 }
                             }
                         }
-                        </td>
-                        <td>
+                    </td>
+                    <td>
                         @{
                             var dictionaryNew = JsonParse(user.NewValues);
 
@@ -119,8 +125,8 @@
                                 }
                             }
                         }
-                        </td>
-                    </tr>
+                    </td>
+                </tr>
                  }
             </tbody>
         </table>

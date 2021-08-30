@@ -122,7 +122,8 @@ namespace WebUI.Areas.Admin
                         Action = "Create",
                         UserId = _userService.UserId,
                         TableName = "Users",
-                        NewValues = new AuditUserModel(userModel)
+                        NewValues = new AuditUserModel(userModel),
+                        Key = user.Id
                     };
 
                     await _mediator.Send(new AddLogCommand() { Log = log });
@@ -156,7 +157,8 @@ namespace WebUI.Areas.Admin
                         Action = "Delete",
                         UserId = _userService.UserId,
                         TableName = "Users",
-                        OldValues = new AuditUserModel(_mapper.Map<UserViewModel>(user))
+                        OldValues = new AuditUserModel(_mapper.Map<UserViewModel>(user)),
+                        Key = user.Id
                     };
 
                     await _mediator.Send(new AddLogCommand() { Log =  log });
@@ -190,8 +192,9 @@ namespace WebUI.Areas.Admin
                     Log log = new Log()
                     {
                         UserId = _userService.UserId,
+                        Key = user.Id,
                         TableName = "Users",
-                        NewValues = JsonConvert.SerializeObject(new AuditUserModel(_mapper.Map<UserViewModel>(user)))
+                        NewValues = new AuditUserModel(_mapper.Map<UserViewModel>(user))
                     };
 
                     if (user.IsActive)

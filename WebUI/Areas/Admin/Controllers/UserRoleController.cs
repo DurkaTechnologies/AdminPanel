@@ -69,6 +69,7 @@ namespace WebUI.Areas.Admin.Controllers
             var currentUser = await _userManager.GetUserAsync(User);
             await _signInManager.RefreshSignInAsync(currentUser);
             await AdminPanel.Infrastructure.Identity.Seeds.DefaultSuperAdminUser.SeedAsync(_userManager, _roleManager);
+            var newRoles = await _userManager.GetRolesAsync(user);
 
             _notify.Success($"Ролі для {user.FirstName + " " + user.LastName} змінено");
 
@@ -78,6 +79,8 @@ namespace WebUI.Areas.Admin.Controllers
                 Action = "Manage Roles",
                 TableName = "Users",
                 OldValues = roles,
+                NewValues = newRoles,
+                Key = user.Id
             };
 
             await _mediator.Send(new AddLogCommand() { Log = log });

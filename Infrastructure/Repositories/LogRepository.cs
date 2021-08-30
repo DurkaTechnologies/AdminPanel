@@ -39,6 +39,7 @@ namespace AdminPanel.Infrastructure.Repositories
                     UserId = log.UserId,
                     OldValues = ConvertValues(log.OldValues),
                     NewValues = ConvertValues(log.NewValues),
+                    PrimaryKey = log.Key
                 };
 
                 await _repository.AddAsync(_mapper.Map<Audit>(audit));
@@ -72,11 +73,11 @@ namespace AdminPanel.Infrastructure.Repositories
                     Dictionary<string, string> dictionary = new Dictionary<string, string>();
 
                     foreach (var item in values as IList<string>)
-                        dictionary.Add(item, "");
+                        dictionary.Add(item, " ");
 
                    return JsonConvert.SerializeObject(dictionary);
                 }
-                else if(values is Dictionary<string, string>)
+                else
                     return JsonConvert.SerializeObject(values);
             }
             return null;
