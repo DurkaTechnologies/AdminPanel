@@ -15,7 +15,7 @@
                     <div class="col-12 col-sm-4 col-md-4 col-lg-12 position-relative p-4">
                         @if (Model.ProfilePicture != null)
                         {
-                            <img id="profilePicture" class="rounded-circle" style="width: 100%; object-fit: cover;" src="@ENV.ImagePath@Model.ProfilePicture"
+                            <img id="profilePicture" class="rounded-circle" style="width: 100%; object-fit: cover;" src="@Url.Content(ENV.ImagePath + Model.ProfilePicture)"
                                  onerror="this.onerror = null; this.src = '@Url.Content("~/images/users/default-user.png")';">
                         }
                         else

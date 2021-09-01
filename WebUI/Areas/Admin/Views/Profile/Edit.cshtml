@@ -18,7 +18,7 @@
                             <div class="position-relative p-4">
                                 @if (Model.ProfilePicture != null)
                                 {
-                                    <img id="profilePicture" class="img-circle" style="width: 100%; object-fit: cover; margin-top: 10px;" src="@ENV.ImagePath@Model.ProfilePicture"
+                                    <img id="profilePicture" class="img-circle" style="width: 100%; object-fit: cover; margin-top: 10px;" src="@Url.Content(ENV.ImagePath + Model.ProfilePicture)"
                                          onerror="this.onerror = null; this.src = '@Url.Content("~/images/users/default-user.png")';">
                                 }
                                 else
@@ -38,7 +38,7 @@
                                                id="customFile">
                                         <label class="my-file-label" for="customFile"><i class="fas fa-upload"></i> Завантажити</label>
                                     </div>
-                                    <a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="DeleteImage" asp-route-id="@Model.Id"><i class="fas fa-trash-alt"></i> Видалити</a>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Profile" asp-action="DeleteImage" asp-route-id="@Model.Id"><i class="fas fa-trash-alt"></i> Видалити</a>
                                 </div>
                             </div>
                         </div>
