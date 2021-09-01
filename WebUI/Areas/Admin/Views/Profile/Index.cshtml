@@ -8,53 +8,57 @@
 @using WebUI.Services
 
 <div class="container">
-    <div class="row">
-        <div class="col-xl-4 col-lg-5">
-            <div class="card">
-                <div class="row">
-                    <div class="col-12 col-sm-4 col-md-4 col-lg-12 position-relative p-4">
-                        @if (Model.ProfilePicture != null)
-                        {
-                            <img id="profilePicture" class="rounded-circle" style="width: 100%; object-fit: cover;" src="@ENV.ImagePath@Model.ProfilePicture"
-                                 onerror="this.onerror = null; this.src = '@Url.Content("~/images/users/default-user.png")';">
-                        }
-                        else
-                        {
-                            <img id="profilePicture" class="rounded-circle" style="width: 100%; object-fit: cover;" src="~/images/users/default-user.png">
-                        }
-                    </div>
-                    <div class="col-12 col-sm-8 col-md-8 col-lg-12 d-flex align-items-center justify-content-lg-center justify-content-center justify-content-sm-start">
-                        <div class="">
-                            <h3 class="profile-username text-center pb-2">@Model.FirstName @Model.MiddleName @Model.LastName</h3>
-                            <h5 class="text-muted pb-2"><i class="fas fa-mail-bulk"></i> @Model.Email</h5>
+	<div class="row">
+		<div class="col-xl-4 col-lg-5">
+			<div class="card">
+				<div class="row">
+					<div class="col-12 col-sm-4 col-md-4 col-lg-12 position-relative p-4">
+						@if (Model.ProfilePicture != null)
+						{
+							<img id="profilePicture" class="rounded-circle" style="width: 100%; object-fit: cover;" src="@ENV.ImagePath@Model.ProfilePicture"
+								 onerror="this.onerror = null; this.src = '@Url.Content("~/images/users/default-user.png")';">
+						}
+						else
+						{
+							<img id="profilePicture" class="rounded-circle" style="width: 100%; object-fit: cover;" src="~/images/users/default-user.png">
+						}
+					</div>
+					<div class="col-12 col-sm-8 col-md-8 col-lg-12 d-flex align-items-center justify-content-lg-center justify-content-center justify-content-sm-start">
+						<div class="">
+							<h3 class="profile-username text-center pb-2">@Model.FirstName @Model.MiddleName @Model.LastName</h3>
+							<h5 class="text-muted pb-2"><i class="fas fa-mail-bulk"></i> @Model.Email</h5>
 
-                            @if (!String.IsNullOrEmpty(Model.PhoneNumber))
-                            {
-                                <h5 class="text-muted pb-2">
-                                    <i class="fas fa-phone"></i>
-                                    @Model.PhoneNumber
-                                </h5>
-                            }
+							@if (!String.IsNullOrEmpty(Model.PhoneNumber))
+							{
+								<h5 class="text-muted pb-2">
+									<i class="fas fa-phone"></i>
+									@Model.PhoneNumber
+								</h5>
+							}
 
-                            @if (@Model.Community != null)
-                            {
-                                <h5 class="text-muted pb-4">
-                                    <i class="fas fa-users"></i>
-                                    @Model.Community.Name
-                                </h5>
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-8 col-lg-7">
-            <div class="card p-4">
-                <label class="col-form-label text-center d-block">Опис</label>
-                @Html.Raw(Model.Description)
-            </div>
-        </div>
-    </div>
+							@if (@Model.Community != null)
+							{
+								<h5 class="text-muted pb-4">
+									<i class="fas fa-users"></i>
+									@Model.Community.Name
+								</h5>
+							}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		@if (!String.IsNullOrEmpty(Model.Description))
+		{
+			<div class="col-xl-8 col-lg-7">
+
+				<div class="card p-4">
+					<label class="col-form-label text-center d-block">Опис</label>
+					@Html.Raw(Model.Description)
+				</div>
+			</div>
+		}
+	</div>
 
     <div class="d-flex justify-content-end">
         <a id="update-profile-button ml-auto" class="btn btn-success btn-icon-split" asp-controller="Profile" asp-action="Edit" asp-route-id="@Model.Id">

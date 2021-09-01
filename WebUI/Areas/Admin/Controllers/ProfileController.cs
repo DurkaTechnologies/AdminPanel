@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,7 +31,7 @@ namespace WebUI.Areas.Admin
             _userManager = userManager;
             _webHostEnvironment = webHostEnvironment;
 
-            ImageService.RootPass = _webHostEnvironment.WebRootPath;
+            ImageService.RootPass = ENV.RootPath;
         }
 
         public async Task<IActionResult> Index(string id)
@@ -174,7 +173,7 @@ namespace WebUI.Areas.Admin
 
             if (appUser != null && appUser.ProfilePicture != null)
             {
-                ImageService.DeleteImage(appUser.ProfilePicture);
+                ImageService.RemoveImageFromServer(appUser.ProfilePicture);
 
                 appUser.ProfilePicture = null;
                 await _userManager.UpdateAsync(appUser);
@@ -203,11 +202,18 @@ namespace WebUI.Areas.Admin
                 string imagePath;
                 if (user != null)
                 {
-                    imagePath = ImageService.SaveImage(blob, Path.GetExtension(fileName));
+                    imagePath = ImageService.UploadImageToServer(blob, Path.GetExtension(fileName));
                     if (!String.IsNullOrEmpty(imagePath))
                     {
+                        string oldImage = user.ProfilePicture;
                         user.ProfilePicture = imagePath;
-                        await _userManager.UpdateAsync(user);
+                        if ((await _userManager.UpdateAsync(user)).Succeeded)
+                        {
+                            ImageService.RemoveImageFromServer(oldImage);
+                            _notify.Success($"Фото профілю успішно змінено");
+                        }
+                        else
+                            ImageService.RemoveImageFromServer(imagePath);
                     }
                     else
                         return new JsonResult(new { isValid = false });

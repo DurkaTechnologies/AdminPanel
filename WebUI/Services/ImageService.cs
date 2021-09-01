@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using WebUI.Extensions;
+using System.Net;
 
 namespace WebUI.Services
 {
@@ -61,6 +58,71 @@ namespace WebUI.Services
 
 			if (File.Exists(path))
 				File.Delete(path);
+		}
+
+		public static string UploadImageToServer(IFormFile formFile, string extension = null)
+		{
+			string name = Guid.NewGuid().ToString();
+			if (String.IsNullOrEmpty(extension))
+				extension = Path.GetExtension(formFile.FileName);
+
+			Uri serverUri = new Uri(Path.Combine(RootPass + ENV.UploadPath, name + extension));
+
+			if ((serverUri.Scheme != Uri.UriSchemeFtp) || (formFile.Length > 3000000))
+				return null;
+
+			try
+			{
+				FtpWebRequest request = (FtpWebRequest)WebRequest.Create(serverUri);
+				request.Credentials = new NetworkCredential(ENV.FTPLogin, ENV.FTPPass);
+				request.Method = WebRequestMethods.Ftp.UploadFile;
+
+				byte[] fileContents;
+				using (var ms = new MemoryStream())
+				{
+					formFile.CopyTo(ms);
+					fileContents = ms.ToArray();
+				}
+
+				request.ContentLength = fileContents.Length;
+
+				using (Stream requestStream = request.GetRequestStream())
+				{
+					requestStream.Write(fileContents, 0, fileContents.Length);
+				}
+
+				using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
+				{
+					return response.StatusCode == FtpStatusCode.ClosingData ? name + extension : null;
+				}
+			}
+			catch (Exception)
+			{
+				return null;
+			}
+		}
+
+		public static bool RemoveImageFromServer(string name)
+		{
+			try
+			{
+				Uri serverUri = new Uri(Path.Combine(RootPass + ENV.UploadPath, name));
+
+				if (serverUri.Scheme != Uri.UriSchemeFtp)
+					return false;
+
+				FtpWebRequest request = (FtpWebRequest)WebRequest.Create(serverUri);
+				request.Credentials = new NetworkCredential(ENV.FTPLogin, ENV.FTPPass);
+				request.Method = WebRequestMethods.Ftp.DeleteFile;
+
+				FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+				response.Close();
+				return true;
+			}
+			catch (Exception)
+			{
+				return false;
+			}
 		}
 	}
 }
