@@ -26,29 +26,29 @@
 								<i class="fas fa-angle-left right"></i>
 							</p>
 						</a>
-						<ul class="nav nav-treeview">
-							<li class="nav-item">
-								<a is-active-route asp-area="Admin" asp-controller="User" asp-action="Index" class="nav-link">
-									<i class="fas fa-users nav-icon "></i>
-									<p>Користувачі</p>
-								</a>
-							</li>
-							@if (User.IsInRole("SuperAdmin"))
-							{
-								<li class="nav-item">
-									<a is-active-route asp-area="Admin" asp-controller="Role" asp-action="Index" class="nav-link">
-										<i class="fas fa-user-tag nav-icon"></i>
-										<p>Ролі</p>
-									</a>
-								</li>
-							}
-							<li class="nav-item">
-								<a is-active-route asp-area="Identity" asp-page="/Account/AuditLog" class="nav-link">
-									<i class="fas fa-list nav-icon"></i>
-									<p>Логування</p>
-								</a>
-							</li>
-						</ul>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a is-active-route asp-area="Admin" asp-controller="User" asp-action="Index" class="nav-link">
+                                    <i class="fas fa-users nav-icon "></i>
+                                    <p>Користувачі</p>
+                                </a>
+                            </li>
+                            @if (User.IsInRole("SuperAdmin"))
+                            {
+                                <li class="nav-item">
+                                    <a is-active-route asp-area="Admin" asp-controller="Role" asp-action="Index" class="nav-link">
+                                        <i class="fas fa-user-tag nav-icon"></i>
+                                        <p>Ролі</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a is-active-route asp-area="Identity" asp-page="/Account/AuditLog" class="nav-link">
+                                        <i class="fas fa-list nav-icon"></i>
+                                        <p>Логування</p>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
 					</li>
 					<li class="nav-header">Редактор</li>
 					<li class="nav-item">

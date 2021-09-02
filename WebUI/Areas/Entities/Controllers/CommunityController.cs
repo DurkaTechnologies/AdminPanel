@@ -87,6 +87,7 @@ namespace WebUI.Areas.Entities.Controllers
                         {
                             UserId = _userService.UserId,
                             Action = "Create",
+                            TableName = "Community",
                             NewValues = community
                         };
 
@@ -105,6 +106,7 @@ namespace WebUI.Areas.Entities.Controllers
                     {
                         UserId = _userService.UserId,
                         Action = "Update",
+                        TableName = "Community",
                         OldValues = old.Data
                     };
 
@@ -163,6 +165,7 @@ namespace WebUI.Areas.Entities.Controllers
                     {
                         UserId = _userService.UserId,
                         Action = "Delete",
+                        TableName = "Community",
                         OldValues = community
                     };
 
