@@ -24,10 +24,9 @@ namespace Infrastructure.Extensions
 
         public static void AddRepositories(this IServiceCollection services)
         {
-            #region Repositories
-            services.AddScoped<IDomainEventService, DomainEventService>();
             services.AddTransient<IDateTimeService, DateTimeService>();
 
+            #region Repositories
             services.AddTransient(typeof(IRepositoryAsync<,>), typeof(RepositoryAsync<,>));
 			services.AddTransient<ICommunityCacheRepository, CommunityCacheRepository>();
 			services.AddTransient<IDistrictCacheRepository, DistrictCacheRepository>();
@@ -35,7 +34,6 @@ namespace Infrastructure.Extensions
             services.AddTransient<IDistrictRepository, DistrictRepository>();
             services.AddTransient<ILogRepository, LogRepository>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
-
             #endregion Repositories
         }
     }
