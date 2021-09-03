@@ -10,7 +10,7 @@ namespace WebUI.Services
 	{
 		public static string RootPass { get; set; }
 
-		public static string SaveImage(IFormFileCollection files)
+		public static string SaveImageLocal(IFormFileCollection files)
 		{
 			if (RootPass != null)
 			{
@@ -20,7 +20,7 @@ namespace WebUI.Services
 				string extension = Path.GetExtension(file.FileName);
 				string path = Path.Combine(RootPass + ENV.ImagePath, name + extension);
 
-				using (var fileStream = System.IO.File.Create(path))
+				using (var fileStream = File.Create(path))
 				{
 					file.CopyTo(fileStream);
 				}
@@ -29,7 +29,8 @@ namespace WebUI.Services
 			}
 			return null;
 		}
-		public static string SaveImage(IFormFile file, string extension = null)
+
+		public static string SaveImageLocal(IFormFile file, string extension = null)
 		{
 			if (RootPass != null)
 			{
@@ -39,7 +40,7 @@ namespace WebUI.Services
 
 				string path = Path.Combine(RootPass + ENV.ImagePath, name + extension);
 
-				using (var fileStream = System.IO.File.Create(path))
+				using (var fileStream = File.Create(path))
 				{
 					file.CopyTo(fileStream);
 				}

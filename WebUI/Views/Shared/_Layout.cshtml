@@ -15,27 +15,27 @@
 	<partial name="_Styles" />
 </head>
 <body class="hold-transition sidebar-mini">
-    <div id="loader-wrapper">
-        <div id="loader"></div>
-        <div class="loader-section"></div>
-    </div>
-    <div class="wrapper">
-        @(await Component.InvokeAsync<HeaderViewComponent>())
-        @(await Component.InvokeAsync<SidebarViewComponent>())
-        <div class="content-wrapper" id="contentWrapper">
-            <div class="content">
-                <div class="container-fluid pt-2">
-                    @(await Component.InvokeAsync<TitleViewComponent>())
-                    @RenderBody()
-                </div>
-            </div>
-        </div>
-        @(await Component.InvokeAsync<FooterViewComponent>())
-        @(await Component.InvokeAsync<LogoutViewComponent>())
-        @(await Component.InvokeAsync<FormModalViewComponent>())
-    </div>
-    <partial name="_Scripts" />
-    @await Component.InvokeAsync("Notyf")
-    @RenderSection("Scripts", required: false)
+	<div id="loader-wrapper">
+		<div id="loader"></div>
+		<div class="loader-section"></div>
+	</div>
+	<div class="wrapper">
+		@(await Component.InvokeAsync<HeaderViewComponent>())
+		@(await Component.InvokeAsync<SidebarViewComponent>())
+		<div class="content-wrapper" id="contentWrapper">
+			<div class="content">
+				<div class="container-fluid pt-2">
+					@(await Component.InvokeAsync<TitleViewComponent>())
+					@RenderBody()
+				</div>
+			</div>
+		</div>
+		@(await Component.InvokeAsync<FooterViewComponent>())
+		@(await Component.InvokeAsync<LogoutViewComponent>())
+		@(await Component.InvokeAsync<FormModalViewComponent>())
+	</div>
+	<partial name="_Scripts" />
+	@await Component.InvokeAsync("Notyf")
+	@RenderSection("Scripts", required: false)
 </body>
 </html>

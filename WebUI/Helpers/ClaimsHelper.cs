@@ -15,15 +15,12 @@ namespace WebUI.Helpers
 		public static void HasRequiredClaims(this ClaimsPrincipal claimsPrincipal, IEnumerable<string> permissions)
 		{
 			if (!claimsPrincipal.Identity.IsAuthenticated)
-			{
 				return;
-			}
+
 			var allClaims = claimsPrincipal.Claims.Select(a => a.Value).ToList();
 			var success = allClaims.Intersect(permissions).Any();
 			if (!success)
-			{
 				throw new Exception();
-			}
 			return;
 		}
 
@@ -32,18 +29,14 @@ namespace WebUI.Helpers
 			FieldInfo[] fields = policy.GetFields(BindingFlags.Static | BindingFlags.Public);
 
 			foreach (FieldInfo fi in fields)
-			{
 				allPermissions.Add(new RoleClaimsViewModel { Value = fi.GetValue(null).ToString(), Type = "Permissions" });
-			}
 		}
 
 		public static async Task AddPermissionClaim(this RoleManager<IdentityRole> roleManager, IdentityRole role, string permission)
 		{
 			var allClaims = await roleManager.GetClaimsAsync(role);
 			if (!allClaims.Any(a => a.Type == "Permission" && a.Value == permission))
-			{
 				await roleManager.AddClaimAsync(role, new Claim(CustomClaimTypes.Permission, permission));
-			}
 		}
 	}
 }

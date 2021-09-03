@@ -25,8 +25,8 @@ namespace Application.Features.Communities.Queries.GetById
 			public async Task<Result<GetDistrictByIdResponse>> Handle(GetDistrictByIdQuery query, CancellationToken cancellationToken)
 			{
 				var district = await districtCache.GetByIdAsync(query.Id);
-				var mappedProduct = mapper.Map<GetDistrictByIdResponse>(district);
-				return Result<GetDistrictByIdResponse>.Success(mappedProduct);
+				var mappedDistrict = mapper.Map<GetDistrictByIdResponse>(district);
+				return Result<GetDistrictByIdResponse>.Success(mappedDistrict);
 			}
 		}
 	}

@@ -9,6 +9,7 @@ namespace Application.Features.ActivityLog.Commands
 	public partial class AddActivityLogCommand : IRequest<Result<int>>
 	{
 		public string Action { get; set; }
+
 		public string userId { get; set; }
 	}
 

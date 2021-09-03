@@ -37,10 +37,18 @@
 					<td>
 						@community.Name Територіальна Громада
 					</td>
-					<td>
-						@*null*@
-						@community.District?.Name Район
-					</td>
+					@if (!String.IsNullOrEmpty(community.District.ToString()))
+					{
+						<td>
+							@community.District?.Name Район
+						</td>
+					}
+					else
+					{
+						<td>
+							Район не визначено
+						</td>
+					}
 					@if (delete || edit)
 					{
 						<td text-right">
@@ -67,31 +75,36 @@
 			}
 		</tbody>
 	</table>
-}
-<script>
-	$(document).ready(function () {
-		$("#brandTable").DataTable({
-			initComplete: function () {
-				this.api().columns(2).every(function () {
-					var column = this;
-					var select = $('#districtFilter')
-						.on('change', function () {
-							var val = $.fn.dataTable.util.escapeRegex(
-								$(this).val()
-							);
+	<script>
+		$(document).ready(function () {
+			$("#brandTable").DataTable({
+				initComplete: function () {
+					this.api().columns(2).every(function () {
+						var column = this;
+						var select = $('#districtFilter')
+							.on('change', function () {
+								var val = $.fn.dataTable.util.escapeRegex(
+									$(this).val()
+								);
 
-							column.search(val ? '^' + val + '$' : '', true, false)
-								.draw();
+								column.search(val ? '^' + val + '$' : '', true, false)
+									.draw();
+							});
+
+						column.data().unique().sort().each(function (d, j) {
+							select.append('<option value="' + d + '">' + d + '</option>')
 						});
-
-					column.data().unique().sort().each(function (d, j) {
-						select.append('<option value="' + d + '">' + d + '</option>')
 					});
-				});
-			},
-			language: {
-				url: "//cdn.datatables.net/plug-ins/1.10.18/i18n/Ukrainian.json"
-			},
-		});;
-	});
-</script>
+				},
+				language: {
+					url: "//cdn.datatables.net/plug-ins/1.10.18/i18n/Ukrainian.json"
+				},
+			});;
+		});
+	</script>
+}
+else
+{
+	<h2 class="text-center">Не доступно для вас</h2>
+}
+

@@ -3,19 +3,15 @@ using Application.Features.Communities.Queries.GetAllCached;
 using Application.Features.Communities.Queries.GetById;
 using WebUI.Abstractions;
 using WebUI.Areas.Entities.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Infrastructure.AuditModels;
 using Application.Features.Logs.Commands;
 
 namespace WebUI.Areas.Entities.Controllers
 {
-    [Area("Entities")]
+	[Area("Entities")]
     public class DistrictController : BaseController<DistrictController>
     {
         // GET: DistrictController

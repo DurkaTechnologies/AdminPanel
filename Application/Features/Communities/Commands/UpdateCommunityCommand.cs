@@ -45,8 +45,6 @@ namespace Application.Features.Communities.Commands
 					await unitOfWork.Commit(cancellationToken);
 					return Result<int>.Success(command.Id);
 				}
-
-				
 			}
 		}
 	}

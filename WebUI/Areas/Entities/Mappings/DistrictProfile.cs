@@ -6,14 +6,14 @@ using AutoMapper;
 
 namespace WebUI.Areas.Entities.Mappings
 {
-    internal class DistrictProfile : Profile
-    {
-        public DistrictProfile()
-        {
-            CreateMap<GetAllDistrictsCachedResponse, DistrictViewModel>().ReverseMap();
-            CreateMap<GetDistrictByIdResponse, DistrictViewModel>().ReverseMap();
-            CreateMap<CreateDistrictCommand, DistrictViewModel>().ReverseMap();
-            CreateMap<UpdateDistrictCommand, DistrictViewModel>().ReverseMap();
-        }
-    }
+	internal class DistrictProfile : Profile
+	{
+		public DistrictProfile()
+		{
+			CreateMap<GetAllDistrictsCachedResponse, DistrictViewModel>().ReverseMap();
+			CreateMap<GetDistrictByIdResponse, DistrictViewModel>().ReverseMap();
+			CreateMap<CreateDistrictCommand, DistrictViewModel>().ReverseMap();
+			CreateMap<UpdateDistrictCommand, DistrictViewModel>().ReverseMap();
+		}
+	}
 }

@@ -6,14 +6,14 @@ using AutoMapper;
 
 namespace WebUI.Areas.Entities.Mappings
 {
-    internal class CommunityProfile : Profile
-    {
-        public CommunityProfile()
-        {
-            CreateMap<GetAllCommunitiesCachedResponse, CommunityViewModel>().ReverseMap();
-            CreateMap<GetCommunityByIdResponse, CommunityViewModel>().ReverseMap();
-            CreateMap<CreateCommunityCommand, CommunityViewModel>().ReverseMap();
-            CreateMap<UpdateCommunityCommand, CommunityViewModel>().ReverseMap();
-        }
-    }
+	internal class CommunityProfile : Profile
+	{
+		public CommunityProfile()
+		{
+			CreateMap<GetAllCommunitiesCachedResponse, CommunityViewModel>().ReverseMap();
+			CreateMap<GetCommunityByIdResponse, CommunityViewModel>().ReverseMap();
+			CreateMap<CreateCommunityCommand, CommunityViewModel>().ReverseMap();
+			CreateMap<UpdateCommunityCommand, CommunityViewModel>().ReverseMap();
+		}
+	}
 }

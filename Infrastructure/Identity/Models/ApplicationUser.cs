@@ -30,6 +30,6 @@ namespace Infrastructure.Identity.Models
 
 		public bool IsActive { get; set; } = false;
 
-        public virtual ICollection<Correspondence> Correspondences { get; set; }
-    }
+		public virtual ICollection<Correspondence> Correspondences { get; set; }
+	}
 }

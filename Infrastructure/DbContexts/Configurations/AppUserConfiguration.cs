@@ -24,8 +24,7 @@ namespace Infrastructure.Persistence.Configurations
 				.HasMaxLength(256);
 
 			builder.Property(t => t.Description)
-				.HasMaxLength(2000);
-
+				.HasMaxLength(5000);
 		}
 	}
 }

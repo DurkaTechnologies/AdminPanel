@@ -1,6 +1,5 @@
 ﻿using Application.Enums;
 using Microsoft.AspNetCore.Identity;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Identity.Seeds

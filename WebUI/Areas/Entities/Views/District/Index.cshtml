@@ -7,57 +7,56 @@
 @using Application.Constants
 @model DistrictViewModel
 
-@{ 
+@{
 	bool view = AuthorizationService.AuthorizeAsync(User, Permissions.Districts.View).Result.Succeeded;
 }
 
 @if (view)
 {
-    <div class="card pb-0">
-        <div class="col-sm-12" style="padding:20px">
+	<div class="card pb-0">
+		<div class="col-sm-12" style="padding:20px">
 
-            @if ((AuthorizationService.AuthorizeAsync(User, Permissions.Districts.Create)).Result.Succeeded)
-            {
-                <a onclick="jQueryModalGet('/entities/district/OnGetCreateOrEdit','Створити район')" class="btn bg-success mr-2">
-                    <i class="fa fa-plus-square"></i> Створити
-                </a>
-            }
+			@if ((AuthorizationService.AuthorizeAsync(User, Permissions.Districts.Create)).Result.Succeeded)
+			{
+				<a onclick="jQueryModalGet('/entities/district/OnGetCreateOrEdit','Створити район')" class="btn bg-success mr-2">
+					<i class="fa fa-plus-square"></i> Створити
+				</a>
+			}
 
-            <a id="reload" class="btn btn-primary text-white">
-                <i class="fa fas fa-bolt"></i>
-                Перевантажити
-            </a>
-        </div>
+			<a id="reload" class="btn btn-primary text-white">
+				<i class="fa fas fa-bolt"></i>
+				Перевантажити
+			</a>
+		</div>
 
-        @if (view)
-        {
-            <div id="viewAll" class="card-body table-responsive">
-            </div>
-        }
-    </div>
-}
-else 
-{
-    <h2 class="text-center">Не доступно для вас</h2>
-}
+		@if (view)
+		{
+			<div id="viewAll" class="card-body table-responsive">
+			</div>
+		}
+	</div>
 
-@section Scripts
-{
-    <script src="~/js/site.js"></script>
-    <script>
-        $(document).ready(function () {
-			$("#districtTable").DataTable({
-				language: {
-					url: "//cdn.datatables.net/plug-ins/1.10.18/i18n/Ukrainian.json"
-				},
+	@section Scripts
+	{
+		<script>
+			$(document).ready(function () {
+				$("#districtTable").DataTable({
+					language: {
+						url: "//cdn.datatables.net/plug-ins/1.10.18/i18n/Ukrainian.json"
+					},
+				});
+				loadData();
+				$('#reload').on('click', function () {
+					loadData();
+				});
 			});
-            loadData();
-            $('#reload').on('click', function () {
-                loadData();
-            });
-        });
-        function loadData() {
-			$('#viewAll').load('/entities/district/LoadAll');
-        }
-    </script>
+			function loadData() {
+				$('#viewAll').load('/entities/district/LoadAll');
+			}
+		</script>
+	}
+}
+else
+{
+	<h2 class="text-center">Не доступно для вас</h2>
 }

@@ -5,6 +5,7 @@ using Domain.Entities;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Infrastructure.CacheKeys;
 
 namespace Infrastructure.CacheRepositories
 {
@@ -21,26 +22,28 @@ namespace Infrastructure.CacheRepositories
 
 		public async Task<Community> GetByIdAsync(int communityId)
 		{
-			string cacheKey = CacheKeys.CommunityCacheKeys.GetKey(communityId);
-			var brand = await distributedCache.GetAsync<Community>(cacheKey);
-			if (brand == null)
+			string cacheKey = CommunityCacheKeys.GetKey(communityId);
+			var community = await distributedCache.GetAsync<Community>(cacheKey);
+
+			if (community == null)
 			{
-				brand = await communityRepository.GetByIdAsync(communityId);
-				await distributedCache.SetAsync(cacheKey, brand);
+				community = await communityRepository.GetByIdAsync(communityId);
+				await distributedCache.SetAsync(cacheKey, community);
 			}
-			return brand;
+			return community;
 		}
 
 		public async Task<List<Community>> GetCachedListAsync()
 		{
-			string cacheKey = CacheKeys.CommunityCacheKeys.ListKey;
-			var brandList = await distributedCache.GetAsync<List<Community>>(cacheKey);
-			if (brandList == null)
+			string cacheKey = CommunityCacheKeys.ListKey;
+			var communityList = await distributedCache.GetAsync<List<Community>>(cacheKey);
+
+			if (communityList == null)
 			{
-				brandList = await communityRepository.GetListAsync();
-				await distributedCache.SetAsync(cacheKey, brandList);
+				communityList = await communityRepository.GetListAsync();
+				await distributedCache.SetAsync(cacheKey, communityList);
 			}
-			return brandList;
+			return communityList;
 		}
 	}
 }

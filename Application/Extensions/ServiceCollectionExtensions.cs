@@ -5,13 +5,13 @@ using System.Reflection;
 
 namespace Application.Extensions
 {
-    public static class ServiceCollectionExtensions
-    {
-        public static void AddApplicationLayer(this IServiceCollection services)
-        {
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
-            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-            services.AddMediatR(Assembly.GetExecutingAssembly());
-        }
-    }
+	public static class ServiceCollectionExtensions
+	{
+		public static void AddApplicationLayer(this IServiceCollection services)
+		{
+			services.AddAutoMapper(Assembly.GetExecutingAssembly());
+			services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+			services.AddMediatR(Assembly.GetExecutingAssembly());
+		}
+	}
 }

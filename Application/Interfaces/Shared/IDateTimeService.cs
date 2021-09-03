@@ -2,8 +2,8 @@
 
 namespace Application.Interfaces.Shared
 {
-    public interface IDateTimeService
-    {
-        DateTime NowUtc { get; }
-    }
+	public interface IDateTimeService
+	{
+		DateTime NowUtc { get; }
+	}
 }
