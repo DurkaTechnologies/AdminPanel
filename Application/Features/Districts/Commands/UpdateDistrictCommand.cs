@@ -1,10 +1,10 @@
-﻿using AdminPanel.Application.Common.Models;
-using AdminPanel.Application.Interfaces.Repositories;
+﻿using Application.Common.Models;
+using Application.Interfaces.Repositories;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AdminPanel.Application.Features.Communities.Commands
+namespace Application.Features.Communities.Commands
 {
 	public class UpdateDistrictCommand : IRequest<Result<int>>
 	{

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AdminPanel.Application.Common.Models
+namespace Application.Common.Models
 {
     public interface IResult
     {

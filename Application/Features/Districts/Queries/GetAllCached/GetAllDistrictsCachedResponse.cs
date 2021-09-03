@@ -1,4 +1,4 @@
-﻿namespace AdminPanel.Application.Features.Communities.Queries.GetAllCached
+﻿namespace Application.Features.Communities.Queries.GetAllCached
 {
 	public class GetAllDistrictsCachedResponse
 	{

@@ -1,18 +1,18 @@
-﻿using AdminPanel.Application.Interfaces;
-using AdminPanel.Application.Interfaces.CacheRepositories;
-using AdminPanel.Application.Interfaces.Contexts;
-using AdminPanel.Application.Interfaces.Repositories;
-using AdminPanel.Application.Interfaces.Shared;
-using AdminPanel.Infrastructure.CacheRepositories;
-using AdminPanel.Infrastructure.DbContexts;
-using AdminPanel.Infrastructure.Repositories;
-using AdminPanel.Infrastructure.Services;
+﻿using Application.Interfaces;
+using Application.Interfaces.CacheRepositories;
+using Application.Interfaces.Contexts;
+using Application.Interfaces.Repositories;
+using Application.Interfaces.Shared;
+using Infrastructure.CacheRepositories;
+using Infrastructure.DbContexts;
+using Infrastructure.Repositories;
+using Infrastructure.Services;
 using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace AdminPanel.Infrastructure.Extensions
+namespace Infrastructure.Extensions
 {
     public static class ServiceCollectionExtensions
     {

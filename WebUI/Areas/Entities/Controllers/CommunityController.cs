@@ -1,7 +1,7 @@
-﻿using AdminPanel.Application.Features.Communities.Commands;
-using AdminPanel.Application.Features.Communities.Queries.GetAllCached;
-using AdminPanel.Application.Features.Communities.Queries.GetById;
-using AdminPanel.Web.Abstractions;
+﻿using Application.Features.Communities.Commands;
+using Application.Features.Communities.Queries.GetAllCached;
+using Application.Features.Communities.Queries.GetById;
+using WebUI.Abstractions;
 using WebUI.Areas.Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Application.Features.Logs.Commands;
-using AdminPanel.Infrastructure.AuditModels;
+using Infrastructure.AuditModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace WebUI.Areas.Entities.Controllers
@@ -120,9 +120,6 @@ namespace WebUI.Areas.Entities.Controllers
                         await _mediator.Send(new AddLogCommand() { Log = log });
                         _notify.Success($"Громада {community.Name} змінена");
                     }
-                    
-                    if (result.Succeeded) 
-                        _notify.Success($"Громада {community.Name} змінена");
                 }
                 
                 var response = await _mediator.Send(new GetAllCommunitiesCachedQuery());

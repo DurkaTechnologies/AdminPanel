@@ -1,10 +1,10 @@
-﻿using AdminPanel.Application.Enums;
+﻿using Application.Enums;
 using Infrastructure.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AdminPanel.Infrastructure.Identity.Seeds
+namespace Infrastructure.Identity.Seeds
 {
     public static class DefaultUser
     {

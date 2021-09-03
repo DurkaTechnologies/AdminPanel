@@ -1,12 +1,12 @@
-﻿using AdminPanel.Application.Interfaces.CacheRepositories;
-using AdminPanel.Application.Interfaces.Repositories;
-using AdminPanel.Infrastructure.Extensions;
+﻿using Application.Interfaces.CacheRepositories;
+using Application.Interfaces.Repositories;
+using Infrastructure.Extensions;
 using Domain.Entities;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace AdminPanel.Infrastructure.CacheRepositories
+namespace Infrastructure.CacheRepositories
 {
 	public class DistrictCacheRepository : IDistrictCacheRepository
 	{

@@ -1,4 +1,4 @@
-﻿using AdminPanel.Application.Interfaces.Shared;
+﻿using Application.Interfaces.Shared;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using AutoMapper;
 using MediatR;
@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace AdminPanel.Web.Abstractions
+namespace WebUI.Abstractions
 {
     public abstract class BaseController<T> : Controller
     {

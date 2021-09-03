@@ -1,4 +1,4 @@
-﻿namespace AdminPanel.Infrastructure.Identity.Services
+﻿namespace Infrastructure.Identity.Services
 {
 	class IdentityService
 	{

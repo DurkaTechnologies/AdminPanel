@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace AdminPanel.Application.Constants
+namespace Application.Constants
 {
 	public static class Permissions
 	{

@@ -1,7 +1,7 @@
-﻿using AdminPanel.Application.Features.Communities.Queries.GetAllCached;
-using AdminPanel.Application.Features.Communities.Queries.GetById;
-using AdminPanel.Infrastructure.AuditModels;
-using AdminPanel.Web.Abstractions;
+﻿using Application.Features.Communities.Queries.GetAllCached;
+using Application.Features.Communities.Queries.GetById;
+using Infrastructure.AuditModels;
+using WebUI.Abstractions;
 using Application.Features.Logs.Commands;
 using Infrastructure.Identity.Models;
 using Microsoft.AspNetCore.Hosting;

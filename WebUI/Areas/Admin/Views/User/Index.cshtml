@@ -2,7 +2,7 @@
 	ViewData["Caption"] = "Редагувати користувачів";
 }
 
-@using AdminPanel.Application.Constants
+@using Application.Constants
 
 @if ((AuthorizationService.AuthorizeAsync(User, Permissions.Users.View)).Result.Succeeded)
 {

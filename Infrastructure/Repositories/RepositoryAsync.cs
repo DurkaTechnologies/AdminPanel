@@ -1,11 +1,11 @@
-﻿using AdminPanel.Application.Interfaces.Repositories;
-using AdminPanel.Infrastructure.DbContexts;
+﻿using Application.Interfaces.Repositories;
+using Infrastructure.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AdminPanel.Infrastructure.Repositories
+namespace Infrastructure.Repositories
 {
     public class RepositoryAsync<TEntity, TContext> : IRepositoryAsync<TEntity, TContext> where TEntity : class where TContext : DbContext
     {

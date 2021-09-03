@@ -1,13 +1,13 @@
-﻿using AdminPanel.Application.Common.Models;
-using AdminPanel.Application.Interfaces;
-using AdminPanel.Domain.Common;
-using AdminPanel.Domain.Common.Models;
+﻿using Application.Common.Models;
+using Application.Interfaces;
+using Domain.Common;
+using Domain.Common.Models;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
-namespace AdminPanel.Infrastructure.Services
+namespace Infrastructure.Services
 {
     public class DomainEventService : IDomainEventService
     {

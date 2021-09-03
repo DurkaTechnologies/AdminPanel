@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
 
-namespace AdminPanel.WebUI.Permission
+namespace WebUI.Permission
 {
     internal class PermissionPolicyProvider : IAuthorizationPolicyProvider
     {

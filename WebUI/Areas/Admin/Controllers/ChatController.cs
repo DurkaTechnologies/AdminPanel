@@ -1,5 +1,5 @@
 ﻿using Infrastructure.Identity.Models;
-using AdminPanel.Web.Abstractions;
+using WebUI.Abstractions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

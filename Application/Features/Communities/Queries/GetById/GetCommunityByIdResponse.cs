@@ -1,4 +1,4 @@
-﻿namespace AdminPanel.Application.Features.Communities.Queries.GetById
+﻿namespace Application.Features.Communities.Queries.GetById
 {
 	public class GetCommunityByIdResponse
 	{

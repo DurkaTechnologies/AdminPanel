@@ -1,6 +1,6 @@
-﻿using AdminPanel.Infrastructure.AuditModels;
+﻿using Infrastructure.AuditModels;
 using Infrastructure.Identity.Models;
-using AdminPanel.Web.Abstractions;
+using WebUI.Abstractions;
 using Application.Features.Logs.Commands;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -68,7 +68,7 @@ namespace WebUI.Areas.Admin.Controllers
             result = await _userManager.AddToRolesAsync(user, model.UserRoles.Where(x => x.Selected).Select(y => y.RoleName));
             var currentUser = await _userManager.GetUserAsync(User);
             await _signInManager.RefreshSignInAsync(currentUser);
-            await AdminPanel.Infrastructure.Identity.Seeds.DefaultSuperAdminUser.SeedAsync(_userManager, _roleManager);
+            await Infrastructure.Identity.Seeds.DefaultSuperAdminUser.SeedAsync(_userManager, _roleManager);
             var newRoles = await _userManager.GetRolesAsync(user);
 
             _notify.Success($"Ролі для {user.FirstName + " " + user.LastName} змінено");

@@ -1,11 +1,11 @@
-﻿using AdminPanel.Infrastructure.DbContexts;
+﻿using Infrastructure.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AdminPanel.Infrastructure.AuditModels
+namespace Infrastructure.AuditModels
 {
     public class AuditableContext : DbContext
     {

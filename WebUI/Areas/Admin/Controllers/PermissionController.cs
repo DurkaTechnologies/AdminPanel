@@ -1,8 +1,8 @@
-﻿using AdminPanel.Application.Constants;
+﻿using Application.Constants;
 using Infrastructure.Identity.Models;
-using AdminPanel.Web.Abstractions;
+using WebUI.Abstractions;
 using WebUI.Areas.Admin.Models;
-using AdminPanel.WebUI.Helpers;
+using WebUI.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Application.Features.Logs.Commands;
-using AdminPanel.Infrastructure.AuditModels;
+using Infrastructure.AuditModels;
 using Newtonsoft.Json;
 
 namespace WebUI.Areas.Admin.Controllers

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AdminPanel.Application.DTOs
+namespace Application.DTOs
 {
     public class AuditLogResponse
     {

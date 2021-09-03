@@ -1,4 +1,4 @@
-﻿using AdminPanel.Web.Abstractions;
+﻿using WebUI.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -15,7 +15,7 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
-namespace AdminPanel.Web.Services
+namespace WebUI.Services
 {
     public class ViewRenderService : IViewRenderService
     {

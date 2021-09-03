@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using AdminPanel.Web.Abstractions;
+using WebUI.Abstractions;
 
 namespace WebUI.Areas.Identity.Pages.Account
 {

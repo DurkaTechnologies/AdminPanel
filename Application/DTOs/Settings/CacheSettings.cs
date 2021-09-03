@@ -1,4 +1,4 @@
-﻿namespace AdminPanel.Application.DTOs.Settings
+﻿namespace Application.DTOs.Settings
 {
     public class CacheSettings
     {

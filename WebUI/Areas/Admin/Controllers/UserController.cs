@@ -1,6 +1,6 @@
-﻿using AdminPanel.Application.Enums;
-using AdminPanel.Application.Features.Communities.Queries.GetAllCached;
-using AdminPanel.Web.Abstractions;
+﻿using Application.Enums;
+using Application.Features.Communities.Queries.GetAllCached;
+using WebUI.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -16,7 +16,7 @@ using WebUI.Areas.Admin.Models;
 using WebUI.Areas.Entities.Models;
 using WebUI.Services;
 using Newtonsoft.Json;
-using AdminPanel.Infrastructure.AuditModels;
+using Infrastructure.AuditModels;
 using Application.Features.Logs.Commands;
 using Infrastructure.Identity.Models;
 

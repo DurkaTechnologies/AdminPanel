@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AdminPanel.Application.DTOs;
-using AdminPanel.Application.Features.ActivityLog.Queries;
-using AdminPanel.Application.Interfaces.Shared;
-using AdminPanel.Web.Abstractions;
+using Application.DTOs;
+using Application.Features.ActivityLog.Queries;
+using Application.Interfaces.Shared;
+using WebUI.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 

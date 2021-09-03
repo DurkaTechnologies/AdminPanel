@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
-namespace AdminPanel.Infrastructure.DbContexts
+namespace Infrastructure.DbContexts
 {
 	public class IdentityContext : IdentityDbContext<ApplicationUser>
     {

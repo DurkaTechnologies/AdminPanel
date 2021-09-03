@@ -1,12 +1,12 @@
-﻿using AdminPanel.Application.Constants;
-using AdminPanel.Application.Enums;
+﻿using Application.Constants;
+using Application.Enums;
 using Infrastructure.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace AdminPanel.Infrastructure.Identity.Seeds
+namespace Infrastructure.Identity.Seeds
 {
     public static class DefaultSuperAdminUser
     {

@@ -1,4 +1,4 @@
-﻿namespace AdminPanel.Application.DTOs.Identity
+﻿namespace Application.DTOs.Identity
 {
     public class TokenRequest
     {

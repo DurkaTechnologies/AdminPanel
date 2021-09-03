@@ -1,6 +1,6 @@
-﻿using AdminPanel.Application.Features.Communities.Commands;
-using AdminPanel.Application.Features.Communities.Queries.GetAllCached;
-using AdminPanel.Application.Features.Communities.Queries.GetById;
+﻿using Application.Features.Communities.Commands;
+using Application.Features.Communities.Queries.GetAllCached;
+using Application.Features.Communities.Queries.GetById;
 using WebUI.Areas.Entities.Models;
 using AutoMapper;
 

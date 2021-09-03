@@ -1,7 +1,7 @@
-﻿using AdminPanel.Domain.Common.Models;
+﻿using Domain.Common.Models;
 using System.Threading.Tasks;
 
-namespace AdminPanel.Application.Interfaces
+namespace Application.Interfaces
 {
     public interface IDomainEventService
     {

@@ -14,10 +14,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using System.Net.Mail;
 using AspNetCoreHero.ToastNotification.Abstractions;
-using AdminPanel.Web.Abstractions;
+using WebUI.Abstractions;
 using WebUI.Services;
 using Microsoft.AspNetCore.Hosting;
-using AdminPanel.Application.Features.ActivityLog.Commands;
+using Application.Features.ActivityLog.Commands;
 
 namespace WebUI.Areas.Identity.Pages.Account
 {

@@ -1,4 +1,4 @@
-﻿namespace AdminPanel.Application.DTOs.Mail
+﻿namespace Application.DTOs.Mail
 {
     public class MailRequest
     {

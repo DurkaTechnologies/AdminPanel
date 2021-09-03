@@ -1,5 +1,5 @@
-﻿using AdminPanel.Domain.Common.Interfaces;
-using AdminPanel.Domain.Common.Models;
+﻿using Domain.Common.Interfaces;
+using Domain.Common.Models;
 using System.Collections.Generic;
 
 namespace Domain.Entities

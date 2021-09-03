@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AdminPanel.Application.Interfaces.Shared
+namespace Application.Interfaces.Shared
 {
     public interface IDateTimeService
     {

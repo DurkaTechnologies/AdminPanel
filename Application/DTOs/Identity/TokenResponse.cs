@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace AdminPanel.Application.DTOs.Identity
+namespace Application.DTOs.Identity
 {
     public class TokenResponse
     {

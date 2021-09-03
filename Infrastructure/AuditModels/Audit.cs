@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AdminPanel.Infrastructure.AuditModels
+namespace Infrastructure.AuditModels
 {
     public class Audit : IAudit
     {

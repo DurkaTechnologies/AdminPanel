@@ -1,11 +1,11 @@
-﻿using AdminPanel.Application.Constants;
+﻿using Application.Constants;
 using Infrastructure.Identity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AdminPanel.WebUI.Permission
+namespace WebUI.Permission
 {
     internal class PermissionAuthorizationHandler : AuthorizationHandler<PermissionRequirement>
     {

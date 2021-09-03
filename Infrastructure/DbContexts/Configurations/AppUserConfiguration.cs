@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace AdminPanel.Infrastructure.Persistence.Configurations
+namespace Infrastructure.Persistence.Configurations
 {
 	public class AppUserConfiguration : IEntityTypeConfiguration<ApplicationUser>
 	{

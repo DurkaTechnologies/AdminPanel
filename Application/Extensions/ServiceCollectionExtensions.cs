@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace AdminPanel.Application.Extensions
+namespace Application.Extensions
 {
     public static class ServiceCollectionExtensions
     {

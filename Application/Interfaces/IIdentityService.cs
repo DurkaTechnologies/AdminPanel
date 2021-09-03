@@ -1,8 +1,8 @@
-﻿using AdminPanel.Application.Common.Models;
-using AdminPanel.Application.DTOs.Identity;
+﻿using Application.Common.Models;
+using Application.DTOs.Identity;
 using System.Threading.Tasks;
 
-namespace AdminPanel.Application.Interfaces
+namespace Application.Interfaces
 {
     public interface IIdentityService
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace AdminPanel.WebUI.Permission
+namespace WebUI.Permission
 {
     internal class PermissionRequirement : IAuthorizationRequirement
     {

@@ -1,8 +1,8 @@
-﻿using AdminPanel.Application.Interfaces.Repositories;
+﻿using Application.Interfaces.Repositories;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
-using AdminPanel.Application.Common.Models;
+using Application.Common.Models;
 using Domain.Common.Interfaces;
 using System;
 

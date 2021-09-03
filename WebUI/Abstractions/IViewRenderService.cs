@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace AdminPanel.Web.Abstractions
+namespace WebUI.Abstractions
 {
     public interface IViewRenderService
     {

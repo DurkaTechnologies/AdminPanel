@@ -1,4 +1,4 @@
-﻿using AdminPanel.Domain.Common.Interfaces;
+﻿using Domain.Common.Interfaces;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;

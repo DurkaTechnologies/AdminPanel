@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AdminPanel.Infrastructure.Identity.Seeds;
+using Infrastructure.Identity.Seeds;
 using System.Threading.Tasks;
 using WebUI.Services;
 

@@ -1,7 +1,7 @@
-﻿using AdminPanel.Domain.Common.Models;
+﻿using Domain.Common.Models;
 using MediatR;
 
-namespace AdminPanel.Application.Common.Models
+namespace Application.Common.Models
 {
     public class DomainEventNotification<TDomainEvent> : INotification where TDomainEvent : DomainEvent
     {

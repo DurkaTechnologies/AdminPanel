@@ -1,10 +1,10 @@
-﻿using AdminPanel.Application.Interfaces.Repositories;
+﻿using Application.Interfaces.Repositories;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
-using AdminPanel.Application.Common.Models;
+using Application.Common.Models;
 
-namespace AdminPanel.Application.Features.ActivityLog.Commands
+namespace Application.Features.ActivityLog.Commands
 {
 	public partial class AddActivityLogCommand : IRequest<Result<int>>
 	{

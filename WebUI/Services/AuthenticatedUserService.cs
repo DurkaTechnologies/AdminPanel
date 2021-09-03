@@ -1,8 +1,8 @@
-﻿using AdminPanel.Application.Interfaces.Shared;
+﻿using Application.Interfaces.Shared;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
-namespace AdminPanel.Web.Services
+namespace WebUI.Services
 {
     public class AuthenticatedUserService : IAuthenticatedUserService
     {

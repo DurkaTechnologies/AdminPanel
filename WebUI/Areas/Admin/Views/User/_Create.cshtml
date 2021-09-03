@@ -1,6 +1,6 @@
 @using WebUI.Areas.Admin.Models
 @model UserViewModel
-@using AdminPanel.Application.Constants
+@using Application.Constants
 
 @if (AuthorizationService.AuthorizeAsync(User, Permissions.Users.Edit).Result.Succeeded || AuthorizationService.AuthorizeAsync(User, Permissions.Users.Create).Result.Succeeded)
 {

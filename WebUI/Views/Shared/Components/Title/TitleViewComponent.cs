@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace AdminPanel.Web.Views.Shared.Components.Title
+namespace WebUI.Views.Shared.Components.Title
 {
     public class TitleViewComponent : ViewComponent
     {

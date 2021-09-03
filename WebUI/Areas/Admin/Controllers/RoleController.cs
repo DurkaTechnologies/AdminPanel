@@ -1,7 +1,7 @@
-﻿using AdminPanel.Application.Enums;
-using AdminPanel.Infrastructure.AuditModels;
+﻿using Application.Enums;
+using Infrastructure.AuditModels;
 using Infrastructure.Identity.Models;
-using AdminPanel.Web.Abstractions;
+using WebUI.Abstractions;
 using Application.Features.Logs.Commands;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

@@ -1,4 +1,4 @@
-﻿namespace AdminPanel.Application.Enums
+﻿namespace Application.Enums
 {
 	public enum Roles
     {

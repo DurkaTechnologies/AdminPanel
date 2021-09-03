@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace AdminPanel.Web.Views.Shared.Components.ImageModal
+namespace WebUI.Views.Shared.Components.ImageModal
 {
     public class ImageModalViewComponent : ViewComponent
     {

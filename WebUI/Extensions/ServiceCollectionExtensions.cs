@@ -1,7 +1,7 @@
-﻿using AdminPanel.Application.DTOs.Settings;
-using AdminPanel.Application.Interfaces.Shared;
-using AdminPanel.Infrastructure.DbContexts;
-using AdminPanel.Web.Services;
+﻿using Application.DTOs.Settings;
+using Application.Interfaces.Shared;
+using Infrastructure.DbContexts;
+using WebUI.Services;
 using Infrastructure.Identity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AdminPanel.Web.Extensions
+namespace WebUI.Extensions
 {
     public static class ServiceCollectionExtensions
     {

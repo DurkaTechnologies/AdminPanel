@@ -1,10 +1,10 @@
-﻿using AdminPanel.Application.Features.Communities.Commands;
-using AdminPanel.Application.Features.Communities.Queries.GetAllCached;
-using AdminPanel.Application.Features.Communities.Queries.GetById;
+﻿using Application.Features.Communities.Commands;
+using Application.Features.Communities.Queries.GetAllCached;
+using Application.Features.Communities.Queries.GetById;
 using Domain.Entities;
 using AutoMapper;
 
-namespace AdminPanel.Application.Mappings
+namespace Application.Mappings
 {
 	internal class CommunityProfile : Profile
 	{

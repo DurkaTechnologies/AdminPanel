@@ -1,13 +1,13 @@
-﻿using AdminPanel.Application.Interfaces.Contexts;
-using AdminPanel.Application.Interfaces.Shared;
-using AdminPanel.Domain.Common.Models;
-using AdminPanel.Infrastructure.AuditModels;
+﻿using Application.Interfaces.Contexts;
+using Application.Interfaces.Shared;
+using Domain.Common.Models;
+using Infrastructure.AuditModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AdminPanel.Infrastructure.DbContexts
+namespace Infrastructure.DbContexts
 {
     public class ApplicationDbContext : AuditableContext, IApplicationDbContext
     {

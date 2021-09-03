@@ -1,7 +1,7 @@
-﻿using AdminPanel.Domain.Common.Models;
+﻿using Domain.Common.Models;
 using Domain.Entities;
 
-namespace AdminPanel.Domain.Common.Interfaces
+namespace Domain.Common.Interfaces
 {
 	public interface IWorker
 	{

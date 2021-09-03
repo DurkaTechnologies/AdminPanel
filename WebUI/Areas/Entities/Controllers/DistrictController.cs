@@ -1,7 +1,7 @@
-﻿using AdminPanel.Application.Features.Communities.Commands;
-using AdminPanel.Application.Features.Communities.Queries.GetAllCached;
-using AdminPanel.Application.Features.Communities.Queries.GetById;
-using AdminPanel.Web.Abstractions;
+﻿using Application.Features.Communities.Commands;
+using Application.Features.Communities.Queries.GetAllCached;
+using Application.Features.Communities.Queries.GetById;
+using WebUI.Abstractions;
 using WebUI.Areas.Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using AdminPanel.Infrastructure.AuditModels;
+using Infrastructure.AuditModels;
 using Application.Features.Logs.Commands;
 
 namespace WebUI.Areas.Entities.Controllers

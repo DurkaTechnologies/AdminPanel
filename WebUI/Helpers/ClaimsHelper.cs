@@ -1,4 +1,4 @@
-﻿using AdminPanel.Application.Constants;
+﻿using Application.Constants;
 using WebUI.Areas.Admin.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace AdminPanel.WebUI.Helpers
+namespace WebUI.Helpers
 {
 	public static class ClaimsHelper
 	{

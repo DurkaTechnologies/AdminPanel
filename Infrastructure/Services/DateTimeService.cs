@@ -1,7 +1,7 @@
-﻿using AdminPanel.Application.Interfaces.Shared;
+﻿using Application.Interfaces.Shared;
 using System;
 
-namespace AdminPanel.Infrastructure.Services
+namespace Infrastructure.Services
 {
 	public class DateTimeService : IDateTimeService
 	{

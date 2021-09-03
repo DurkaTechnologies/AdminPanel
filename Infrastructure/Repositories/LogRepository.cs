@@ -1,18 +1,18 @@
-﻿using AdminPanel.Application.DTOs;
-using AdminPanel.Application.Interfaces.Repositories;
-using AdminPanel.Application.Interfaces.Shared;
+﻿using Application.DTOs;
+using Application.Interfaces.Repositories;
+using Application.Interfaces.Shared;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AdminPanel.Infrastructure.AuditModels;
+using Infrastructure.AuditModels;
 using Domain.Common.Interfaces;
 using System;
-using AdminPanel.Infrastructure.DbContexts;
+using Infrastructure.DbContexts;
 using Newtonsoft.Json;
 
-namespace AdminPanel.Infrastructure.Repositories
+namespace Infrastructure.Repositories
 {
     public class LogRepository : ILogRepository
     {
