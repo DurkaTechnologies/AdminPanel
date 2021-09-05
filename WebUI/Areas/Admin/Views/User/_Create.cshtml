@@ -73,7 +73,6 @@
         <div class="col-md-9">
             <div class="custom-file form-image">
                 <input accept=".png,.jpg,.jpeg,.gif,.tif"
-                       asp-for="@Model.ProfilePicture"
                        type="file" class="custom-file-input"
                        id="customFile">
                 <label class="my-file-label" for="customFile"><i class="fas fa-upload"></i> Завантажити</label>
@@ -96,7 +95,7 @@
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
     <div class="form-group justify-content-between" style="margin-bottom: 0px !important">
-        <button type="submit" class="btn btn-success" id="save-btn">Зберегти</button>
+        <button class="btn btn-success" id="save-btn">Зберегти</button>
         <button type="submit" class="btn btn-default close-button" data-dismiss="modal">Відміна</button>
     </div>
 
@@ -157,14 +156,15 @@ else
 
         document.getElementById("customFile").addEventListener("change", readFile);
 
-		$("#save-btn").on('click', function () {
+        $("#save-btn").on('click', function () {
+            console.log("CLICK SAVE");
 			$uploadCrop.croppie('result', 'blob').then(function (blob) {
                 var formData = new FormData(document.getElementById("create-form"));
                 formData.append('fileName', $('#customFile').val());
 				formData.append('blob', blob);
 				$.ajax({
-					type: 'POST',
-					url: '/Admin/Profile/ChangeProfileImage',
+                    type: 'POST', 
+                    url: '/Admin/User/OnPostCreate',
 					data: formData,
 					async: false,
 					contentType: false,
@@ -176,8 +176,6 @@ else
 					error: function (err) {
 						alert(err);
 					}
-				}).done(function () {
-					window.location.href = '@(@Url.Action("Edit", "Profile"))?Id=' + '@Model';
 				});
 			});
 		});

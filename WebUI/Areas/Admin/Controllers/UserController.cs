@@ -18,6 +18,7 @@ using WebUI.Services;
 using Infrastructure.AuditModels;
 using Application.Features.Logs.Commands;
 using Infrastructure.Identity.Models;
+using System.IO;
 
 namespace WebUI.Areas.Admin
 {
@@ -39,7 +40,7 @@ namespace WebUI.Areas.Admin
 			_roleManager = roleManager;
 			_webHostEnvironment = webHostEnvironment;
 
-			ImageService.RootPass = ENV.UploadPath;
+			ImageService.RootPass = ENV.RootPath;
 		}
 
 		public IActionResult Index()
@@ -81,15 +82,16 @@ namespace WebUI.Areas.Admin
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> OnPostCreate(UserViewModel userModel)
+		public async Task<IActionResult> OnPostCreate(UserViewModel userModel, string fileName, IFormFile blob)
 		{
+			
 			if (ModelState.IsValid)
 			{
 				string imagePath = null;
 
 				// нема кропера
-				if (Request.Form.Files.Count > 0)
-					imagePath = ImageService.UploadImageToServer(Request.Form.Files[0]);
+				if (blob != null)
+					imagePath = ImageService.UploadImageToServer(blob, Path.GetExtension(fileName));
 
 				MailAddress address = new MailAddress(userModel.Email);
 				string userName = address.User;
