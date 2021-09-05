@@ -5,101 +5,106 @@
 
 @if (AuthorizationService.AuthorizeAsync(User, Permissions.Users.Edit).Result.Succeeded || AuthorizationService.AuthorizeAsync(User, Permissions.Users.Create).Result.Succeeded)
 {
-	<form id="create-form" method="post" asp-area="Admin" asp-controller="User" asp-action="OnPostCreate" onsubmit="return jQueryModalPost(this);">
-		<div class="form-group row">
-			<label class="col-md-3 col-form-label">Ім'я</label>
-			<div class="col-md-9">
-				<input type="text" asp-for="FirstName" name="FirstName" class="form-control">
-				<span asp-validation-for="FirstName" class="text-danger"></span>
-			</div>
-		</div>
-		<div class="form-group row">
-			<label class="col-md-3 col-form-label">Прізвище</label>
-			<div class="col-md-9">
-				<input type="text" asp-for="MiddleName" name="MiddleName" class="form-control">
-				<span asp-validation-for="MiddleName" class="text-danger"></span>
-			</div>
-		</div>
-		<div class="form-group row">
-			<label class="col-md-3 col-form-label">По Батькові</label>
-			<div class="col-md-9">
-				<input type="text" asp-for="LastName" name="LastName" class="form-control">
-				<span asp-validation-for="LastName" class="text-danger"></span>
-			</div>
-		</div>
-		<div class="form-group row">
-			<label class="col-md-3 col-form-label">Пошта</label>
-			<div class="col-md-9">
-				<input type="text" asp-for="UserName" name="UserName" class="form-control">
-				<span asp-validation-for="UserName" class="text-danger"></span>
-			</div>
-		</div>
-		<div class="form-group row">
-			<label class="col-md-3 col-form-label">Пошта</label>
-			<div class="col-md-9">
-				<input type="email" asp-for="Email" name="Email" class="form-control">
-				<span asp-validation-for="Email" class="text-danger"></span>
-			</div>
-		</div>
-		<div class="form-group row">
-			<label class="col-md-3 col-form-label">Телефон</label>
+<form id="create-form" method="post" asp-area="Admin" asp-controller="User" asp-action="OnPostCreate" onsubmit="return jQueryModalPost(this);">
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label">Ім'я</label>
+        <div class="col-md-9">
+            <input type="text" asp-for="FirstName" name="FirstName" class="form-control">
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label">Прізвище</label>
+        <div class="col-md-9">
+            <input type="text" asp-for="MiddleName" name="MiddleName" class="form-control">
+            <span asp-validation-for="MiddleName" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label">По Батькові</label>
+        <div class="col-md-9">
+            <input type="text" asp-for="LastName" name="LastName" class="form-control">
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label">Пошта</label>
+        <div class="col-md-9">
+            <input type="text" asp-for="UserName" name="UserName" class="form-control">
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label">Пошта</label>
+        <div class="col-md-9">
+            <input type="email" asp-for="Email" name="Email" class="form-control">
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label">Телефон</label>
 
-			<div class="col-md-9">
-				<div class="input-group">
-					<div class="input-group-prepend">
-						<span class="input-group-text"><i class="fas fa-phone"></i></span>
-					</div>
-					<input type="text" asp-for="PhoneNumber" name="PhoneNumber" class="form-control ukrainephone" maxlength="14">
-				</div>
-			</div>
-			<!-- /.input group -->
-		</div>
-		<div class="form-group row">
-			<label class="col-md-3 col-form-label">Пароль</label>
-			<div class="col-md-9">
-				<input type="password" asp-for="Password" name="Password" class="form-control">
-				<span asp-validation-for="Password" class="text-danger"></span>
-			</div>
-		</div>
-		<div class="form-group row">
-			<label class="col-md-3 col-form-label">Повторіть пароль</label>
-			<div class="col-md-9">
-				<input type="password" asp-for="ConfirmPassword" name="ConfirmPassword" class="form-control">
-				<span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-			</div>
-		</div>
-		<div class="form-group row">
-			<label class="col-md-3 col-form-label">Фото</label>
-			<div class="col-md-9">
-				<div class="custom-file form-image">
-					<input accept=".png,.jpg,.jpeg,.gif,.tif"
-						   type="file" class="custom-file-input"
-						   id="customFile"
-						   name="files">
-					<label class="custom-file-label" for="customFile">Виберіть картинку</label>
-				</div>
-			</div>
-		</div>
-		<div class="form-group row">
-			<label class="col-md-3 col-form-label">Громада</label>
-			<div class="col-md-9">
-				<div class="input-group">
-					<select name="CommunityId" class="form-control select2bs4" id="CommunityId" asp-for="CommunityId" asp-items="@Model.Communities">
-					</select>
-				</div>
-				<span asp-validation-for="CommunityId" class="text-danger"></span>
-			</div>
-		</div>
-		<div class="form-group">
-			<label class="col-form-label text-center d-block">Опис</label>
-			<textarea asp-for="Description" name="Description" class="form-control" id="summernote"></textarea>
-			<span asp-validation-for="Description" class="text-danger"></span>
-		</div>
-		<div class="form-group justify-content-between" style="margin-bottom: 0px !important">
-			<button type="submit" class="btn btn-success">Зберегти</button>
-			<button type="submit" class="btn btn-default close-button" data-dismiss="modal">Відміна</button>
-		</div>
-	</form>
+        <div class="col-md-9">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                </div>
+                <input type="text" asp-for="PhoneNumber" name="PhoneNumber" class="form-control ukrainephone" maxlength="14">
+            </div>
+        </div>
+        <!-- /.input group -->
+    </div>
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label">Пароль</label>
+        <div class="col-md-9">
+            <input type="password" asp-for="Password" name="Password" class="form-control">
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label">Повторіть пароль</label>
+        <div class="col-md-9">
+            <input type="password" asp-for="ConfirmPassword" name="ConfirmPassword" class="form-control">
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label">Фото</label>
+        <div class="col-md-9">
+            <div class="custom-file form-image">
+                <input accept=".png,.jpg,.jpeg,.gif,.tif"
+                       asp-for="@Model.ProfilePicture"
+                       type="file" class="custom-file-input"
+                       id="customFile">
+                <label class="my-file-label" for="customFile"><i class="fas fa-upload"></i> Завантажити</label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-md-3 col-form-label">Громада</label>
+        <div class="col-md-9">
+            <div class="input-group">
+                <select name="CommunityId" class="form-control select2bs4" id="CommunityId" asp-for="CommunityId" asp-items="@Model.Communities">
+                </select>
+            </div>
+            <span asp-validation-for="CommunityId" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-form-label text-center d-block">Опис</label>
+        <textarea asp-for="Description" name="Description" class="form-control" id="summernote"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="form-group justify-content-between" style="margin-bottom: 0px !important">
+        <button type="submit" class="btn btn-success" id="save-btn">Зберегти</button>
+        <button type="submit" class="btn btn-default close-button" data-dismiss="modal">Відміна</button>
+    </div>
+
+    <div class="form-group">
+        <img id="cropper" />
+    </div>
+
+</form>
 
 	<script type="text/javascript" language=javascript>
 		$(document).ready(function () {
@@ -118,3 +123,63 @@ else
 {
 	<h2 class="text-center">Не доступно для вас</h2>
 }
+
+<script>
+	$(function () {
+		var $uploadCrop;
+
+		$uploadCrop = $('#cropper').croppie({
+			viewport: {
+				width: 500,
+				height: 500,
+				type: 'square'
+			},
+			boundary: {
+				width: 600,
+				height: 600
+			},
+			showZoomer: false,
+			enforceBoundary: true,
+			enableExif: true
+		});
+
+		function readFile(e) {
+			var reader = new FileReader();
+
+			reader.onload = function (e) {
+				$uploadCrop.croppie('bind', {
+					url: e.target.result
+				}).then(function () {
+				});
+			}
+			reader.readAsDataURL(e.target.files[0]);
+        }
+
+        document.getElementById("customFile").addEventListener("change", readFile);
+
+		$("#save-btn").on('click', function () {
+			$uploadCrop.croppie('result', 'blob').then(function (blob) {
+                var formData = new FormData(document.getElementById("create-form"));
+                formData.append('fileName', $('#customFile').val());
+				formData.append('blob', blob);
+				$.ajax({
+					type: 'POST',
+					url: '/Admin/Profile/ChangeProfileImage',
+					data: formData,
+					async: false,
+					contentType: false,
+					processData: false,
+					success: function (res) {
+						if (res.isValid) {
+						}
+					},
+					error: function (err) {
+						alert(err);
+					}
+				}).done(function () {
+					window.location.href = '@(@Url.Action("Edit", "Profile"))?Id=' + '@Model';
+				});
+			});
+		});
+	});
+</script>
