@@ -75,6 +75,7 @@ namespace WebUI.Areas.Admin
 
 				appUser.CommunityId = user.CommunityId;
 				appUser.Description = user.Description;
+				appUser.Chat = user.Chat;
 
 				if (!String.IsNullOrEmpty(user.FirstName))
 					appUser.FirstName = user.FirstName;

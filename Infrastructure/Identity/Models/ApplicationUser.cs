@@ -25,6 +25,8 @@ namespace Infrastructure.Identity.Models
 
 		public string Description { get; set; }
 
+		public string Chat { get; set; }
+
 		public Community Community { get; set; }
 		#endregion
 
