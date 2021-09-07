@@ -39,7 +39,7 @@ namespace WebUI.Areas.Admin
 			_roleManager = roleManager;
 			_webHostEnvironment = webHostEnvironment;
 
-			ImageService.RootPass = ENV.UploadPath;
+			ImageService.RootPass = ENV.RootPath;
 		}
 
 		public IActionResult Index()
@@ -100,6 +100,7 @@ namespace WebUI.Areas.Admin
 					FirstName = userModel.FirstName,
 					MiddleName = userModel.MiddleName,
 					LastName = userModel.LastName,
+					Chat = userModel.Chat,
 					ProfilePicture = imagePath,
 					EmailConfirmed = true,
 					IsActive = true,
