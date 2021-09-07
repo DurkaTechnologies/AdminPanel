@@ -145,7 +145,6 @@ namespace WebUI.Areas.Admin
 			return default;
 		}
 
-		[Authorize(Roles = "SuperAdmin")]
 		public async Task<JsonResult> OnPostDelete(string id)
 		{
 			var user = await _userManager.FindByIdAsync(id);
