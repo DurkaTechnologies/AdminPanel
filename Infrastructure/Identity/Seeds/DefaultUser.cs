@@ -12,7 +12,7 @@ namespace Infrastructure.Identity.Seeds
 			var defaultUser = new ApplicationUser
 			{
 				UserName = "testUser",
-				Email = "testUser@gmail.com",
+				Email = "basicuser@gmail.com",
 				FirstName = "John",
 				MiddleName = "Saloedovich",
 				LastName = "Doe",

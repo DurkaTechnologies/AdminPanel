@@ -18,6 +18,8 @@ using WebUI.Services;
 using Infrastructure.AuditModels;
 using Application.Features.Logs.Commands;
 using Infrastructure.Identity.Models;
+using System.IO;
+using System;
 
 namespace WebUI.Areas.Admin
 {
@@ -80,26 +82,45 @@ namespace WebUI.Areas.Admin
 			return null;
 		}
 
+		public async Task<JsonResult> FileUploadError(UserViewModel userModel)
+		{
+			_notify.Error("Помилка про завантаженні фото профілю");
+			return new JsonResult(new
+			{
+				isValid = false,
+				html = await _viewRenderer.RenderViewToStringAsync("_Create", userModel)
+			});
+		}
+
 		[HttpPost]
-		public async Task<IActionResult> OnPostCreate(UserViewModel userModel)
+		public async Task<IActionResult> OnPostCreate(UserViewModel userModel, string fileName, IFormFile blob)
 		{
 			if (ModelState.IsValid)
 			{
-				string imagePath = null;
+				string imagePath;
 
-				// нема кропера
-				if (Request.Form.Files.Count > 0)
-					imagePath = ImageService.UploadImageToServer(Request.Form.Files[0]);
+				try
+				{
+					imagePath = ImageService.UploadImageToServer(blob, Path.GetExtension(fileName));
+				}
+				catch (Exception)
+				{
+					return await FileUploadError(userModel);
+				}
+
+				if (String.IsNullOrEmpty(imagePath))
+					return await FileUploadError(userModel);
 
 				MailAddress address = new MailAddress(userModel.Email);
 				string userName = address.User;
 				var user = new ApplicationUser
 				{
 					Email = userModel.Email,
-					UserName = userModel.UserName,
+					UserName = userModel.Email,
 					FirstName = userModel.FirstName,
 					MiddleName = userModel.MiddleName,
 					LastName = userModel.LastName,
+					PhoneNumber = userModel.PhoneNumber,
 					Chat = userModel.Chat,
 					ProfilePicture = imagePath,
 					EmailConfirmed = true,
@@ -109,6 +130,7 @@ namespace WebUI.Areas.Admin
 				};
 
 				var result = await _userManager.CreateAsync(user, userModel.Password);
+
 				if (result.Succeeded)
 				{
 					await _userManager.AddToRoleAsync(user, Roles.Worker.ToString());
@@ -135,10 +157,13 @@ namespace WebUI.Areas.Admin
 
 					return new JsonResult(new { isValid = true, html = htmlData });
 				}
+
 				foreach (var error in result.Errors)
 				{
 					_notify.Error(error.Description);
 				}
+
+				ImageService.RemoveImageFromServer(imagePath);
 				var html = await _viewRenderer.RenderViewToStringAsync("_Create", userModel);
 				return new JsonResult(new { isValid = false, html = html });
 			}
@@ -154,18 +179,25 @@ namespace WebUI.Areas.Admin
 				if (user.FirstName != "Super" && user.FirstName != "Default")
 				{
 					_notify.Success($"Користувач {user.FirstName + " " + user.LastName} був успішно видалений");
-					await _userManager.DeleteAsync(user);
 
-					Log log = new Log()
+					var result = await _userManager.DeleteAsync(user);
+
+					if (result.Succeeded)
 					{
-						Action = "Delete",
-						UserId = _userService.UserId,
-						TableName = "Users",
-						OldValues = new AuditUserModel(_mapper.Map<UserViewModel>(user)),
-						Key = user.Id
-					};
+						ImageService.RemoveImageFromServer(user.ProfilePicture);
 
-					await _mediator.Send(new AddLogCommand() { Log = log });
+						Log log = new Log()
+						{
+							Action = "Delete",
+							UserId = _userService.UserId,
+							TableName = "Users",
+							OldValues = new AuditUserModel(_mapper.Map<UserViewModel>(user)),
+							Key = user.Id
+						};
+						await _mediator.Send(new AddLogCommand() { Log = log });
+					}
+					else
+						_notify.Error($"Помилка при видалені користувача");
 				}
 				else
 					_notify.Error($"Не можна видалити базових користувачів");

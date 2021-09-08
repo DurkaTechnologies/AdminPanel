@@ -33,7 +33,7 @@
 										<input accept=".png,.jpg,.jpeg,.gif,.tif"
 											   asp-for="@Model.ProfilePicture"
 											   type="file" class="custom-file-input"
-											   onchange="jQueryModalGet('/admin/profile/ChangeProfileImage', 'Обріжте нове зображення профілю')"
+											   onchange="jQueryModalGet('/admin/profile/ChangeProfileImage?id=@Model.Id', 'Обріжте нове зображення профілю')"
 											   id="customFile">
 										<label class="my-file-label" for="customFile"><i class="fas fa-upload"></i> Завантажити</label>
 									</div>
@@ -91,14 +91,17 @@
                         </div>
 					</div>
 					<label class="col-form-label text-center d-block">Опис</label>
-					<textarea asp-for="Description" class="form-control note-editor" id="summernote"></textarea>
-					
+					<textarea asp-for="Description" class="form-control" rows="3"></textarea>
+
 					<span asp-validation-for="Description" class="text-danger"></span>
 					<div class="d-flex justify-content-end pt-2">
 						<div class="col-xs-12 text-right p-2 h6 m-0">
 							<span id="lenghtContentPost"></span>
 							<span id="maxContentPost"></span>
 						</div>
+
+						<button type="submit" class="btn btn-default close-button mr-2" asp-area="Admin" asp-controller="Profile" asp-action="Index" asp-route-id="@Model.Id">Відмінити</button>
+
 						<button id="update-profile-button ml-auto" type="submit" class="btn btn-success btn-icon-split">
 							<span class="icon text-white-50">
 								<i class="fas fa-check"></i>
@@ -113,54 +116,15 @@
 </div>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script type="text/javascript">
+<script src="~/js/summernote.js"></script>
+<script>
 	$(document).ready(function () {
-		registerSummernote('#summernote', 5000, function (max) {
-			$('#lenghtContentPost').text(max)
-		});
+		//registerSummernote('#summernote', 5000, function (max) {
+		//	$('#lenghtContentPost').text(max)
+		//}, 400, 400);d
 
-		document.getElementById("summernote").hidden = true;
+		//document.getElementById("summernote").hidden = true;
 
 		$('.ukrainephone').mask("(999) 999-9999");
 	});
-
-	function registerSummernote(element, max, callbackMax) {
-		$(element).summernote({
-			tabsize: 2,
-			height: 400,
-			callbacks: {
-				onInit: function () {
-					var length = $('#summernote').summernote('code').replace(/<[^>]+>/g, "").length;
-					$('#lenghtContentPost').text(max - length);
-					$('#maxContentPost').text(`/ ${max} символів`);
-				},
-				onKeydown: function (e) {
-					var t = e.currentTarget.innerText;
-					if (t.trim().length >= max) {
-						if (e.keyCode != 8 && !(e.keyCode >= 37 && e.keyCode <= 40) && e.keyCode != 46 && !(e.keyCode == 88 && e.ctrlKey) && !(e.keyCode == 67 && e.ctrlKey) && !(e.keyCode == 65 && e.ctrlKey))
-							e.preventDefault();
-					}
-				},
-				onKeyup: function (e) {
-					var t = e.currentTarget.innerText;
-					if (typeof callbackMax == 'function')
-						callbackMax(max - t.length);
-				},
-				onPaste: function (e) {
-					var t = e.currentTarget.innerText;
-					var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-					e.preventDefault();
-					var maxPaste = bufferText.length;
-
-					if (t.length + bufferText.length > max)
-						maxPaste = max - t.length - 1;
-
-					if (maxPaste > 0)
-						document.execCommand('insertText', false, bufferText.substring(0, maxPaste));
-
-					$('#lenghtContentPost').text(max - t.length);
-				}
-			}
-		});
-	}
 </script>

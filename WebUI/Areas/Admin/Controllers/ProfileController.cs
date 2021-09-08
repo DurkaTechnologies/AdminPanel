@@ -37,11 +37,18 @@ namespace WebUI.Areas.Admin
 		public async Task<IActionResult> Index(string id)
 		{
 			UserViewModel user = _mapper.Map<UserViewModel>(await GetCurrentUser(id));
-			var response = await _mediator.Send(new GetCommunityByIdQuery() { Id = user.СommunityId });
+			var response = await _mediator.Send(new GetCommunityByIdQuery() { Id = user.CommunityId });
 
 			if (response.Succeeded)
+			{
 				user.Community = _mapper.Map<CommunityViewModel>(response.Data);
-
+				if (user.Community != null)
+				{
+					var result = await _mediator.Send(new GetDistrictByIdQuery() { Id = (int)user.Community?.DistrictId });
+					if (result.Succeeded)
+						user.Community.District = _mapper.Map<DistrictViewModel>(result.Data);
+				}
+			}
 			return View(user);
 		}
 
