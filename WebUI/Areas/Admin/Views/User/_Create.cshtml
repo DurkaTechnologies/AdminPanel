@@ -5,7 +5,7 @@
 
 @if (AuthorizationService.AuthorizeAsync(User, Permissions.Users.Edit).Result.Succeeded || AuthorizationService.AuthorizeAsync(User, Permissions.Users.Create).Result.Succeeded)
 {
-	<form id="create-form" method="post" asp-area="Admin" asp-controller="User" asp-action="OnPostCreate" onsubmit="return jQueryModalPost(this);">
+	<form id="create-form" method="post" asp-area="Admin" asp-controller="User" asp-action="OnPostCreate" >
 		<div class="row">
 			<div class="col" id="mainForm">
 				<div class="form-group row">
@@ -108,7 +108,7 @@
 
 		<div class="form-group">
 			<label class="col-form-label text-center d-block">Опис</label>
-			<textarea asp-for="Description" name="Description" class="form-control" id="summernote"></textarea>
+			<textarea asp-for="Description" name="Description" class="form-control" rows="3"></textarea>
 			<span asp-validation-for="Description" class="text-danger"></span>
 			<div class="col-xs-12 text-right p-2 h6 m-0">
 				<span id="lenghtContentPost"></span>
@@ -127,15 +127,16 @@
 		$(document).ready(function () {
 			bsCustomFileInput.init();
 
-			registerSummernote('#summernote', 5000, function (max) {
-				$('#lenghtContentPost').text(max)
-			}, 200, 400);
+			//registerSummernote('#summernote', 5000, function (max) {
+			//	$('#lenghtContentPost').text(max)
+			//}, 200, 400);
 
-			document.getElementById("summernote").hidden = true;
+			//document.getElementById("summernote").hidden = true;
 
 			$('.ukrainephone').mask("(999) 999-9999");
 
 			var $uploadCrop;
+			var $blob;
 
 			$uploadCrop = $('#cropper').croppie({
 				viewport: {
@@ -158,8 +159,7 @@
 				reader.onload = function (e) {
 					$('#cropper').croppie('bind', {
 						url: e.target.result
-					}).then(function () {
-					});
+					})
 				}
 				reader.readAsDataURL(e.target.files[0]);
 
@@ -168,47 +168,47 @@
 				$("#cropperBox").removeClass("d-none");
 				$(".cr-slider-wrap").addClass("d-none");
 				$("#profilePicture").addClass("d-none");
-
 			}
 
 			document.getElementById("customFile").addEventListener("change", readFile);
 
-			function getFormData($form) {
-				var unindexed_array = $form.serializeArray();
-				var indexed_array = {};
-
-				$.map(unindexed_array, function (n, i) {
-					indexed_array[n['name']] = n['value'];
-				});
-
-				return indexed_array;
-			}
-
 			$("#croppImage").on('click', function () {
 				$uploadCrop.croppie('result', 'blob').then(function (blob) {
+					$blob = blob;
 					var urlCreator = window.URL || window.webkitURL;
 					var imageUrl = urlCreator.createObjectURL(blob);
 					$("#profilePicture").attr('src', imageUrl);
 					$("#cropperBox").addClass("d-none");
 					$("#profilePicture").removeClass("d-none");
+				});
+			});
 
-					var formData = new FormData();
+			$("#create-form").submit(function () {
+				var formData = new FormData(this);
+				formData.append('fileName', $('#customFile').val());
+				formData.append('blob', $blob);
 
-					formData.append('userModel', $('#create-form'));
-					//formData.append('fileName', $('#customFile').val());
-					//formData.append('blob', blob);
-					//console.log(JSON.stringify(getFormData($('#create-form'))));
+				try {
 					$.ajax({
 						type: 'POST',
 						url: '/Admin/User/OnPostCreate',
-						dataType: 'json',
 						data: formData,
+						contentType: false,
 						processData: false,
-						success: function (result) {
-							console.log(result);
+						success: function (res) {
+							if (res.isValid) {
+								$('#viewAll').html(res.html)
+								$('#form-modal').modal('hide');
+							}
+						},
+						error: function (err) {
+							console.log(err)
 						}
-					});
-				});
+					})
+					return false;
+				} catch (ex) {
+					console.log(ex)
+				}
 			});
 		});
 	</script>

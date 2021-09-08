@@ -33,7 +33,7 @@
 										<input accept=".png,.jpg,.jpeg,.gif,.tif"
 											   asp-for="@Model.ProfilePicture"
 											   type="file" class="custom-file-input"
-											   onchange="jQueryModalGet('/admin/profile/ChangeProfileImage', 'Обріжте нове зображення профілю')"
+											   onchange="jQueryModalGet('/admin/profile/ChangeProfileImage?id=@Model.Id', 'Обріжте нове зображення профілю')"
 											   id="customFile">
 										<label class="my-file-label" for="customFile"><i class="fas fa-upload"></i> Завантажити</label>
 									</div>
@@ -85,7 +85,7 @@
 						</div>
 					</div>
 					<label class="col-form-label text-center d-block">Опис</label>
-					<textarea asp-for="Description" class="form-control note-editor" id="summernote"></textarea>
+					<textarea asp-for="Description" class="form-control" rows="3"></textarea>
 
 					<span asp-validation-for="Description" class="text-danger"></span>
 					<div class="d-flex justify-content-end pt-2">
@@ -93,6 +93,9 @@
 							<span id="lenghtContentPost"></span>
 							<span id="maxContentPost"></span>
 						</div>
+
+						<button type="submit" class="btn btn-default close-button mr-2" asp-area="Admin" asp-controller="Profile" asp-action="Index" asp-route-id="@Model.Id">Відмінити</button>
+
 						<button id="update-profile-button ml-auto" type="submit" class="btn btn-success btn-icon-split">
 							<span class="icon text-white-50">
 								<i class="fas fa-check"></i>
@@ -110,11 +113,11 @@
 <script src="~/js/summernote.js"></script>
 <script>
 	$(document).ready(function () {
-		registerSummernote('#summernote', 5000, function (max) {
-			$('#lenghtContentPost').text(max)
-		}, 400, 400);
+		//registerSummernote('#summernote', 5000, function (max) {
+		//	$('#lenghtContentPost').text(max)
+		//}, 400, 400);d
 
-		document.getElementById("summernote").hidden = true;
+		//document.getElementById("summernote").hidden = true;
 
 		$('.ukrainephone').mask("(999) 999-9999");
 	});

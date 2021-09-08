@@ -5,6 +5,8 @@
 		$('.selectpicker').selectpicker();
 	});
 
+	$("center").remove();
+
 	setTimeout(function () {
 		$('body').addClass('loaded');
 	}, 200);

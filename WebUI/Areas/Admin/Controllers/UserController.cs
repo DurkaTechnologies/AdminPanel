@@ -93,9 +93,8 @@ namespace WebUI.Areas.Admin
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> OnPostCreate([FromForm] UserViewModel userModel, string fileName, IFormFile blob)
+		public async Task<IActionResult> OnPostCreate(UserViewModel userModel, string fileName, IFormFile blob)
 		{
-			
 			if (ModelState.IsValid)
 			{
 				string imagePath;
@@ -121,6 +120,7 @@ namespace WebUI.Areas.Admin
 					FirstName = userModel.FirstName,
 					MiddleName = userModel.MiddleName,
 					LastName = userModel.LastName,
+					PhoneNumber = userModel.PhoneNumber,
 					ProfilePicture = imagePath,
 					EmailConfirmed = true,
 					IsActive = true,
@@ -128,7 +128,7 @@ namespace WebUI.Areas.Admin
 					Description = userModel.Description
 				};
 
-				var	result = await _userManager.CreateAsync(user, userModel.Password);
+				var result = await _userManager.CreateAsync(user, userModel.Password);
 
 				if (result.Succeeded)
 				{
@@ -179,18 +179,25 @@ namespace WebUI.Areas.Admin
 				if (user.FirstName != "Super" && user.FirstName != "Default")
 				{
 					_notify.Success($"Користувач {user.FirstName + " " + user.LastName} був успішно видалений");
-					await _userManager.DeleteAsync(user);
 
-					Log log = new Log()
+					var result = await _userManager.DeleteAsync(user);
+
+					if (result.Succeeded)
 					{
-						Action = "Delete",
-						UserId = _userService.UserId,
-						TableName = "Users",
-						OldValues = new AuditUserModel(_mapper.Map<UserViewModel>(user)),
-						Key = user.Id
-					};
+						ImageService.RemoveImageFromServer(user.ProfilePicture);
 
-					await _mediator.Send(new AddLogCommand() { Log = log });
+						Log log = new Log()
+						{
+							Action = "Delete",
+							UserId = _userService.UserId,
+							TableName = "Users",
+							OldValues = new AuditUserModel(_mapper.Map<UserViewModel>(user)),
+							Key = user.Id
+						};
+						await _mediator.Send(new AddLogCommand() { Log = log });
+					}
+					else
+						_notify.Error($"Помилка при видалені користувача");
 				}
 				else
 					_notify.Error($"Не можна видалити базових користувачів");
