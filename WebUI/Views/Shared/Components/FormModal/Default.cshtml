@@ -1,5 +1,5 @@
 <div class="modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" id="form-modal">
-	<div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+	<div class="modal-dialog modal-dialog-centered modal-xl" role="document" id="form-main">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title"></h5>
@@ -9,3 +9,15 @@
 		</div>
 	</div>
 </div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+	$(document).ready(function () {
+		$("#form-modal").click(function (e) {
+			if (e.target !== e.currentTarget)
+				return;
+
+			$(".modal-content").find(".close-button").click();
+		});
+	});
+</script>

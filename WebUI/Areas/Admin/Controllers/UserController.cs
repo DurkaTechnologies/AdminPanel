@@ -19,6 +19,7 @@ using Infrastructure.AuditModels;
 using Application.Features.Logs.Commands;
 using Infrastructure.Identity.Models;
 using System.IO;
+using System;
 
 namespace WebUI.Areas.Admin
 {
@@ -81,24 +82,42 @@ namespace WebUI.Areas.Admin
 			return null;
 		}
 
+		public async Task<JsonResult> FileUploadError(UserViewModel userModel)
+		{
+			_notify.Error("Помилка про завантаженні фото профілю");
+			return new JsonResult(new
+			{
+				isValid = false,
+				html = await _viewRenderer.RenderViewToStringAsync("_Create", userModel)
+			});
+		}
+
 		[HttpPost]
-		public async Task<IActionResult> OnPostCreate(UserViewModel userModel, string fileName, IFormFile blob)
+		public async Task<IActionResult> OnPostCreate([FromForm] UserViewModel userModel, string fileName, IFormFile blob)
 		{
 			
 			if (ModelState.IsValid)
 			{
-				string imagePath = null;
+				string imagePath;
 
-				// нема кропера
-				if (blob != null)
+				try
+				{
 					imagePath = ImageService.UploadImageToServer(blob, Path.GetExtension(fileName));
+				}
+				catch (Exception)
+				{
+					return await FileUploadError(userModel);
+				}
+
+				if (String.IsNullOrEmpty(imagePath))
+					return await FileUploadError(userModel);
 
 				MailAddress address = new MailAddress(userModel.Email);
 				string userName = address.User;
 				var user = new ApplicationUser
 				{
 					Email = userModel.Email,
-					UserName = userModel.UserName,
+					UserName = userModel.Email,
 					FirstName = userModel.FirstName,
 					MiddleName = userModel.MiddleName,
 					LastName = userModel.LastName,
@@ -109,7 +128,8 @@ namespace WebUI.Areas.Admin
 					Description = userModel.Description
 				};
 
-				var result = await _userManager.CreateAsync(user, userModel.Password);
+				var	result = await _userManager.CreateAsync(user, userModel.Password);
+
 				if (result.Succeeded)
 				{
 					await _userManager.AddToRoleAsync(user, Roles.Worker.ToString());
@@ -136,10 +156,13 @@ namespace WebUI.Areas.Admin
 
 					return new JsonResult(new { isValid = true, html = htmlData });
 				}
+
 				foreach (var error in result.Errors)
 				{
 					_notify.Error(error.Description);
 				}
+
+				ImageService.RemoveImageFromServer(imagePath);
 				var html = await _viewRenderer.RenderViewToStringAsync("_Create", userModel);
 				return new JsonResult(new { isValid = false, html = html });
 			}
