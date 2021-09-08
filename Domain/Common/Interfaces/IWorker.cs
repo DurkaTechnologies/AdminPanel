@@ -1,7 +1,7 @@
-﻿using AdminPanel.Domain.Common.Models;
+﻿using Domain.Common.Models;
 using Domain.Entities;
 
-namespace AdminPanel.Domain.Common.Interfaces
+namespace Domain.Common.Interfaces
 {
 	public interface IWorker
 	{
@@ -14,6 +14,8 @@ namespace AdminPanel.Domain.Common.Interfaces
 		public string ProfilePicture { get; set; }
 
 		public string Description { get; set; }
+
+		public string Chat { get; set; }
 
 		public int? CommunityId { get; set; }
 

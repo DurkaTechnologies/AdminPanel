@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace AdminPanel.Infrastructure.Persistence.Configurations
+namespace Infrastructure.Persistence.Configurations
 {
 	public class AppUserConfiguration : IEntityTypeConfiguration<ApplicationUser>
 	{
@@ -24,8 +24,7 @@ namespace AdminPanel.Infrastructure.Persistence.Configurations
 				.HasMaxLength(256);
 
 			builder.Property(t => t.Description)
-				.HasMaxLength(2000);
-
+				.HasMaxLength(5000);
 		}
 	}
 }

@@ -1,7 +1,7 @@
-﻿using AdminPanel.Domain.Common.Interfaces;
+﻿using Domain.Common.Interfaces;
 using System;
 
-namespace AdminPanel.Domain.Common.Models
+namespace Domain.Common.Models
 {
 	public class AuditableEntity : IAuditableEntity
 	{

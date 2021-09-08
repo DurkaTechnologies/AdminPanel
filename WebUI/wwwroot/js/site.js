@@ -1,114 +1,118 @@
 ﻿$(document).ready(function () {
-    $('.form-image').click(function () { $('#customFile').trigger('click'); });
-    $(function () {
-        $('.selectpicker').selectpicker();
-    });
-    setTimeout(function () {
-        $('body').addClass('loaded');
-    }, 200);
+	$('.form-image').click(function () { $('#customFile').trigger('click'); });
 
-    //phone number mask
-    $('.ukrainephone').mask("(999) 999-9999");
+	$(function () {
+		$('.selectpicker').selectpicker();
+	});
 
-    jQueryModalGet = (url, title) => {
-        try {
-            $.ajax({
-                type: 'GET',
-                url: url,
-                contentType: false,
-                processData: false,
-                success: function (res) {
-                    $('#form-modal .modal-body').html(res.html);
-                    $('#form-modal .modal-title').html(title);
-                    $('#form-modal').modal('show');
-                    console.log(res);
-                },
-                error: function (err) {
-                    console.log(err)
-                }
-            })
-            //to prevent default form submit event
-            return false;
-        } catch (ex) {
-            console.log(ex)
-        }
-    }
+	$("center").remove();
 
-    jQueryModalPost = form => {
-        try {
-            $.ajax({
-                type: 'POST',
-                url: form.action,
-                data: new FormData(form),
-                contentType: false,
-                processData: false,
-                success: function (res) {
-                    if (res.isValid) {
-                        $('#viewAll').html(res.html)
-                        $('#form-modal').modal('hide');
-                    }
-                },
-                error: function (err) {
-                    console.log(err)
-                }
-            })
-            return false;
-        } catch (ex) {
-            console.log(ex)
-        }
-    }
+	setTimeout(function () {
+		$('body').addClass('loaded');
+	}, 200);
 
-    jQueryModalDelete = form => {
-        if (confirm('Ви впевнені що хочете видалити це ?')) {
-            try {
-                $.ajax({
-                    type: 'POST',
-                    url: form.action,
-                    data: new FormData(form),
-                    contentType: false,
-                    processData: false,
-                    success: function (res) {
-                        if (res.isValid) {
-                            $('#viewAll').html(res.html)
-                        }
-                    },
-                    error: function (err) {
-                        console.log(err)
-                    }
-                })
-            } catch (ex) {
-                console.log(ex)
-            }
-        }
+	//phone number mask
+	$('.ukrainephone').mask("(999) 999-9999");
 
-        //prevent default form submit event
-        return false;
-    }
+	jQueryModalGet = (url, title) => {
+		try {
+			$.ajax({
+				type: 'GET',
+				url: url,
+				contentType: false,
+				processData: false,
+				success: function (res) {
+					$('#form-modal .modal-body').html(res.html);
+					$('#form-modal .modal-title').html(title);
+					$('#form-modal').modal('show');
+					console.log(res);
+				},
+				error: function (err) {
+					console.log(err)
+				}
+			})
+			//to prevent default form submit event
+			return false;
+		} catch (ex) {
+			console.log(ex)
+		}
+	}
 
-    jQueryModalDeactivate = form => {
-        if (confirm('Ви впевнені що хочете деактивувати це ?')) {
-            try {
-                $.ajax({
-                    type: 'POST',
-                    url: form.action,
-                    data: new FormData(form),
-                    contentType: false,
-                    processData: false,
-                    success: function (res) {
-                        if (res.isValid) {
-                            $('#viewAll').html(res.html)
-                        }
-                    },
-                    error: function (err) {
-                        console.log(err)
-                    }
-                })
-            } catch (ex) {
-                console.log(ex)
-            }
-        }
+	jQueryModalPost = form => {
+		try {
+			$.ajax({
+				type: 'POST',
+				url: form.action,
+				data: new FormData(form),
+				contentType: false,
+				processData: false,
+				success: function (res) {
+					if (res.isValid) {
+						$('#viewAll').html(res.html)
+						$('#form-modal').modal('hide');
+					}
+				},
+				error: function (err) {
+					console.log(err)
+				}
+			})
+			return false;
+		} catch (ex) {
+			console.log(ex)
+		}
+	}
 
-        //prevent default form submit event
-        return false;
-    }
+	jQueryModalDelete = form => {
+		if (confirm('Ви впевнені що хочете видалити це ?')) {
+			try {
+				$.ajax({
+					type: 'POST',
+					url: form.action,
+					data: new FormData(form),
+					contentType: false,
+					processData: false,
+					success: function (res) {
+						if (res.isValid) {
+							$('#viewAll').html(res.html)
+						}
+					},
+					error: function (err) {
+						console.log(err)
+					}
+				})
+			} catch (ex) {
+				console.log(ex)
+			}
+		}
+
+		//prevent default form submit event
+		return false;
+	}
+
+	jQueryModalDeactivate = form => {
+		if (confirm('Ви впевнені що хочете деактивувати це ?')) {
+			try {
+				$.ajax({
+					type: 'POST',
+					url: form.action,
+					data: new FormData(form),
+					contentType: false,
+					processData: false,
+					success: function (res) {
+						if (res.isValid) {
+							$('#viewAll').html(res.html)
+						}
+					},
+					error: function (err) {
+						console.log(err)
+					}
+				})
+			} catch (ex) {
+				console.log(ex)
+			}
+		}
+
+		//prevent default form submit event
+		return false;
+	}
 });

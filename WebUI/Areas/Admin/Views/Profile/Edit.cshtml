@@ -1,47 +1,46 @@
 ﻿@{
-    ViewData["Title"] = "Профіль";
-    ViewData["Caption"] = "Редагування профілю";
+	ViewData["Title"] = "Профіль";
+	ViewData["Caption"] = "Редагування профілю";
 }
 @using WebUI
 @using WebUI.Areas.Admin.Models
+
 @model UserViewModel
-@using System.IO
-@using WebUI.Services
 
 <div class="row d-flex justify-content-center">
-    <div class="col-md-11">
-        <div class="card">
-            <div class="card-body">
-                <form id="profile-form" method="post" enctype="multipart/form-data">
-                    <div class="row d-flex justify-content-center">
-                        <div class="col-md-3">
-                            <div class="position-relative p-4">
-                                @if (Model.ProfilePicture != null)
-                                {
-                                    <img id="profilePicture" class="img-circle" style="width: 100%; object-fit: cover; margin-top: 10px;" src="@Url.Content(ENV.ImagePath + Model.ProfilePicture)"
-                                         onerror="this.onerror = null; this.src = '@Url.Content("~/images/users/default-user.png")';">
-                                }
-                                else
-                                {
-                                    <img id="profilePicture" class="rounded-circle" style="width: 100%; object-fit: cover; padding-top: 10px;" src="~/images/users/default-user.png">
-                                }
-                                <a class="btn btn-dark position-absolute btn-image" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-pencil-alt"></i> Змініти
-                                </a>
-                                <!-- Dropdown - User Information -->
-                                <div class="dropdown-menu dropdown-menu-left shadow animated--grow-in" aria-labelledby="userDropdown">
-                                    <div class="dropdown-item p-0">
-                                        <input accept=".png,.jpg,.jpeg,.gif,.tif"
-                                               asp-for="@Model.ProfilePicture"
-                                               type="file" class="custom-file-input"
-                                               onchange="jQueryModalGet('/admin/profile/ChangeProfileImage', 'Обріжте нове зображення профілю')"
-                                               id="customFile">
-                                        <label class="my-file-label" for="customFile"><i class="fas fa-upload"></i> Завантажити</label>
-                                    </div>
-                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Profile" asp-action="DeleteImage" asp-route-id="@Model.Id"><i class="fas fa-trash-alt"></i> Видалити</a>
-                                </div>
-                            </div>
-                        </div>
+	<div class="col-md-11">
+		<div class="card">
+			<div class="card-body">
+				<form id="profile-form" method="post" enctype="multipart/form-data">
+					<div class="row d-flex justify-content-center">
+						<div class="col-md-3">
+							<div class="position-relative p-4">
+								@if (Model.ProfilePicture != null)
+								{
+									<img id="profilePicture" class="img-circle" style="width: 100%; object-fit: cover; margin-top: 10px;" src="@ENV.ImagePath@Model.ProfilePicture"
+										 onerror="this.onerror = null; this.src = '@Url.Content("~/images/users/default-user.png")';">
+								}
+								else
+								{
+									<img id="profilePicture" class="rounded-circle" style="width: 100%; object-fit: cover; padding-top: 10px;" src="~/images/users/default-user.png">
+								}
+								<a class="btn btn-dark position-absolute btn-image" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<i class="fas fa-pencil-alt"></i> Змініти
+								</a>
+								<!-- Dropdown - User Information -->
+								<div class="dropdown-menu dropdown-menu-left shadow animated--grow-in" aria-labelledby="userDropdown">
+									<div class="dropdown-item p-0">
+										<input accept=".png,.jpg,.jpeg,.gif,.tif"
+											   asp-for="@Model.ProfilePicture"
+											   type="file" class="custom-file-input"
+											   onchange="jQueryModalGet('/admin/profile/ChangeProfileImage?id=@Model.Id', 'Обріжте нове зображення профілю')"
+											   id="customFile">
+										<label class="my-file-label" for="customFile"><i class="fas fa-upload"></i> Завантажити</label>
+									</div>
+									<a class="dropdown-item" asp-area="Admin" asp-controller="Profile" asp-action="DeleteImage" asp-route-id="@Model.Id"><i class="fas fa-trash-alt"></i> Видалити</a>
+								</div>
+							</div>
+						</div>
                         <div class="col-md-9 row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -83,36 +82,49 @@
                                     <span asp-validation-for="CommunityId" class="text-danger"></span>
                                 </div>
                             </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label asp-for="@Model.Chat">Посилання на чат</label>
+                                    <input type="text" asp-for="@Model.Chat" class="form-control" />
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <label class="col-form-label text-center d-block">Опис</label>
-                    <textarea asp-for="Description" class="form-control note-editor" id="summernote"></textarea>
-                    <span asp-validation-for="Description" class="text-danger"></span>
-                    <div class="d-flex justify-content-end pt-2">
-                        <button id="update-profile-button ml-auto" type="submit" class="btn btn-success btn-icon-split">
-                            <span class="icon text-white-50">
-                                <i class="fas fa-check"></i>
-                            </span>
-                            <span class="text">Зберегти</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+					</div>
+					<label class="col-form-label text-center d-block">Опис</label>
+					<textarea asp-for="Description" class="form-control" rows="3"></textarea>
+
+					<span asp-validation-for="Description" class="text-danger"></span>
+					<div class="d-flex justify-content-end pt-2">
+						<div class="col-xs-12 text-right p-2 h6 m-0">
+							<span id="lenghtContentPost"></span>
+							<span id="maxContentPost"></span>
+						</div>
+
+						<button type="submit" class="btn btn-default close-button mr-2" asp-area="Admin" asp-controller="Profile" asp-action="Index" asp-route-id="@Model.Id">Відмінити</button>
+
+						<button id="update-profile-button ml-auto" type="submit" class="btn btn-success btn-icon-split">
+							<span class="icon text-white-50">
+								<i class="fas fa-check"></i>
+							</span>
+							<span class="text">Зберегти</span>
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 </div>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script type="text/javascript">
-    $(document).ready(function () {
+<script src="~/js/summernote.js"></script>
+<script>
+	$(document).ready(function () {
+		//registerSummernote('#summernote', 5000, function (max) {
+		//	$('#lenghtContentPost').text(max)
+		//}, 400, 400);d
 
-        $('#summernote').summernote({
-            tabsize: 2,
-            height: 400,
-        });
+		//document.getElementById("summernote").hidden = true;
 
-        document.getElementById("summernote").hidden = true;
-
-        $('.ukrainephone').mask("(999) 999-9999");
-    });
+		$('.ukrainephone').mask("(999) 999-9999");
+	});
 </script>

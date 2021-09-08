@@ -1,5 +1,5 @@
-using AdminPanel.Application.Extensions;
-using AdminPanel.Infrastructure.Extensions;
+using Application.Extensions;
+using Infrastructure.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -10,15 +10,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
-using AdminPanel.Web.Extensions;
-using MediatR;
-using AdminPanel.Web.Abstractions;
-using AdminPanel.Web.Services;
+using WebUI.Extensions;
+using WebUI.Abstractions;
+using WebUI.Services;
 using Microsoft.AspNetCore.Authorization;
-using AdminPanel.WebUI.Permission;
+using WebUI.Permission;
 using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
-using WebUI.Services;
 
 namespace WebUI
 {

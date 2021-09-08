@@ -1,8 +1,9 @@
-﻿@{ ViewData["Title"] = "Користувачі";
+﻿@{
+	ViewData["Title"] = "Користувачі";
 	ViewData["Caption"] = "Редагувати користувачів";
 }
 
-@using AdminPanel.Application.Constants
+@using Application.Constants
 
 @if ((AuthorizationService.AuthorizeAsync(User, Permissions.Users.View)).Result.Succeeded)
 {
@@ -22,29 +23,29 @@
 		<div id="viewAll" class="card-body table-responsive">
 		</div>
 	</div>
+
+	@section Scripts
+	{
+		<script src="~/js/site.js"></script>
+		<script>
+			$(document).ready(function () {
+				$("#userTable").DataTable({
+					language: {
+						url: "//cdn.datatables.net/plug-ins/1.10.18/i18n/Ukrainian.json"
+					},
+				});
+				loadData();
+				$('#reload').on('click', function () {
+					loadData();
+				});
+			});
+			function loadData() {
+				$('#viewAll').load('/admin/user/LoadAll');
+			}
+		</script>
+	}
 }
 else
 {
 	<h2 class="text-center">Не доступно для вас</h2>
-}
-
-@section Scripts
-{
-	<script src="~/js/site.js"></script>
-	<script>
-		$(document).ready(function () {
-			$("#userTable").DataTable({
-				language: {
-					url: "//cdn.datatables.net/plug-ins/1.10.18/i18n/Ukrainian.json"
-				},
-			});
-			loadData();
-			$('#reload').on('click', function () {
-				loadData();
-			});
-		});
-		function loadData() {
-			$('#viewAll').load('/admin/user/LoadAll');
-		}
-	</script>
 }

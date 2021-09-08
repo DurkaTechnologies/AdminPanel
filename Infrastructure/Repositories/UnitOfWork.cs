@@ -1,11 +1,11 @@
-﻿using AdminPanel.Application.Interfaces.Repositories;
-using AdminPanel.Application.Interfaces.Shared;
-using AdminPanel.Infrastructure.DbContexts;
+﻿using Application.Interfaces.Repositories;
+using Application.Interfaces.Shared;
+using Infrastructure.DbContexts;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AdminPanel.Infrastructure.Repositories
+namespace Infrastructure.Repositories
 {
 	public class UnitOfWork : IUnitOfWork
 	{

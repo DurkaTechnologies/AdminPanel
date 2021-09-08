@@ -1,21 +1,19 @@
-﻿using AdminPanel.Application.Features.Communities.Commands;
-using AdminPanel.Application.Features.Communities.Queries.GetAllCached;
-using AdminPanel.Application.Features.Communities.Queries.GetById;
-using AdminPanel.Web.Abstractions;
+﻿using Application.Features.Communities.Commands;
+using Application.Features.Communities.Queries.GetAllCached;
+using Application.Features.Communities.Queries.GetById;
+using WebUI.Abstractions;
 using WebUI.Areas.Entities.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+using Infrastructure.AuditModels;
+using Application.Features.Logs.Commands;
 
 namespace WebUI.Areas.Entities.Controllers
 {
-    [Area("Entities")]
+	[Area("Entities")]
     public class DistrictController : BaseController<DistrictController>
-	{
+    {
         // GET: DistrictController
         public IActionResult Index()
         {
@@ -66,6 +64,17 @@ namespace WebUI.Areas.Entities.Controllers
                     if (result.Succeeded)
                     {
                         id = result.Data;
+
+                        Log log = new Log()
+                        {
+                            UserId = _userService.UserId,
+                            Action = "Create",
+                            TableName = "District",
+                            NewValues = district
+                        };
+
+                        await _mediator.Send(new AddLogCommand() { Log = log });
+
                         _notify.Success($"Район {district.Name} створений");
                     }
                     else
@@ -73,13 +82,29 @@ namespace WebUI.Areas.Entities.Controllers
                 }
                 else
                 {
+                    var oldDistrict = _mediator.Send(new GetDistrictByIdQuery() { Id = district.Id }).Result.Data;
                     var updateDistrictCommand = _mapper.Map<UpdateDistrictCommand>(district);
                     var result = await _mediator.Send(updateDistrictCommand);
-                    if (result.Succeeded) _notify.Success($"Район {district.Name} змінений");
+
+                    if (result.Succeeded)
+                    {
+                        Log log = new Log()
+                        {
+                            UserId = _userService.UserId,
+                            Action = "Update",
+                            TableName = "District",
+                            OldValues = oldDistrict,
+                            NewValues = district,
+                        };
+
+                        await _mediator.Send(new AddLogCommand() { Log = log });
+
+                        _notify.Success($"Район {district.Name} змінений");
+                    }
                 }
-                
+
                 var response = await _mediator.Send(new GetAllDistrictsCachedQuery());
-                
+
                 if (response.Succeeded)
                 {
                     var viewModel = _mapper.Map<List<DistrictViewModel>>(response.Data);
@@ -94,8 +119,8 @@ namespace WebUI.Areas.Entities.Controllers
             }
             else
             {
-                
-                
+
+
                 var html = await _viewRenderer.RenderViewToStringAsync("_CreateOrEdit", district);
                 return new JsonResult(new { isValid = false, html = html });
             }
@@ -108,12 +133,22 @@ namespace WebUI.Areas.Entities.Controllers
             var district = _mapper.Map<DistrictViewModel>(byIdResponse.Data);
 
             var deleteCommand = await _mediator.Send(new DeleteDistrictCommand { Id = id });
-            
+
             if (deleteCommand.Succeeded)
             {
+                Log log = new Log()
+                {
+                    UserId = _userService.UserId,
+                    Action = "Delete",
+                    TableName = "District",
+                    OldValues = district,
+                };
+
+                await _mediator.Send(new AddLogCommand() { Log = log });
+
                 _notify.Success($"Район {district.Name} видалений");
                 var response = await _mediator.Send(new GetAllDistrictsCachedQuery());
-                
+
                 if (response.Succeeded)
                 {
                     var viewModel = _mapper.Map<List<DistrictViewModel>>(response.Data);

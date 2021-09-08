@@ -1,13 +1,8 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using WebUI.Extensions;
 
 namespace WebUI.Services
 {
@@ -15,7 +10,7 @@ namespace WebUI.Services
 	{
 		public static string RootPass { get; set; }
 
-		public static string SaveImage(IFormFileCollection files)
+		public static string SaveImageLocal(IFormFileCollection files)
 		{
 			if (RootPass != null)
 			{
@@ -25,7 +20,7 @@ namespace WebUI.Services
 				string extension = Path.GetExtension(file.FileName);
 				string path = Path.Combine(RootPass + ENV.ImagePath, name + extension);
 
-				using (var fileStream = System.IO.File.Create(path))
+				using (var fileStream = File.Create(path))
 				{
 					file.CopyTo(fileStream);
 				}
@@ -34,7 +29,8 @@ namespace WebUI.Services
 			}
 			return null;
 		}
-		public static string SaveImage(IFormFile file, string extension = null)
+
+		public static string SaveImageLocal(IFormFile file, string extension = null)
 		{
 			if (RootPass != null)
 			{
@@ -44,7 +40,7 @@ namespace WebUI.Services
 
 				string path = Path.Combine(RootPass + ENV.ImagePath, name + extension);
 
-				using (var fileStream = System.IO.File.Create(path))
+				using (var fileStream = File.Create(path))
 				{
 					file.CopyTo(fileStream);
 				}
@@ -81,7 +77,7 @@ namespace WebUI.Services
 				FtpWebRequest request = (FtpWebRequest)WebRequest.Create(serverUri);
 				request.Credentials = new NetworkCredential(ENV.FTPLogin, ENV.FTPPass);
 				request.Method = WebRequestMethods.Ftp.UploadFile;
-				
+
 				byte[] fileContents;
 				using (var ms = new MemoryStream())
 				{

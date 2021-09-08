@@ -1,6 +1,4 @@
-﻿using AdminPanel.Domain.Common.Interfaces;
-using AdminPanel.Domain.Common.Models;
-using System.Collections.Generic;
+﻿using Domain.Common.Models;
 
 namespace Domain.Entities
 {

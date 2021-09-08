@@ -1,35 +1,61 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using AdminPanel.Application.DTOs;
-using AdminPanel.Application.Features.ActivityLog.Queries;
-using AdminPanel.Application.Interfaces.Shared;
-using AdminPanel.Web.Abstractions;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using Application.Common.Models;
+using Application.DTOs;
+using Application.Features.ActivityLog.Queries;
+using Application.Features.Logs.Queries;
+using Application.Interfaces.Shared;
+using Infrastructure.Identity.Models;
+using Microsoft.AspNetCore.Identity;
+using WebUI.Abstractions;
 
 namespace WebUI.Areas.Identity.Pages.Account
 {
-    public class AuditLogModel : BasePageModel<AuditLogModel>
-    {
-        
-        public List<AuditLogResponse> AuditLogResponses;
-        private IViewRenderService _viewRenderer;
+	public class AuditLogModel : BasePageModel<AuditLogModel>
+	{
+		private readonly UserManager<ApplicationUser> _userManager;
+		public List<AuditLogResponse> AuditLogResponses;
+		public bool Simple { get; set; }
+		public string UserId { get; set; }
 
-        public AuditLogModel(IAuthenticatedUserService userService, IViewRenderService viewRenderer)
-        {
-            //_mediator = mediator;
-            _viewRenderer = viewRenderer;
-        }
+		private IViewRenderService _viewRenderer;
 
-        public async Task OnGet(string id)
-        {
-            if (id == null)
-                id = _userService.UserId;
+		public AuditLogModel(IAuthenticatedUserService userService, IViewRenderService viewRenderer, UserManager<ApplicationUser> userManager)
+		{
+			_userManager = userManager;
+			_viewRenderer = viewRenderer;
+			Simple = false;
+		}
 
-            var response = await _mediator.Send(new GetAuditLogsQuery() { userId = id });
-            AuditLogResponses = response.Data;
-        }
-    }
+		public async Task OnGet(string id)
+		{
+			UserId = id;
+			Result<List<AuditLogResponse>> response = null;
+
+            switch (id)
+            {
+				case null:
+					if (User.IsInRole("SuperAdmin"))
+					{
+						response = await _mediator.Send(new GetAllAuditLogsQuery());
+						Simple = false;
+					}
+					break;
+				case "current":
+					response = await _mediator.Send(new GetAuditLogsQuery() { userId = _userService.UserId });
+					Simple = true;
+					break;
+				default:
+					if (User.IsInRole("SuperAdmin"))
+					{
+						response = await _mediator.Send(new GetAuditLogsQuery() { userId = id });
+						Simple = true;
+					}
+					break;
+            }
+
+			if (response != null)
+				AuditLogResponses = response.Data;
+		}
+	}
 }

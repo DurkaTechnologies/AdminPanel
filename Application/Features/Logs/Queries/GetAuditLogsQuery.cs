@@ -1,13 +1,13 @@
-﻿using AdminPanel.Application.Common.Models;
-using AdminPanel.Application.DTOs;
-using AdminPanel.Application.Interfaces.Repositories;
+﻿using Application.Common.Models;
+using Application.DTOs;
+using Application.Interfaces.Repositories;
 using AutoMapper;
 using MediatR;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AdminPanel.Application.Features.ActivityLog.Queries
+namespace Application.Features.ActivityLog.Queries
 {
 	public class GetAuditLogsQuery : IRequest<Result<List<AuditLogResponse>>>
 	{

@@ -1,5 +1,5 @@
-﻿using AdminPanel.Application.Interfaces.Repositories;
-using AdminPanel.Infrastructure.DbContexts;
+﻿using Application.Interfaces.Repositories;
+using Infrastructure.DbContexts;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AdminPanel.Infrastructure.Repositories
+namespace Infrastructure.Repositories
 {
 	public class DistrictRepository : IDistrictRepository
 	{

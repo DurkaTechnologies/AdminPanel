@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AdminPanel.Domain.Common.Interfaces
+namespace Domain.Common.Interfaces
 {
 	public interface IAuditableEntity
 	{
