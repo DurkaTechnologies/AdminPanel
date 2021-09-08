@@ -49,6 +49,13 @@
 					</div>
 					<!-- /.input group -->
 				</div>
+        <div class="form-group row">
+        <label class="col-md-3 col-form-label">Посилання на чат</label>
+        <div class="col-md-9">
+            <input type="text" asp-for="Chat" name="Chat" class="form-control">
+            <span asp-validation-for="Chat" class="text-danger"></span>
+        </div>
+        </div>
 				<div class="form-group row">
 					<label class="col-md-3 col-form-label">Пароль</label>
 					<div class="col-md-9">

@@ -63,7 +63,7 @@ namespace WebUI.Areas.Admin.Controllers
 			foreach (var claim in selectedClaims)
 				await _roleManager.AddPermissionClaim(role, claim.Value);
 
-			_notify.Error($"Дозволи для ролі {role.Name} змінено");
+			_notify.Success($"Дозволи для ролі {role.Name} змінено");
 			return RedirectToAction("Index", new { roleId = model.RoleId });
 		}
 	}

@@ -121,6 +121,7 @@ namespace WebUI.Areas.Admin
 					MiddleName = userModel.MiddleName,
 					LastName = userModel.LastName,
 					PhoneNumber = userModel.PhoneNumber,
+					Chat = userModel.Chat,
 					ProfilePicture = imagePath,
 					EmailConfirmed = true,
 					IsActive = true,
@@ -169,7 +170,6 @@ namespace WebUI.Areas.Admin
 			return default;
 		}
 
-		[Authorize(Roles = "SuperAdmin")]
 		public async Task<JsonResult> OnPostDelete(string id)
 		{
 			var user = await _userManager.FindByIdAsync(id);
