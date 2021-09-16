@@ -20,6 +20,7 @@ using Application.Features.Logs.Commands;
 using Infrastructure.Identity.Models;
 using System.IO;
 using System;
+using Application.Features.Communities.Commands;
 
 namespace WebUI.Areas.Admin
 {
@@ -60,10 +61,13 @@ namespace WebUI.Areas.Admin
 
 		public async Task<IActionResult> OnGetCreate()
 		{
-			var response = await _mediator.Send(new GetAllCommunitiesCachedQuery());
+			var response = await _mediator.Send(new GetFreeCommunitiesQuery());
 
 			if (response.Succeeded)
 			{
+				if (response.Data.Count == 0)
+					_notify.Error("Немає вільних громад");
+
 				var data = _mapper.Map<IEnumerable<CommunityViewModel>>(response.Data);
 				var communities = new SelectList(data, nameof(CommunityViewModel.Id),
 					nameof(CommunityViewModel.Name), null, null);
@@ -71,9 +75,8 @@ namespace WebUI.Areas.Admin
 				return new JsonResult(new
 				{
 					isValid = true,
-					html = await _viewRenderer.RenderViewToStringAsync("_Create", new UserViewModel()
-					{
-						Communities = communities
+					html = await _viewRenderer.RenderViewToStringAsync("_Create", new UserViewModel() {
+						CommunitiesList = communities
 					})
 				});
 			}
@@ -98,6 +101,7 @@ namespace WebUI.Areas.Admin
 			if (ModelState.IsValid)
 			{
 				string imagePath;
+				userModel.Password ??= "1";
 
 				try
 				{
@@ -125,7 +129,6 @@ namespace WebUI.Areas.Admin
 					ProfilePicture = imagePath,
 					EmailConfirmed = true,
 					IsActive = true,
-					CommunityId = userModel.CommunityId == 0 ? null : userModel.CommunityId,
 					Description = userModel.Description
 				};
 
@@ -139,6 +142,21 @@ namespace WebUI.Areas.Admin
 					var allUsersExceptCurrentUser = await _userManager.Users.Where(a => a.Id != currentUser.Id).ToListAsync();
 					var users = _mapper.Map<IEnumerable<UserViewModel>>(allUsersExceptCurrentUser);
 					var htmlData = await _viewRenderer.RenderViewToStringAsync("_ViewAll", users);
+
+					var commands = userModel.CommunitiesSelected.Select(id => new UpdateCommunityCommand() {
+						Id = id,
+						ApplicationUserId = user.Id
+					});
+
+					foreach (var command in commands.ToList())
+					{
+						var communityRes = await _mediator.Send(command);
+
+						if (result.Succeeded)
+						{
+							_notify.Success($"Громада {communityRes.Data} змінена");
+						}
+					}
 
 					_notify.Success($"Аккаунт {user.Email} створено");
 

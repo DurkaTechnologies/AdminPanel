@@ -19,6 +19,12 @@
 
   <ItemGroup>
     <None Include="Properties\PublishProfiles\FTPProfile.pubxml.user" />
+    <None Include="wwwroot\lib\select2\js\i18n\en.js" />
+    <None Include="wwwroot\lib\select2\js\i18n\uk.js" />
+    <None Include="wwwroot\lib\select2\js\select2.full.js" />
+    <None Include="wwwroot\lib\select2\js\select2.full.min.js" />
+    <None Include="wwwroot\lib\select2\js\select2.js" />
+    <None Include="wwwroot\lib\select2\js\select2.min.js" />
   </ItemGroup>
 
   <ItemGroup>

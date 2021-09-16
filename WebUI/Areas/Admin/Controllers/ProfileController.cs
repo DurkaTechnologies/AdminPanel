@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using WebUI.Areas.Admin.Models;
 using WebUI.Areas.Entities.Models;
 using WebUI.Services;
+using System.Linq;
 
 namespace WebUI.Areas.Admin
 {
@@ -37,17 +38,17 @@ namespace WebUI.Areas.Admin
 		public async Task<IActionResult> Index(string id)
 		{
 			UserViewModel user = _mapper.Map<UserViewModel>(await GetCurrentUser(id));
-			var response = await _mediator.Send(new GetCommunityByIdQuery() { Id = user.CommunityId });
+			var response = await _mediator.Send(new GeUserCommunitiesQuery() { UserId = user.Id });
 
 			if (response.Succeeded)
 			{
-				user.Community = _mapper.Map<CommunityViewModel>(response.Data);
-				if (user.Community != null)
-				{
-					var result = await _mediator.Send(new GetDistrictByIdQuery() { Id = (int)user.Community?.DistrictId });
-					if (result.Succeeded)
-						user.Community.District = _mapper.Map<DistrictViewModel>(result.Data);
-				}
+				user.Communities = _mapper.Map<List<CommunityViewModel>>(response.Data);
+				//if (user.Community != null)
+				//{
+				//	var result = await _mediator.Send(new GetDistrictByIdQuery() { Id = (int)user.Community?.DistrictId });
+				//	if (result.Succeeded)
+				//		user.Community.District = _mapper.Map<DistrictViewModel>(result.Data);
+				//}
 			}
 			return View(user);
 		}
@@ -56,12 +57,28 @@ namespace WebUI.Areas.Admin
 		{
 			UserViewModel user = _mapper.Map<UserViewModel>(await GetCurrentUser(id));
 
-			var response = await _mediator.Send(new GetAllCommunitiesCachedQuery());
-			var data = _mapper.Map<IEnumerable<CommunityViewModel>>(response.Data);
-			var communities = new SelectList(data, nameof(CommunityViewModel.Id), nameof(CommunityViewModel.Name), null, null);
-			user.Communities = communities;
+			var response = await _mediator.Send(new GeUserCommunitiesQuery() { UserId = user.Id });
 
-			return View(user);
+			if (response.Succeeded)
+			{
+				user.CommunitiesSelected = response.Data.Select(c => c.Id);
+
+				var responseFree = await _mediator.Send(new GetFreeCommunitiesQuery());
+				if (responseFree.Succeeded)
+				{
+					var data = _mapper.Map<IEnumerable<CommunityViewModel>>(responseFree.Data);
+					var communities = new SelectList(data, nameof(CommunityViewModel.Id),
+						nameof(CommunityViewModel.Name), null, null);
+
+					user.CommunitiesList = communities;
+				}
+				//else notif
+
+				return View(user);
+			}
+
+			_notify.Error("Помилка завантаження громад");
+			return null;
 		}
 
 		[HttpPost]
@@ -80,7 +97,6 @@ namespace WebUI.Areas.Admin
 					NewValues = new AuditUserModel(user)
 				};
 
-				appUser.CommunityId = user.CommunityId;
 				appUser.Description = user.Description;
 				appUser.Chat = user.Chat;
 
@@ -126,7 +142,7 @@ namespace WebUI.Areas.Admin
 			var response = await _mediator.Send(new GetAllCommunitiesCachedQuery());
 			var data = _mapper.Map<IEnumerable<CommunityViewModel>>(response.Data);
 			var communities = new SelectList(data, nameof(CommunityViewModel.Id), nameof(CommunityViewModel.Name), null, null);
-			user.Communities = communities;
+			user.CommunitiesList = communities;
 
 			return RedirectToAction(nameof(Index), new { Id = user.Id });
 		}

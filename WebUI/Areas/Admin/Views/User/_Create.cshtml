@@ -5,7 +5,7 @@
 
 @if (AuthorizationService.AuthorizeAsync(User, Permissions.Users.Edit).Result.Succeeded || AuthorizationService.AuthorizeAsync(User, Permissions.Users.Create).Result.Succeeded)
 {
-	<form id="create-form" method="post" asp-area="Admin" asp-controller="User" asp-action="OnPostCreate" >
+	<form id="create-form" method="post" asp-area="Admin" asp-controller="User" asp-action="OnPostCreate">
 		<div class="row">
 			<div class="col" id="mainForm">
 				<div class="form-group row">
@@ -49,25 +49,11 @@
 					</div>
 					<!-- /.input group -->
 				</div>
-        <div class="form-group row">
-        <label class="col-md-3 col-form-label">Посилання на чат</label>
-        <div class="col-md-9">
-            <input type="text" asp-for="Chat" name="Chat" class="form-control">
-            <span asp-validation-for="Chat" class="text-danger"></span>
-        </div>
-        </div>
 				<div class="form-group row">
-					<label class="col-md-3 col-form-label">Пароль</label>
+					<label class="col-md-3 col-form-label">Посилання на чат</label>
 					<div class="col-md-9">
-						<input type="password" asp-for="Password" name="Password" class="form-control">
-						<span asp-validation-for="Password" class="text-danger"></span>
-					</div>
-				</div>
-				<div class="form-group row">
-					<label class="col-md-3 col-form-label">Повторіть пароль</label>
-					<div class="col-md-9">
-						<input type="password" asp-for="ConfirmPassword" name="ConfirmPassword" class="form-control">
-						<span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+						<input type="text" asp-for="Chat" name="Chat" class="form-control">
+						<span asp-validation-for="Chat" class="text-danger"></span>
 					</div>
 				</div>
 				<div class="form-group row">
@@ -84,11 +70,11 @@
 				<div class="form-group row">
 					<label class="col-md-3 col-form-label">Громада</label>
 					<div class="col-md-9">
-						<div class="input-group">
-							<select name="CommunityId" class="form-control select2bs4" id="CommunityId" asp-for="CommunityId" asp-items="@Model.Communities">
-							</select>
-						</div>
-						<span asp-validation-for="CommunityId" class="text-danger"></span>
+						<select class="select2" multiple="multiple" name="CommunitiesSelected" style="width: 100%"
+								asp-for="@Model.CommunitiesSelected" asp-items="@Model.CommunitiesList"
+								data-placeholder="Виберіть громади">
+						</select>
+						<span asp-validation-for="CommunitiesSelected" class="text-danger"></span>
 					</div>
 				</div>
 			</div>
@@ -107,7 +93,7 @@
 					</div>
 				</div>
 				<div class="position-relative p-4">
-					<img id="profilePicture" class="brand-image d-none" style="width: 100%; object-fit: cover;" type="file" 
+					<img id="profilePicture" class="brand-image d-none" style="width: 100%; object-fit: cover;" type="file"
 						 onerror="this.onerror = null; this.src = '@Url.Content("~/images/users/default-user.png")';">
 				</div>
 			</div>
@@ -129,9 +115,11 @@
 	</form>
 
 	<script src="~/js/summernote.js"></script>
-
 	<script>
 		$(document).ready(function () {
+			$('.select2').select2({
+				language: "uk"
+			});
 			bsCustomFileInput.init();
 
 			//registerSummernote('#summernote', 5000, function (max) {

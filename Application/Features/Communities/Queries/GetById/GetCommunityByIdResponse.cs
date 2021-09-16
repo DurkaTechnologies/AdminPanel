@@ -7,5 +7,7 @@
 		public string Name { get; set; }
 
 		public int? DistrictId { get; set; }
+
+		public string ApplicationUserId { get; set; }
 	}
 }

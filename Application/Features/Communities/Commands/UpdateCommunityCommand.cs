@@ -16,6 +16,8 @@ namespace Application.Features.Communities.Commands
 
 		public int? DistrictId { get; set; }
 
+		public string ApplicationUserId { get; set; }
+
 		public class UpdateCommunityCommandHandler : IRequestHandler<UpdateCommunityCommand, Result<int>>
 		{
 			private readonly IUnitOfWork unitOfWork;
@@ -39,13 +41,26 @@ namespace Application.Features.Communities.Commands
 				}
 				else
 				{
-					community.Name = command.Name ?? community.Name;
+					community.Name = command.Name.NullIfEmpty() ?? community.Name;
 					community.DistrictId = command.DistrictId ?? community.DistrictId;
+					community.ApplicationUserId = command.ApplicationUserId;
 					await communityRepository.UpdateAsync(mapper.Map<Community>(command));
 					await unitOfWork.Commit(cancellationToken);
 					return Result<int>.Success(command.Id);
 				}
 			}
+		}
+	}
+
+	public static class StringExtensions
+	{
+		public static string NullIfEmpty(this string s)
+		{
+			return string.IsNullOrEmpty(s) ? null : s;
+		}
+		public static string NullIfWhiteSpace(this string s)
+		{
+			return string.IsNullOrWhiteSpace(s) ? null : s;
 		}
 	}
 }

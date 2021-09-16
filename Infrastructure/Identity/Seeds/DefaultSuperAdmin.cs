@@ -40,7 +40,6 @@ namespace Infrastructure.Identity.Seeds
 				FirstName = "Super",
 				MiddleName = "Adminovich",
 				LastName = "Admin",
-				CommunityId = null,
 				EmailConfirmed = true,
 				PhoneNumberConfirmed = true,
 				IsActive = true

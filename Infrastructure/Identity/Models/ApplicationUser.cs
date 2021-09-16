@@ -10,6 +10,7 @@ namespace Infrastructure.Identity.Models
 		public ApplicationUser()
 		{
 			Correspondences = new HashSet<Correspondence>();
+			Communities = new HashSet<Community>();
 		}
 
 		#region Worker fields
@@ -21,13 +22,11 @@ namespace Infrastructure.Identity.Models
 
 		public string ProfilePicture { get; set; }
 
-		public int? CommunityId { get; set; }
-
 		public string Description { get; set; }
 
 		public string Chat { get; set; }
 
-		public Community Community { get; set; }
+		public virtual ICollection<Community> Communities { get; set; }
 		#endregion
 
 		public bool IsActive { get; set; } = false;

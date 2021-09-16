@@ -34,30 +34,31 @@
 							<h3 class="profile-username text-center pb-2">@Model.FirstName @Model.MiddleName @Model.LastName</h3>
 							<h5 class="text-muted pb-2"><i class="fas fa-mail-bulk"></i> @Model.Email</h5>
 
-                            @if (!String.IsNullOrEmpty(Model.PhoneNumber))
-                            {
-                                <h5 class="text-muted pb-2">
-                                    <i class="fas fa-phone"></i>
-                                    @Model.PhoneNumber
-                                </h5>
-                            }
-							@if (@Model.Community != null)
+							@if (!String.IsNullOrEmpty(Model.PhoneNumber))
+							{
+								<h5 class="text-muted pb-2">
+									<i class="fas fa-phone"></i>
+									@Model.PhoneNumber
+								</h5>
+							}
+
+							@foreach (var community in Model.Communities)
 							{
 								<h5 class="text-muted pb-2">
 									<i class="fas fa-users"></i>
-									@Model.Community.Name
+									@community.Name
 									Територіальна Громада
 								</h5>
 							}
 
-							@if (@Model.Community?.District != null)
+							@*@if (@Model.Community?.District != null)
 							{
 								<h5 class="text-muted pb-2">
 									<i class="fas fa-city"></i>
 									@Model.Community?.District.Name
 									Район
 								</h5>
-							}
+							}*@
 						</div>
 					</div>
 				</div>

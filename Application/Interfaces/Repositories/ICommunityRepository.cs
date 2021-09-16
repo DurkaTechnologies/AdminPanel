@@ -11,6 +11,10 @@ namespace Application.Interfaces.Repositories
 
 		Task<List<Community>> GetListAsync();
 
+		Task<List<Community>> GetFreeListAsync();
+
+		Task<List<Community>> GetListByUserIdAsync(string userId);
+
 		Task<Community> GetByIdAsync(int communityId);
 
 		Task<int> InsertAsync(Community community);

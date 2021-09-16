@@ -8,23 +8,25 @@ namespace Infrastructure.Persistence.Configurations
 	{
 		public void Configure(EntityTypeBuilder<ApplicationUser> builder)
 		{
-			builder.Property(t => t.FirstName)
+			builder.Property(user => user.FirstName)
 				.HasMaxLength(30)
 				.IsRequired();
 
-			builder.Property(t => t.MiddleName)
+			builder.Property(user => user.MiddleName)
 				.HasMaxLength(30)
 				.IsRequired();
 
-			builder.Property(t => t.LastName)
+			builder.Property(user => user.LastName)
 				.HasMaxLength(30)
 				.IsRequired();
 
-			builder.Property(t => t.ProfilePicture)
+			builder.Property(user => user.ProfilePicture)
 				.HasMaxLength(256);
 
-			builder.Property(t => t.Description)
+			builder.Property(user => user.Description)
 				.HasMaxLength(5000);
+
+			builder.HasMany(user => user.Communities);
 		}
 	}
 }

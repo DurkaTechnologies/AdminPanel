@@ -6,6 +6,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 
 namespace Infrastructure.Repositories
 {
@@ -37,6 +38,15 @@ namespace Infrastructure.Repositories
 		public async Task<List<Community>> GetListAsync()
 		{
 			return await _repository.Entities.Include(c => c.District).ToListAsync();
+		}
+
+		public async Task<List<Community>> GetFreeListAsync()
+		{
+			return await _repository.Entities.Where(c => c.ApplicationUserId == null).ToListAsync();
+		}
+		public async Task<List<Community>> GetListByUserIdAsync(string userId)
+		{
+			return await _repository.Entities.Where(c => c.ApplicationUserId == userId).ToListAsync();
 		}
 
 		public async Task<int> InsertAsync(Community community)
