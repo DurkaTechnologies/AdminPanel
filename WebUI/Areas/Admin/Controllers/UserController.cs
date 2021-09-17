@@ -21,6 +21,7 @@ using Infrastructure.Identity.Models;
 using System.IO;
 using System;
 using Application.Features.Communities.Commands;
+using Application.Features.Communities.Queries.GetById;
 
 namespace WebUI.Areas.Admin
 {
@@ -148,13 +149,16 @@ namespace WebUI.Areas.Admin
 						ApplicationUserId = user.Id
 					});
 
+					var communities = _mediator.Send(new GetAllCommunitiesCachedQuery()).Result.Data;
+
 					foreach (var command in commands.ToList())
 					{
 						var communityRes = await _mediator.Send(command);
 
 						if (result.Succeeded)
 						{
-							_notify.Success($"Громада {communityRes.Data} змінена");
+							var community = _mediator.Send(new GetCommunityByIdQuery() { Id = communityRes.Data }).Result.Data;
+							_notify.Success($"Громада {community.Name} змінена");
 						}
 					}
 
