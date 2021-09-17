@@ -97,6 +97,7 @@ namespace WebUI.Areas.Admin
 							UserId = _userService.UserId,
 							Action = "Update",
 							TableName = "Roles",
+							Key = result.Id,
 							OldValues = _mapper.Map<RoleViewModel>(existingRole),
 							NewValues = role
 						};
@@ -148,6 +149,7 @@ namespace WebUI.Areas.Admin
 					Log log = new Log()
 					{
 						UserId = _userService.UserId,
+						Key = existingRole.Id,
 						Action = "Delete",
 						TableName = "Roles",
 						OldValues = _mapper.Map<RoleViewModel>(existingRole)

@@ -95,6 +95,7 @@ namespace WebUI.Areas.Entities.Controllers
                             TableName = "District",
                             OldValues = oldDistrict,
                             NewValues = district,
+                            Key = oldDistrict.Id.ToString(),
                         };
 
                         await _mediator.Send(new AddLogCommand() { Log = log });
@@ -142,6 +143,7 @@ namespace WebUI.Areas.Entities.Controllers
                     Action = "Delete",
                     TableName = "District",
                     OldValues = district,
+                    Key = district.Id.ToString()
                 };
 
                 await _mediator.Send(new AddLogCommand() { Log = log });

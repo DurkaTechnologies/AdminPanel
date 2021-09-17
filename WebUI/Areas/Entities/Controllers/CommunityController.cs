@@ -102,7 +102,8 @@ namespace WebUI.Areas.Entities.Controllers
 						UserId = _userService.UserId,
 						Action = "Update",
 						TableName = "Community",
-						OldValues = old.Data
+						OldValues = old.Data,
+						Key = id.ToString()
 					};
 
 					var updateCommunityCommand = _mapper.Map<UpdateCommunityCommand>(community);
@@ -158,7 +159,8 @@ namespace WebUI.Areas.Entities.Controllers
 						UserId = _userService.UserId,
 						Action = "Delete",
 						TableName = "Community",
-						OldValues = community
+						OldValues = community,
+						Key = community.Id.ToString()
 					};
 
 					await _mediator.Send(new AddLogCommand() { Log = log });
