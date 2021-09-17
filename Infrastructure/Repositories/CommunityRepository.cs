@@ -42,11 +42,11 @@ namespace Infrastructure.Repositories
 
 		public async Task<List<Community>> GetFreeListAsync()
 		{
-			return await _repository.Entities.Where(c => c.ApplicationUserId == null).ToListAsync();
+			return await _repository.Entities.Include(c => c.District).Where(c => c.ApplicationUserId == null).ToListAsync();
 		}
 		public async Task<List<Community>> GetListByUserIdAsync(string userId)
 		{
-			return await _repository.Entities.Where(c => c.ApplicationUserId == userId).ToListAsync();
+			return await _repository.Entities.Include(c => c.District).Where(c => c.ApplicationUserId == userId).ToListAsync();
 		}
 
 		public async Task<int> InsertAsync(Community community)

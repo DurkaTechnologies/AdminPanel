@@ -1,5 +1,4 @@
 ﻿using Application.Features.Communities.Queries.GetAllCached;
-using Application.Features.Communities.Queries.GetById;
 using Infrastructure.AuditModels;
 using WebUI.Abstractions;
 using Application.Features.Logs.Commands;
@@ -56,24 +55,23 @@ namespace WebUI.Areas.Admin
 		public async Task<IActionResult> Edit(string id)
 		{
 			UserViewModel user = _mapper.Map<UserViewModel>(await GetCurrentUser(id));
-
 			var response = await _mediator.Send(new GeUserCommunitiesQuery() { UserId = user.Id });
 
 			if (response.Succeeded)
 			{
-				user.CommunitiesSelected = response.Data.Select(c => c.Id);
-
 				var responseFree = await _mediator.Send(new GetFreeCommunitiesQuery());
 				if (responseFree.Succeeded)
 				{
-					var data = _mapper.Map<IEnumerable<CommunityViewModel>>(responseFree.Data);
-					var communities = new SelectList(data, nameof(CommunityViewModel.Id),
-						nameof(CommunityViewModel.Name), null, null);
+					var freeData = _mapper.Map<IEnumerable<CommunityViewModel>>(responseFree.Data).ToList();
+					var data = _mapper.Map<IEnumerable<CommunityViewModel>>(response.Data);
+					freeData.AddRange(data);
+					user.CommunitiesSelected = data.Select(c => c.Id).ToList();
 
-					user.CommunitiesList = communities;
+					user.CommunitiesList = new SelectList(freeData.OrderBy(x => x.District.Name).ThenBy(x => x.Name), 
+						nameof(CommunityViewModel.Id), nameof(CommunityViewModel.Name), 
+						null, "District.Name");
 				}
 				//else notif
-
 				return View(user);
 			}
 
@@ -141,8 +139,8 @@ namespace WebUI.Areas.Admin
 
 			var response = await _mediator.Send(new GetAllCommunitiesCachedQuery());
 			var data = _mapper.Map<IEnumerable<CommunityViewModel>>(response.Data);
-			var communities = new SelectList(data, nameof(CommunityViewModel.Id), nameof(CommunityViewModel.Name), null, null);
-			user.CommunitiesList = communities;
+			//var communities = new SelectList(data, nameof(CommunityViewModel.Id), nameof(CommunityViewModel.Name), null, null);
+			//user.CommunitiesList = communities;
 
 			return RedirectToAction(nameof(Index), new { Id = user.Id });
 		}
@@ -164,8 +162,11 @@ namespace WebUI.Areas.Admin
 
 		public async Task<IActionResult> ChangeProfileImage(string id)
 		{
-			return new JsonResult(new { isValid = true, 
-				html = await _viewRenderer.RenderViewToStringAsync("_ChangeImage", id) });
+			return new JsonResult(new
+			{
+				isValid = true,
+				html = await _viewRenderer.RenderViewToStringAsync("_ChangeImage", id)
+			});
 		}
 
 		[HttpPost]

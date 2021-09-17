@@ -76,19 +76,12 @@
 									</div>
 								</div>
 								<div class="form-group">
-
 									<label asp-for="@Model.CommunitiesSelected">Громада</label>
 									<select class="select2" multiple="multiple" id="CommunitiesSelected" name="CommunitiesSelected" style="width: 100%"
 											asp-for="@Model.CommunitiesSelected" asp-items="@Model.CommunitiesList">
 									</select>
 									<span asp-validation-for="CommunitiesSelected" class="text-danger"></span>
 								</div>
-								@{
-									foreach (var item in Model.CommunitiesSelected)
-									{
-										Console.WriteLine(item);
-									}
-								}
 							</div>
                             <div class="col-md-12">
                                 <div class="form-group">

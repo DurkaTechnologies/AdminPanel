@@ -76,7 +76,7 @@ namespace WebUI.Areas.Admin
 				{
 					isValid = true,
 					html = await _viewRenderer.RenderViewToStringAsync("_Create", new UserViewModel() {
-						CommunitiesList = communities
+						//CommunitiesList = communities
 					})
 				});
 			}

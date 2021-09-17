@@ -36,7 +36,7 @@ namespace WebUI.Areas.Admin.Models
 
 		public ICollection<CommunityViewModel> Communities { get; set; }
 
-		public IEnumerable<int> CommunitiesSelected { get; set; }
+		public List<int> CommunitiesSelected { get; set; }
 
 		public SelectList CommunitiesList { get; set; }
 	}
