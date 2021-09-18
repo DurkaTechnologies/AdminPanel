@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Infrastructure.AuditModels;
 using Application.Features.Logs.Commands;
+using Application.Features.Districts.Queries;
 
 namespace WebUI.Areas.Entities.Controllers
 {
@@ -23,7 +24,7 @@ namespace WebUI.Areas.Entities.Controllers
 
         public async Task<IActionResult> LoadAll()
         {
-            var response = await _mediator.Send(new GetAllDistrictsCachedQuery());
+            var response = await _mediator.Send(new GetAllDistrictsQuery());
             if (response.Succeeded)
             {
                 var viewModel = _mapper.Map<List<DistrictViewModel>>(response.Data);
@@ -104,7 +105,7 @@ namespace WebUI.Areas.Entities.Controllers
                     }
                 }
 
-                var response = await _mediator.Send(new GetAllDistrictsCachedQuery());
+                var response = await _mediator.Send(new GetAllDistrictsQuery());
 
                 if (response.Succeeded)
                 {
@@ -149,7 +150,7 @@ namespace WebUI.Areas.Entities.Controllers
                 await _mediator.Send(new AddLogCommand() { Log = log });
 
                 _notify.Success($"Район {district.Name} видалений");
-                var response = await _mediator.Send(new GetAllDistrictsCachedQuery());
+                var response = await _mediator.Send(new GetAllDistrictsQuery());
 
                 if (response.Succeeded)
                 {
