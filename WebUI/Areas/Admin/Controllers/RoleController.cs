@@ -7,8 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebUI.Areas.Admin.Models;
@@ -19,14 +17,20 @@ namespace WebUI.Areas.Admin
 	[Authorize(Roles = "SuperAdmin")]
 	public class RoleController : BaseController<RoleController>
 	{
+		#region Fields
+
 		private readonly RoleManager<IdentityRole> _roleManager;
 		private readonly UserManager<ApplicationUser> _userManager;
+
+		#endregion
 
 		public RoleController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
 		{
 			_userManager = userManager;
 			_roleManager = roleManager;
 		}
+
+		#region Main Controller Methods
 
 		public IActionResult Index()
 		{
@@ -36,12 +40,10 @@ namespace WebUI.Areas.Admin
 		public async Task<IActionResult> LoadAll()
 		{
 			var roles = await _roleManager.Roles.ToListAsync();
-			var model = _mapper.Map<IEnumerable<RoleViewModel>>(roles);
-
-			return PartialView("_ViewAll", model);
+			return PartialView("_ViewAll", _mapper.Map<IEnumerable<RoleViewModel>>(roles));
 		}
 
-		public async Task<IActionResult> OnGetCreate(string id)
+		public async Task<IActionResult> OnGetCreateOrEdit(string id)
 		{
 			if (string.IsNullOrEmpty(id))
 			{
@@ -53,31 +55,32 @@ namespace WebUI.Areas.Admin
 			}
 			else
 			{
-				var role = await _roleManager.FindByIdAsync(id);
-				var roleviewModel = _mapper.Map<RoleViewModel>(role);
+				var roleViewModel = _mapper.Map<RoleViewModel>(await _roleManager.FindByIdAsync(id));
 
 				return new JsonResult(new
 				{
 					isValid = true,
-					html = await _viewRenderer.RenderViewToStringAsync("_Create", roleviewModel)
+					html = await _viewRenderer.RenderViewToStringAsync("_Create", roleViewModel)
 				});
 			}
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> OnPostCreate(RoleViewModel role)
+		public async Task<IActionResult> OnPostCreateOrEdit(RoleViewModel role)
 		{
 			if (ModelState.IsValid)
 			{
-				var result = await _roleManager.FindByNameAsync(role.Name);
-
-				if (result == null)
+				if (await _roleManager.FindByNameAsync(role.Name) != null)
 				{
-					if (string.IsNullOrEmpty(role.Id))
-					{
-						_notify.Success($"Роль {role.Name} створено");
-						await _roleManager.CreateAsync(new IdentityRole(role.Name));
+					_notify.Information($"Роль {role.Name} вже існує");
+					return new JsonResult(new { isValid = true, html = await GetJSONRolesListAsync() });
+				}
 
+				if (string.IsNullOrEmpty(role.Id))
+				{
+					var result = await _roleManager.CreateAsync(new IdentityRole(role.Name));
+					if (result.Succeeded)
+					{
 						Log log = new Log()
 						{
 							UserId = _userService.UserId,
@@ -87,38 +90,38 @@ namespace WebUI.Areas.Admin
 						};
 
 						await _mediator.Send(new AddLogCommand() { Log = log });
+						_notify.Success($"Роль {role.Name} створено");
 					}
 					else
-					{
-						var existingRole = await _roleManager.FindByIdAsync(role.Id);
-
-						Log log = new Log()
-						{
-							UserId = _userService.UserId,
-							Action = "Update",
-							TableName = "Roles",
-							OldValues = _mapper.Map<RoleViewModel>(existingRole),
-							NewValues = role
-						};
-
-						existingRole.Name = role.Name;
-						existingRole.NormalizedName = role.Name.ToUpper();
-						await _roleManager.UpdateAsync(existingRole);
-
-						_notify.Success($"Роль {role.Name} змінено");
-						await _mediator.Send(new AddLogCommand() { Log = log });
-					}
+						_notify.Error($"Помилка при створені ролі {role.Name}");
 				}
 				else
 				{
-					_notify.Error($"Роль {role.Name} вже існує");
+					var existingRole = await _roleManager.FindByIdAsync(role.Id);
+
+					Log log = new Log()
+					{
+						UserId = _userService.UserId,
+						Action = "Update",
+						TableName = "Roles",
+						OldValues = _mapper.Map<RoleViewModel>(existingRole),
+						NewValues = role
+					};
+
+					existingRole.Name = role.Name;
+					existingRole.NormalizedName = role.Name.ToUpper();
+
+					var result = await _roleManager.UpdateAsync(existingRole);
+					if (result.Succeeded)
+					{
+						_notify.Success($"Роль {role.Name} змінено");
+						await _mediator.Send(new AddLogCommand() { Log = log });
+					}
+					else
+						_notify.Error($"Помилка при збережені змін до {role.Name}");
 				}
 
-				var roles = await _roleManager.Roles.ToListAsync();
-				var mappedRoles = _mapper.Map<IEnumerable<RoleViewModel>>(roles);
-				var html = await _viewRenderer.RenderViewToStringAsync("_ViewAll", mappedRoles);
-
-				return new JsonResult(new { isValid = true, html = html });
+				return new JsonResult(new { isValid = true, html = await GetJSONRolesListAsync() });
 			}
 			else
 			{
@@ -127,34 +130,40 @@ namespace WebUI.Areas.Admin
 			}
 		}
 
+		[HttpPost]
 		public async Task<JsonResult> OnPostDelete(string id)
 		{
 			var existingRole = await _roleManager.FindByIdAsync(id);
 
-			if (existingRole.Name != Roles.SuperAdmin.ToString())
+			if (existingRole.Name != Roles.SuperAdmin.ToString() && existingRole.Name != Roles.Worker.ToString())
 			{
-				bool roleIsNotUsed = true;
-				// stupit проверка.
 				var allUsers = await _userManager.Users.ToListAsync();
+				bool roleIsNotUsed = true;
 
 				foreach (var user in allUsers)
 					if (await _userManager.IsInRoleAsync(user, existingRole.Name))
+					{
 						roleIsNotUsed = false;
-				// до сюда
+						break;
+					}
+
 				if (roleIsNotUsed)
 				{
-					await _roleManager.DeleteAsync(existingRole);
-
-					Log log = new Log()
+					if ((await _roleManager.DeleteAsync(existingRole)).Succeeded)
 					{
-						UserId = _userService.UserId,
-						Action = "Delete",
-						TableName = "Roles",
-						OldValues = _mapper.Map<RoleViewModel>(existingRole)
-					};
+						Log log = new Log()
+						{
+							UserId = _userService.UserId,
+							Action = "Delete",
+							TableName = "Roles",
+							OldValues = _mapper.Map<RoleViewModel>(existingRole)
+						};
 
-					await _mediator.Send(new AddLogCommand() { Log = log });
-					_notify.Success($"Роль {existingRole.Name} видалено");
+						await _mediator.Send(new AddLogCommand() { Log = log });
+						_notify.Success($"Роль {existingRole.Name} видалено");
+					}
+					else
+						_notify.Error($"Помилка при видалені ролі {existingRole.Name}");
 				}
 				else
 					_notify.Error($"Роль {existingRole.Name} використовується");
@@ -162,11 +171,18 @@ namespace WebUI.Areas.Admin
 			else
 				_notify.Error($"Роль {existingRole.Name} не може бути видаленою");
 
+			return new JsonResult(new { isValid = true, html = await GetJSONRolesListAsync() });
+		}
+		#endregion
+
+		#region Other Methods
+		private async Task<string> GetJSONRolesListAsync()
+		{
 			var roles = await _roleManager.Roles.ToListAsync();
 			var mappedRoles = _mapper.Map<IEnumerable<RoleViewModel>>(roles);
-			var html = await _viewRenderer.RenderViewToStringAsync("_ViewAll", mappedRoles);
-
-			return new JsonResult(new { isValid = true, html = html });
+			return await _viewRenderer.RenderViewToStringAsync("_ViewAll", mappedRoles);
 		}
+
+		#endregion
 	}
 }
