@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using Infrastructure.Identity.Seeds;
 using System.Threading.Tasks;
+using Infrastructure.DbContexts;
 
 namespace WebUI
 {
@@ -25,11 +26,14 @@ namespace WebUI
 				{
 					var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 					var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+					var context = services.GetRequiredService<IdentityContext>();
 
 					await DefaultRoles.SeedAsync(roleManager);
 					await DefaultSuperAdminUser.SeedAsync(userManager, roleManager);
 					await DefaultAdminUser.SeedAsync(userManager, roleManager);
 					await DefaultUser.SeedAsync(userManager);
+
+					await DefaultSeed.SeedAsync(context);
 
 					logger.LogInformation("Finished Seeding Default Data");
 					logger.LogInformation("Application Starting");
