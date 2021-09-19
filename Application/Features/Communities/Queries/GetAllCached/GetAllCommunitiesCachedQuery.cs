@@ -30,6 +30,7 @@ namespace Application.Features.Communities.Queries.GetAllCached
 		{
 			var communities = await communityCache.GetCachedListAsync();
 			var mappedCommunities = mapper.Map<List<GetAllCommunitiesCachedResponse>>(communities);
+			mappedCommunities = await communityCache.FillUserName(mappedCommunities);
 			return Result<List<GetAllCommunitiesCachedResponse>>.Success(mappedCommunities);
 		}
 	}

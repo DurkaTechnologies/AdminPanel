@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Application.Features.Logs.Commands;
 using Infrastructure.AuditModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebUI.Areas.Entities.Controllers
 {

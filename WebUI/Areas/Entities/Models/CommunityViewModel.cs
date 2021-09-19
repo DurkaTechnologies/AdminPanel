@@ -14,8 +14,9 @@ namespace WebUI.Areas.Entities.Models
 		public int? DistrictId { get; set; }
 
 		public string ApplicationUserId { get; set; }
+        public string ApplicationUserName { get; set; }
 
-		public DistrictViewModel District { get; set; }
+        public DistrictViewModel District { get; set; }
 
 		public SelectList Districts { get; set; }
 	}
