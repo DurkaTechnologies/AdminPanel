@@ -19,8 +19,8 @@
         <thead>
             <tr>
                 <th>ІД</th>
-                <th>Працівник</th>
                 <th>Ім'я</th>
+                <th>Працівник</th>
                 <th>Район</th>
                 @if (delete || edit)
                 {
@@ -35,6 +35,9 @@
                     <td>
                         @community.Id
                     </td>
+                    <td>
+                        @community.Name Територіальна Громада
+                    </td>
                     @if (!String.IsNullOrEmpty(community.ApplicationUserId))
                     {
                         <td>
@@ -47,9 +50,6 @@
                             @community.ApplicationUserName
                         </td>
                     }
-                    <td>
-                        @community.Name Територіальна Громада
-                    </td>
                     @if (!String.IsNullOrEmpty(community.District.ToString()))
                     {
                         <td>

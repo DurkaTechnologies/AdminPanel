@@ -7,29 +7,39 @@
 {
 	<form id="create-form" method="post" asp-controller="Community" asp-action="OnPostCreateOrEdit" asp-route-id="@Model.Id" onsubmit="return jQueryModalPost(this);" enctype="multipart/form-data">
 		<div class="row">
-			<div class="col-md-12">
-				<div class="form-group row">
-					<label class="col-md-3 col-form-label">Ім'я громади</label>
-					<div class="col-md-9">
-						<input type="text" asp-for="Name" name="Name" class="form-control">
-						<span asp-validation-for="Name" class="text-danger"></span>
-					</div>
-				</div>
-				<div class="form-group row">
-					<label class="col-md-3 col-form-label">Район</label>
-					<div class="col-md-9">
-						<div class="input-group">
-							<select name="DistrictId" class="form-control select2bs4" id="DistrictId" asp-for="DistrictId" asp-items="@Model.Districts">
-							</select>
-						</div>
-						<span asp-validation-for="DistrictId" class="text-danger"></span>
-					</div>
-				</div>
-				<div class="form-group row">
-					<div class="col-md-3">
-					</div>
-				</div>
-			</div>
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label">Ім'я громади</label>
+                    <div class="col-md-9">
+                        <input type="text" asp-for="Name" name="Name" class="form-control">
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label">Район</label>
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <select name="DistrictId" class="form-control select2bs4" id="DistrictId" asp-for="DistrictId" asp-items="@Model.Districts">
+                            </select>
+                        </div>
+                        <span asp-validation-for="DistrictId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label">Працівник</label>
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <select name="ApplicationUserId" class="select2" style="width: 100%" id="WorkerId" asp-for="ApplicationUserId" asp-items="@Model.Users">
+                            </select>
+                        </div>
+                        <span asp-validation-for="ApplicationUserId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                    </div>
+                </div>
+            </div>
 		</div>
 		<div class="form-group justify-content-between" style="margin-bottom: 0px !important">
 			<button type="submit" class="btn btn-success">Зберегти</button>
@@ -40,9 +50,16 @@
 	@section Scripts
 	{
 		<script type="text/javascript" language=javascript>
-			$.validator.unobtrusive.parse(document);
+            $.validator.unobtrusive.parse(document);
 		</script>
 	}
+    <script type="text/javascript">
+        $('.select2').select2({
+            placeholder: "Виберіть працівника",
+            allowClear: false,
+            language: "uk"
+        });
+    </script>
 }
 else
 {

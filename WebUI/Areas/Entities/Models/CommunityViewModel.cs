@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
+using WebUI.Areas.Admin.Models;
 
 namespace WebUI.Areas.Entities.Models
 {
@@ -19,5 +20,6 @@ namespace WebUI.Areas.Entities.Models
         public DistrictViewModel District { get; set; }
 
 		public SelectList Districts { get; set; }
+		public SelectList Users { get; set; }
 	}
 }
