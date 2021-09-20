@@ -9,12 +9,21 @@ using System.Threading.Tasks;
 using Application.Features.Logs.Commands;
 using Infrastructure.AuditModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Identity;
+using Infrastructure.Identity.Models;
+using Microsoft.EntityFrameworkCore;
+using WebUI.Areas.Admin.Models;
 
 namespace WebUI.Areas.Entities.Controllers
 {
 	[Area("Entities")]
 	public class CommunityController : BaseController<CommunityController>
 	{
+		private readonly UserManager<ApplicationUser> _userManager;
+        public CommunityController(UserManager<ApplicationUser> userManager)
+        {
+			_userManager = userManager;
+        }
 		public IActionResult Index()
 		{
 			var model = new CommunityViewModel();
@@ -41,9 +50,12 @@ namespace WebUI.Areas.Entities.Controllers
 				var data = _mapper.Map<IEnumerable<DistrictViewModel>>(result.Data);
 				var districts = new SelectList(data, nameof(DistrictViewModel.Id), nameof(DistrictViewModel.Name), null, null);
 
+				var usersData = _mapper.Map<IEnumerable<UserViewModel>>(_userManager.Users.ToListAsync().Result);
+				var users = new SelectList(usersData, nameof(UserViewModel.Id), nameof(UserViewModel.FullName), null, null);
+
 				if (id == 0)
 				{
-					var communityViewModel = new CommunityViewModel() { Districts = districts };
+					var communityViewModel = new CommunityViewModel() { Districts = districts, Users = users };
 					return new JsonResult(new { isValid = true, html = await _viewRenderer.RenderViewToStringAsync("_CreateOrEdit", communityViewModel) });
 				}
 				else
@@ -53,6 +65,7 @@ namespace WebUI.Areas.Entities.Controllers
 					{
 						var communityViewModel = _mapper.Map<CommunityViewModel>(response.Data);
 						communityViewModel.Districts = districts;
+						communityViewModel.Users = users;
 						return new JsonResult(new { isValid = true, html = await _viewRenderer.RenderViewToStringAsync("_CreateOrEdit", communityViewModel) });
 					}
 					_notify.Error("Громаду не знайдено");

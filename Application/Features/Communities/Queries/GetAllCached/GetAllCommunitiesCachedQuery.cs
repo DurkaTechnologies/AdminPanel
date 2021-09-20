@@ -29,6 +29,9 @@ namespace Application.Features.Communities.Queries.GetAllCached
 		public async Task<Result<List<GetAllCommunitiesCachedResponse>>> Handle(GetAllCommunitiesCachedQuery request, CancellationToken cancellationToken)
 		{
 			var communities = await communityCache.GetCachedListAsync();
+      
+			// var mappedCommunities = mapper.Map<List<GetAllCommunitiesCachedResponse>>(communities);
+			// mappedCommunities = await communityCache.FillUserName(mappedCommunities);
 			return Result<List<GetAllCommunitiesCachedResponse>>.Success(communities);
 		}
 	}
