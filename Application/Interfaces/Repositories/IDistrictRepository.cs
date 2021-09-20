@@ -13,6 +13,8 @@ namespace Application.Interfaces.Repositories
 
 		Task<District> GetByIdAsync(int communityId);
 
+		Task<District> GetIncludeByIdAsync(int communityId);
+
 		Task<int> InsertAsync(District community);
 
 		Task UpdateAsync(District community);

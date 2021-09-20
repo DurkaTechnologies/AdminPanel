@@ -8,7 +8,11 @@ namespace Application.Interfaces.CacheRepositories
 	public interface ICommunityCacheRepository
 	{
 		Task<List<Community>> GetCachedListAsync();
+    
 		Task<List<GetAllCommunitiesCachedResponse>> FillUserName(List<GetAllCommunitiesCachedResponse> list);
+
+		Task<List<GetAllCommunitiesCachedResponse>> GetCachedListAsync();
+
 		Task<Community> GetByIdAsync(int brandId);
 	}
 }
