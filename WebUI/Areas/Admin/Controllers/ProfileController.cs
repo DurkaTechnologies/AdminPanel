@@ -159,7 +159,6 @@ namespace WebUI.Areas.Admin
 			return View(user);
 		}
 
-		[HttpPost]
 		public async Task<IActionResult> DeleteImage(string id)
 		{
 			ApplicationUser appUser = await GetCurrentUser(id);

@@ -9,51 +9,51 @@
 		<div class="row">
 			<div class="col" id="mainForm">
 				<div class="form-group row">
-					<label class="col-md-3 col-form-label">Ім'я</label>
+					<label class="col-md-3 col-form-label" asp-for="@Model.FirstName">Ім'я</label>
 					<div class="col-md-9">
-						<input type="text" asp-for="FirstName" name="FirstName" class="form-control">
-						<span asp-validation-for="FirstName" class="text-danger"></span>
+						<input asp-for="@Model.FirstName" class="form-control">
+						<span asp-validation-for="@Model.FirstName" class="text-danger"></span>
 					</div>
 				</div>
 				<div class="form-group row">
-					<label class="col-md-3 col-form-label">Прізвище</label>
+					<label class="col-md-3 col-form-label" asp-for="@Model.MiddleName">Прізвище</label>
 					<div class="col-md-9">
-						<input type="text" asp-for="MiddleName" name="MiddleName" class="form-control">
-						<span asp-validation-for="MiddleName" class="text-danger"></span>
+						<input asp-for="@Model.MiddleName" class="form-control">
+						<span asp-validation-for="@Model.MiddleName" class="text-danger"></span>
 					</div>
 				</div>
 				<div class="form-group row">
-					<label class="col-md-3 col-form-label">По Батькові</label>
+					<label class="col-md-3 col-form-label" asp-for="@Model.LastName">По Батькові</label>
 					<div class="col-md-9">
-						<input type="text" asp-for="LastName" name="LastName" class="form-control">
-						<span asp-validation-for="LastName" class="text-danger"></span>
+						<input asp-for="@Model.LastName" class="form-control">
+						<span asp-validation-for="@Model.LastName" class="text-danger"></span>
 					</div>
 				</div>
 				<div class="form-group row">
-					<label class="col-md-3 col-form-label">Пошта</label>
+					<label class="col-md-3 col-form-label" asp-for="@Model.Email">Пошта</label>
 					<div class="col-md-9">
-						<input type="email" asp-for="Email" name="Email" class="form-control">
-						<span asp-validation-for="Email" class="text-danger"></span>
+						<input asp-for="@Model.Email" class="form-control">
+						<span asp-validation-for="@Model.Email" class="text-danger"></span>
 					</div>
 				</div>
 				<div class="form-group row">
-					<label class="col-md-3 col-form-label">Телефон</label>
-
+					<label class="col-md-3 col-form-label" asp-for="@Model.PhoneNumber">Телефон</label>
 					<div class="col-md-9">
 						<div class="input-group">
 							<div class="input-group-prepend">
 								<span class="input-group-text"><i class="fas fa-phone"></i></span>
 							</div>
-							<input type="text" asp-for="PhoneNumber" name="PhoneNumber" class="form-control ukrainephone" maxlength="14">
+							<input asp-for="@Model.PhoneNumber" class="form-control ukrainephone" maxlength="14">
+							<span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
 						</div>
 					</div>
 					<!-- /.input group -->
 				</div>
 				<div class="form-group row">
-					<label class="col-md-3 col-form-label">Посилання на чат</label>
+					<label class="col-md-3 col-form-label" asp-for="@Model.Chat">Посилання на чат</label>
 					<div class="col-md-9">
-						<input type="text" asp-for="Chat" name="Chat" class="form-control">
-						<span asp-validation-for="Chat" class="text-danger"></span>
+						<input asp-for="@Model.Chat" class="form-control">
+						<span asp-validation-for="@Model.Chat" class="text-danger"></span>
 					</div>
 				</div>
 				<div class="form-group row">
@@ -70,9 +70,8 @@
 				<div class="form-group row">
 					<label class="col-md-3 col-form-label">Громада</label>
 					<div class="col-md-9">
-						<select class="select2" multiple="multiple" name="CommunitiesSelected" style="width: 100%"
-								asp-for="@Model.CommunitiesSelected" asp-items="@Model.CommunitiesList"
-								data-placeholder="Виберіть громади">
+						<select class="select2" multiple="multiple" style="width: 100%" data-placeholder="Виберіть громади"
+								asp-for="@Model.CommunitiesSelected" asp-items="@Model.CommunitiesList">
 						</select>
 						<span asp-validation-for="CommunitiesSelected" class="text-danger"></span>
 					</div>
@@ -92,7 +91,7 @@
 						</a>
 					</div>
 				</div>
-				<div class="position-relative p-4">
+				<div class="position-relative px-4 pb-4">
 					<img id="profilePicture" class="brand-image d-none" style="width: 100%; object-fit: cover;" type="file"
 						 onerror="this.onerror = null; this.src = '@Url.Content("~/images/users/default-user.png")';">
 				</div>
@@ -101,7 +100,7 @@
 
 		<div class="form-group">
 			<label class="col-form-label text-center d-block">Опис</label>
-			<textarea asp-for="Description" name="Description" class="form-control" rows="3"></textarea>
+			<textarea asp-for="Description" class="form-control" rows="3"></textarea>
 			<span asp-validation-for="Description" class="text-danger"></span>
 			<div class="col-xs-12 text-right p-2 h6 m-0">
 				<span id="lenghtContentPost"></span>
@@ -138,12 +137,12 @@
 			$uploadCrop = $('#cropper').croppie({
 				viewport: {
 					width: 300,
-          height: 300,
+					height: 300,
 					type: 'square'
 				},
 				boundary: {
-					width: 800,
-					height: 800
+					width: 400,
+					height: 400
 				},
 				showZoomer: false,
 				enforceBoundary: true,
@@ -172,7 +171,10 @@
 			$("#croppImage").on('click', function () {
 				$uploadCrop.croppie('result', {
 					type: 'blob',
-                    size: { width: 640, height: 640 }
+					size: {
+						width: 640,
+						height: 640
+					}
 				}).then(function (blob) {
 					$blob = blob;
 					var urlCreator = window.URL || window.webkitURL;
@@ -183,7 +185,9 @@
 				});
 			});
 
-			$("#create-form").submit(function () {
+			$("#create-form").submit(function (f) {
+				//$("#create-form").css('visibility', 'hidden');
+
 				var formData = new FormData(this);
 				formData.append('fileName', $('#customFile').val());
 				formData.append('blob', $blob);

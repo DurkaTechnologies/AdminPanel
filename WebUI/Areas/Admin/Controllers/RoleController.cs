@@ -166,7 +166,7 @@ namespace WebUI.Areas.Admin
 						_notify.Error($"Помилка при видалені ролі {existingRole.Name}");
 				}
 				else
-					_notify.Error($"Роль {existingRole.Name} використовується");
+					_notify.Warning($"Роль {existingRole.Name} використовується");
 			}
 			else
 				_notify.Error($"Роль {existingRole.Name} не може бути видаленою");

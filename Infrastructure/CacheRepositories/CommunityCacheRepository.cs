@@ -6,6 +6,10 @@ using Microsoft.Extensions.Caching.Distributed;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Infrastructure.CacheKeys;
+using Application.Features.Communities.Queries.GetAllCached;
+using AutoMapper.QueryableExtensions;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.CacheRepositories
 {
@@ -13,11 +17,13 @@ namespace Infrastructure.CacheRepositories
 	{
 		private readonly IDistributedCache distributedCache;
 		private readonly ICommunityRepository communityRepository;
-
-		public CommunityCacheRepository(IDistributedCache distributedCache, ICommunityRepository communityRepository)
+		private readonly IMapper mapper;
+		public CommunityCacheRepository(IDistributedCache distributedCache, 
+			ICommunityRepository communityRepository, IMapper mapper)
 		{
 			this.distributedCache = distributedCache;
 			this.communityRepository = communityRepository;
+			this.mapper = mapper;
 		}
 
 		public async Task<Community> GetByIdAsync(int communityId)
@@ -33,14 +39,17 @@ namespace Infrastructure.CacheRepositories
 			return community;
 		}
 
-		public async Task<List<Community>> GetCachedListAsync()
+		public async Task<List<GetAllCommunitiesCachedResponse>> GetCachedListAsync()
 		{
 			string cacheKey = CommunityCacheKeys.ListKey;
-			var communityList = await distributedCache.GetAsync<List<Community>>(cacheKey);
+			var communityList = await distributedCache.GetAsync<List<GetAllCommunitiesCachedResponse>>(cacheKey);
 
 			if (communityList == null)
 			{
-				communityList = await communityRepository.GetListAsync();
+				communityList = await communityRepository.GetIncludentListAsync()
+					.ProjectTo<GetAllCommunitiesCachedResponse>(mapper.ConfigurationProvider)
+					.ToListAsync();
+
 				await distributedCache.SetAsync(cacheKey, communityList);
 			}
 			return communityList;

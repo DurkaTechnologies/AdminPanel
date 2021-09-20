@@ -160,8 +160,11 @@ namespace WebUI.Areas.Admin
 					};
 
 					await _mediator.Send(new AddLogCommand() { Log = log });
-
-					var htmlData = await _viewRenderer.RenderViewToStringAsync("_ViewAll", await GetUsersExceptCurrentAsync());
+					var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+					var allUsersExceptCurrentUser = await _userManager.Users.Where(a => a.Id != currentUser.Id).ToListAsync();
+					var users = _mapper.Map<IEnumerable<UserViewModel>>(allUsersExceptCurrentUser);
+					var htmlData = await _viewRenderer.RenderViewToStringAsync("_ViewAll", users);
+					//var htmlData = await _viewRenderer.RenderViewToStringAsync("_ViewAll", await GetUsersExceptCurrentAsync());
 					return new JsonResult(new { isValid = true, html = htmlData });
 				}
 
@@ -169,10 +172,10 @@ namespace WebUI.Areas.Admin
 					_notify.Error(error.Description);
 
 				ImageService.RemoveImageFromServer(imagePath);
-				var html = await _viewRenderer.RenderViewToStringAsync("_Create", userModel);
-				return new JsonResult(new { isValid = false, html = html });
 			}
-			return default;
+
+			var html = await _viewRenderer.RenderViewToStringAsync("_Create", userModel);
+			return new JsonResult(new { isValid = false, html = html });
 		}
 
 		[HttpPost]
