@@ -118,7 +118,9 @@
 	<script>
 		$(document).ready(function () {
 			$('.select2').select2({
-				language: "uk"
+				language: "uk",
+				minimumResultsForSearch: 6,
+				placeholder: "Виберіть громади"
 			});
 			bsCustomFileInput.init();
 
@@ -136,12 +138,12 @@
 			$uploadCrop = $('#cropper').croppie({
 				viewport: {
 					width: 300,
-                    height: 300,
+          height: 300,
 					type: 'square'
 				},
 				boundary: {
-					width: 400,
-					height: 400
+					width: 800,
+					height: 800
 				},
 				showZoomer: false,
 				enforceBoundary: true,

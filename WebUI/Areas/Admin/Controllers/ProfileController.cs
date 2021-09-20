@@ -16,6 +16,7 @@ using WebUI.Areas.Admin.Models;
 using WebUI.Areas.Entities.Models;
 using WebUI.Services;
 using System.Linq;
+using Application.Features.Communities.Commands;
 
 namespace WebUI.Areas.Admin
 {
@@ -67,11 +68,11 @@ namespace WebUI.Areas.Admin
 					freeData.AddRange(data);
 					user.CommunitiesSelected = data.Select(c => c.Id).ToList();
 
-					user.CommunitiesList = new SelectList(freeData.OrderBy(x => x.District.Name).ThenBy(x => x.Name), 
-						nameof(CommunityViewModel.Id), nameof(CommunityViewModel.Name), 
+					user.CommunitiesList = new SelectList(freeData.OrderBy(x => x.District.Name).ThenBy(x => x.Name),
+						nameof(CommunityViewModel.Id), nameof(CommunityViewModel.Name),
 						null, "District.Name");
 				}
-				//else notif
+				// maybe implement notify
 				return View(user);
 			}
 
@@ -97,21 +98,32 @@ namespace WebUI.Areas.Admin
 
 				appUser.Description = user.Description;
 				appUser.Chat = user.Chat;
+				appUser.FirstName = user.FirstName;
+				appUser.MiddleName = user.MiddleName;
+				appUser.LastName = user.LastName;
 
-				if (!String.IsNullOrEmpty(user.FirstName))
-					appUser.FirstName = user.FirstName;
-				else
-					_notify.Error("Ім'я не може бути пустим");
+				var response = await _mediator.Send(new GeUserCommunitiesQuery() { UserId = user.Id });
+				if (response.Succeeded)
+				{
+					if (user.CommunitiesSelected != null)
+					{
+						var currentCommunitiesIds = response.Data.Select(c => c.Id);
 
-				if (!String.IsNullOrEmpty(user.MiddleName))
-					appUser.MiddleName = user.MiddleName;
-				else
-					_notify.Error("Прізвище не може бути пустим");
-
-				if (!String.IsNullOrEmpty(user.LastName))
-					appUser.LastName = user.LastName;
-				else
-					_notify.Error("По Батькові не може бути пустим");
+						var newCommunities = user.CommunitiesSelected.Except(currentCommunitiesIds);
+						var delCommunities = currentCommunitiesIds.Except(user.CommunitiesSelected);
+						await ExecuteUpdateCommands(GenerateUpdate(newCommunities, user.Id));
+						await ExecuteUpdateCommands(GenerateUpdate(delCommunities, null));
+					}
+					else
+					{
+						var delAll = response.Data.Select(c => new UpdateCommunityCommand()
+						{
+							Id = c.Id,
+							ApplicationUserId = null
+						});
+						await ExecuteUpdateCommands(delAll);
+					}
+				}
 
 				try
 				{
@@ -130,6 +142,7 @@ namespace WebUI.Areas.Admin
 					_notify.Success($"Користувач {user.UserName} був успішно змінений");
 
 					await _mediator.Send(new AddLogCommand() { Log = log });
+					return RedirectToAction(nameof(Index), new { Id = user.Id });
 				}
 				catch (Exception ex)
 				{
@@ -137,26 +150,32 @@ namespace WebUI.Areas.Admin
 				}
 			}
 
-			var response = await _mediator.Send(new GetAllCommunitiesCachedQuery());
-			var data = _mapper.Map<IEnumerable<CommunityViewModel>>(response.Data);
-			//var communities = new SelectList(data, nameof(CommunityViewModel.Id), nameof(CommunityViewModel.Name), null, null);
-			//user.CommunitiesList = communities;
+			var freeData = await GetAllFreeData(user.Id);
 
-			return RedirectToAction(nameof(Index), new { Id = user.Id });
+			user.CommunitiesList = new SelectList(freeData.OrderBy(x => x.District.Name).ThenBy(x => x.Name),
+				nameof(CommunityViewModel.Id), nameof(CommunityViewModel.Name),
+				null, "District.Name");
+
+			return View(user);
 		}
 
+		[HttpPost]
 		public async Task<IActionResult> DeleteImage(string id)
 		{
 			ApplicationUser appUser = await GetCurrentUser(id);
 
 			if (appUser != null && appUser.ProfilePicture != null)
 			{
-				ImageService.RemoveImageFromServer(appUser.ProfilePicture);
+				if (ImageService.RemoveImageFromServer(appUser.ProfilePicture))
+				{
+					appUser.ProfilePicture = null;
 
-				appUser.ProfilePicture = null;
-				await _userManager.UpdateAsync(appUser);
+					if ((await _userManager.UpdateAsync(appUser)).Succeeded)
+						_notify.Success($"Фото профілю успішно змінено");
+					else
+						_notify.Success($"Помилка при видалені фото");
+				}
 			}
-
 			return RedirectToAction(nameof(Index), new { Id = id });
 		}
 
@@ -176,10 +195,9 @@ namespace WebUI.Areas.Admin
 			{
 				ApplicationUser appUser = await GetCurrentUser(id);
 
-				string imagePath;
 				if (appUser != null)
 				{
-					imagePath = ImageService.UploadImageToServer(blob, Path.GetExtension(fileName));
+					string imagePath = ImageService.UploadImageToServer(blob, Path.GetExtension(fileName));
 					if (!String.IsNullOrEmpty(imagePath))
 					{
 						string oldImage = appUser.ProfilePicture;
@@ -192,8 +210,6 @@ namespace WebUI.Areas.Admin
 						else
 							ImageService.RemoveImageFromServer(imagePath);
 					}
-					else
-						return new JsonResult(new { isValid = false });
 				}
 				return new JsonResult(new { isValid = true });
 			}
@@ -203,11 +219,55 @@ namespace WebUI.Areas.Admin
 			}
 		}
 
-		private async Task<ApplicationUser> GetCurrentUser(string id)
+		private async Task<ApplicationUser> GetCurrentUser(string userId)
 		{
-			if (String.IsNullOrEmpty(id))
+			if (String.IsNullOrEmpty(userId))
 				return await _userManager.GetUserAsync(User);
-			return await _userManager.FindByIdAsync(id);
+			return await _userManager.FindByIdAsync(userId);
+		}
+
+		private async Task<IEnumerable<CommunityViewModel>> GetAllFreeData(string userId)
+		{
+			var response = await _mediator.Send(new GeUserCommunitiesQuery() { UserId = userId });
+
+			if (response.Succeeded)
+			{
+				var responseFree = await _mediator.Send(new GetFreeCommunitiesQuery());
+				if (responseFree.Succeeded)
+				{
+					var freeData = _mapper.Map<IEnumerable<CommunityViewModel>>(responseFree.Data).ToList();
+					var data = _mapper.Map<IEnumerable<CommunityViewModel>>(response.Data);
+					freeData.AddRange(data);
+					return freeData;
+				}
+			}
+			return new List<CommunityViewModel>();
+		}
+
+		private IEnumerable<UpdateCommunityCommand> GenerateUpdate(IEnumerable<int> communities, string userId)
+		{
+			return communities.Select(id => new UpdateCommunityCommand()
+			{
+				Id = id,
+				ApplicationUserId = userId
+			});
+		}
+
+		private async Task<bool> ExecuteUpdateCommands(IEnumerable<UpdateCommunityCommand> commands)
+		{
+			foreach (var command in commands)
+			{
+				var communityRes = await _mediator.Send(command);
+
+				if (!communityRes.Succeeded)
+				{
+					_notify.Error($"Помилка при редагувані громади: {communityRes.Data}");
+					return false;
+				}
+				else
+					_notify.Information($"Громада {communityRes.Data} змінена");
+			}
+			return true;
 		}
 	}
 }

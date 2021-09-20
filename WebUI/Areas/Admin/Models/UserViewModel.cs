@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using WebUI.Areas.Entities.Models;
 
@@ -39,5 +40,17 @@ namespace WebUI.Areas.Admin.Models
 		public List<int> CommunitiesSelected { get; set; }
 
 		public SelectList CommunitiesList { get; set; }
+	}
+
+	public class UserViewModelValidator : AbstractValidator<UserViewModel>
+	{
+		public UserViewModelValidator()
+		{
+			RuleFor(x => x.FirstName).NotEmpty().WithMessage("Ім'я не може бути пустим");
+			RuleFor(x => x.MiddleName).NotEmpty().WithMessage("Прізвище не може бути пустим");
+			RuleFor(x => x.LastName).NotEmpty().WithMessage("По Батькові не може бути пустим");
+			RuleFor(x => x.PhoneNumber).NotEmpty().WithMessage("Номер телефону не дійсний");
+			RuleFor(x => x.Email).EmailAddress().WithMessage("Електроний адрес не дійсний");
+		}
 	}
 }

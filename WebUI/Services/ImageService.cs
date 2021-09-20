@@ -116,12 +116,16 @@ namespace WebUI.Services
 				request.Credentials = new NetworkCredential(ENV.FTPLogin, ENV.FTPPass);
 				request.Method = WebRequestMethods.Ftp.DeleteFile;
 
-				FtpWebResponse response = (FtpWebResponse)request.GetResponse();
-				response.Close();
-				return true;
+				using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
+				{
+					response.Close();
+					return true;
+				}
 			}
-			catch (Exception)
+			catch (WebException ex)
 			{
+				if (((FtpWebResponse)ex.Response).StatusCode == FtpStatusCode.ActionNotTakenFileUnavailable)
+					return true;
 				return false;
 			}
 		}
