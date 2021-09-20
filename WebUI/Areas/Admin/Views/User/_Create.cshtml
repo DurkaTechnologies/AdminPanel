@@ -137,8 +137,8 @@
 
 			$uploadCrop = $('#cropper').croppie({
 				viewport: {
-					width: 600,
-					height: 600,
+					width: 300,
+          height: 300,
 					type: 'square'
 				},
 				boundary: {
@@ -170,7 +170,10 @@
 			document.getElementById("customFile").addEventListener("change", readFile);
 
 			$("#croppImage").on('click', function () {
-				$uploadCrop.croppie('result', 'blob').then(function (blob) {
+				$uploadCrop.croppie('result', {
+					type: 'blob',
+                    size: { width: 640, height: 640 }
+				}).then(function (blob) {
 					$blob = blob;
 					var urlCreator = window.URL || window.webkitURL;
 					var imageUrl = urlCreator.createObjectURL(blob);
