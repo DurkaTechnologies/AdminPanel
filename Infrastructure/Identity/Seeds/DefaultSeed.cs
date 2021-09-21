@@ -2,6 +2,8 @@
 using Infrastructure.DbContexts;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -94,7 +96,7 @@ namespace Infrastructure.Identity.Seeds
 
                 if (!result)
                 {
-                    IEnumerable<Community> toSet = communities.Where(x => x.DistrictId == item.Id);
+                    List<Community> toSet = communities.Where(x => x.DistrictId == item.Id).ToList();
 
                     item.Id = 0;
                     await context.Districts.AddAsync(item);
@@ -107,8 +109,17 @@ namespace Infrastructure.Identity.Seeds
 
                     context.Communities.AddRange(toSet);
                     context.SaveChanges();
+                    Info(item.Name);
                 }
             }
+        }
+
+        private static void Info(string info) 
+        {
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.Write("info: ");
+            Console.ResetColor();
+            Console.WriteLine($"Seed for : {info} created");
         }
     }
 }

@@ -56,6 +56,11 @@ namespace Infrastructure.Repositories
 			return community.Id;
 		}
 
+		public async Task<bool> CheckForeignKey(int districtId)
+		{
+			return await _repository.Entities.AnyAsync(x => x.DistrictId == districtId);
+		}
+
 		public async Task UpdateAsync(Community community)
 		{
 			await _repository.UpdateAsync(community);

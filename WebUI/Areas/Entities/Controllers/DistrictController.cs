@@ -9,10 +9,12 @@ using System.Threading.Tasks;
 using Infrastructure.AuditModels;
 using Application.Features.Logs.Commands;
 using Application.Features.Districts.Queries;
+using Application.Common.Models;
+using System;
 
 namespace WebUI.Areas.Entities.Controllers
 {
-	[Area("Entities")]
+    [Area("Entities")]
     public class DistrictController : BaseController<DistrictController>
     {
         // GET: DistrictController
@@ -133,40 +135,42 @@ namespace WebUI.Areas.Entities.Controllers
         {
             var byIdResponse = await _mediator.Send(new GetDistrictByIdQuery() { Id = id });
             var district = _mapper.Map<DistrictViewModel>(byIdResponse.Data);
+            Result<int> deleteCommand;
 
-            var deleteCommand = await _mediator.Send(new DeleteDistrictCommand { Id = id });
-
-            if (deleteCommand.Succeeded)
+            try
             {
-                Log log = new Log()
+                deleteCommand = await _mediator.Send(new DeleteDistrictCommand { Id = id });
+
+                if (deleteCommand.Succeeded)
                 {
-                    UserId = _userService.UserId,
-                    Action = "Delete",
-                    TableName = "District",
-                    OldValues = district,
-                    Key = district.Id.ToString()
-                };
+                    Log log = new Log()
+                    {
+                        UserId = _userService.UserId,
+                        Action = "Delete",
+                        TableName = "District",
+                        OldValues = district,
+                        Key = district.Id.ToString()
+                    };
 
-                await _mediator.Send(new AddLogCommand() { Log = log });
+                    await _mediator.Send(new AddLogCommand() { Log = log });
 
-                _notify.Success($"Район {district.Name} видалений");
-                var response = await _mediator.Send(new GetAllDistrictsQuery());
+                    _notify.Success($"Район {district.Name} видалений");
+                    var response = await _mediator.Send(new GetAllDistrictsQuery());
 
-                if (response.Succeeded)
-                {
-                    var viewModel = _mapper.Map<List<DistrictViewModel>>(response.Data);
-                    var html = await _viewRenderer.RenderViewToStringAsync("_ViewAll", viewModel);
-                    return new JsonResult(new { isValid = true, html = html });
+                    if (response.Succeeded)
+                    {
+                        var viewModel = _mapper.Map<List<DistrictViewModel>>(response.Data);
+                        var html = await _viewRenderer.RenderViewToStringAsync("_ViewAll", viewModel);
+                        return new JsonResult(new { isValid = true, html = html });
+                    }
                 }
-                else
-                {
-                    _notify.Error("Помилка видалення");
-                    return null;
-                }
-            }
-            else
-            {
+
                 _notify.Error("Помилка видалення");
+                return null;
+            }
+            catch (Exception)
+            {
+                _notify.Error("Помилка видалення. Район має зв'язки");
                 return null;
             }
         }
