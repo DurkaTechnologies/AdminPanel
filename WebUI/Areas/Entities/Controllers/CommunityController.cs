@@ -51,7 +51,9 @@ namespace WebUI.Areas.Entities.Controllers
 				var data = _mapper.Map<IEnumerable<DistrictViewModel>>(result.Data);
 				var districts = new SelectList(data, nameof(DistrictViewModel.Id), nameof(DistrictViewModel.Name), null, null);
 
-				var usersData = _mapper.Map<IEnumerable<UserViewModel>>(await userManager.Users.ToListAsync());
+				var appUsers = await userManager.Users.ToListAsync();
+				appUsers.Insert(0, new ApplicationUser() { Id = ""});
+				var usersData = _mapper.Map<IEnumerable<UserViewModel>>(appUsers);
 				var users = new SelectList(usersData, nameof(UserViewModel.Id), nameof(UserViewModel.FullName), null, null);
 
 				if (id == 0)

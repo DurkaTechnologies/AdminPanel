@@ -7,10 +7,10 @@
 @model UserViewModel
 
 @{
-    bool CheckEdit = true;
+	bool CheckEdit = true;
 
-    if (Model.UserName != _userService.Username)
-        CheckEdit = AuthorizationService.AuthorizeAsync(User, Permissions.Users.Edit).Result.Succeeded;
+	if (Model.UserName != _userService.Username)
+		CheckEdit = AuthorizationService.AuthorizeAsync(User, Permissions.Users.Edit).Result.Succeeded;
 }
 
 <div class="container pb-2">
@@ -41,24 +41,27 @@
 									@Model.PhoneNumber
 								</h5>
 							}
-
-							@foreach (var community in Model.Communities)
+							@if (Model.Communities?.Count != 0)
 							{
-								<h5 class="text-muted pb-2">
-									<i class="fas fa-users"></i>
-									@community.Name
-									Територіальна Громада
+								<h5 class="text-center pb-2">
+									Територіальні Громади
 								</h5>
+
+								@foreach (var community in Model.Communities)
+								{
+									<h5 class="text-muted m-0 pb-2">
+										@community.Name
+										@if (community?.District != null)
+										{
+											<span class="badge badge-info">
+												<i class="fas fa-city"></i>
+												@community?.District.Name
+												Район
+											</span>
+										}
+									</h5>
+								}
 							}
-
-							@*@if (@Model.Community?.District != null)
-							{
-								<h5 class="text-muted pb-2">
-									<i class="fas fa-city"></i>
-									@Model.Community?.District.Name
-									Район
-								</h5>
-							}*@
 						</div>
 					</div>
 				</div>
@@ -74,15 +77,15 @@
 			</div>
 		}
 	</div>
-    @if (CheckEdit)
-    {
-        <div class="d-flex justify-content-end">
-            <a id="update-profile-button ml-auto" class="btn btn-success btn-icon-split" asp-controller="Profile" asp-action="Edit" asp-route-id="@Model.Id">
-                <span class="icon text-white-50">
-                    <i class="fas fa-pen"></i>
-                </span>
-                <span class="text">Редагувати</span>
-            </a>
-        </div>
-    }
+	@if (CheckEdit)
+	{
+		<div class="d-flex justify-content-end">
+			<a id="update-profile-button ml-auto" class="btn btn-success btn-icon-split" asp-controller="Profile" asp-action="Edit" asp-route-id="@Model.Id">
+				<span class="icon text-white-50">
+					<i class="fas fa-pen"></i>
+				</span>
+				<span class="text">Редагувати</span>
+			</a>
+		</div>
+	}
 </div>

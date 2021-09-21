@@ -8,7 +8,6 @@ namespace WebUI.Areas.Entities.Models
 		public int Id { get; set; }
 
 		[Required(ErrorMessage = "Не вказано ім'я громади")]
-		[MinLength(2, ErrorMessage = "Не вказано ім'я громади")]
 		public string Name { get; set; }
 
 		[Required]
