@@ -88,11 +88,18 @@
             }
         </tbody>
     </table>
-    <script>
+	<script>
         $(document).ready(function () {
+            $('#districtFilter')
+                .find('option')
+                .remove()
+                .end()
+				.append('<option value=""></option>')
+                .val('');
+
             $("#brandTable").DataTable({
                 initComplete: function () {
-                    this.api().columns(2).every(function () {
+                    this.api().columns(3).every(function () {
                         var column = this;
                         var select = $('#districtFilter')
                             .on('change', function () {
@@ -114,7 +121,7 @@
                 },
             });;
         });
-    </script>
+	</script>
 }
 else
 {

@@ -51,9 +51,10 @@ namespace WebUI.Areas.Entities.Controllers
 		}
 
 		[HttpPost]
+		[ValidateAntiForgeryToken]
 		public async Task<JsonResult> OnPostCreateOrEdit(int id, DistrictViewModel district)
 		{
-			if (ModelState.IsValid)
+			if (ModelState.IsValid && !string.IsNullOrEmpty(district.Name))
 			{
 				if (id == 0)
 				{
@@ -62,8 +63,6 @@ namespace WebUI.Areas.Entities.Controllers
 
 					if (result.Succeeded)
 					{
-						id = result.Data;
-
 						Log log = new Log()
 						{
 							UserId = _userService.UserId,
@@ -107,17 +106,13 @@ namespace WebUI.Areas.Entities.Controllers
 				if (response.Succeeded)
 				{
 					var viewModel = _mapper.Map<List<DistrictViewModel>>(response.Data);
-					var html = await _viewRenderer.RenderViewToStringAsync("_ViewAll", viewModel);
-					return new JsonResult(new { isValid = true, html = html });
+					var htmlTable = await _viewRenderer.RenderViewToStringAsync("_ViewAll", viewModel);
+					return new JsonResult(new { isValid = true, html = htmlTable });
 				}
-				_notify.Error("Помилка створення");
-				return null;
 			}
-			else
-			{
-				var html = await _viewRenderer.RenderViewToStringAsync("_CreateOrEdit", district);
-				return new JsonResult(new { isValid = false, html = html });
-			}
+			_notify.Error("Не вказано ім'я району");
+			var html = await _viewRenderer.RenderViewToStringAsync("_CreateOrEdit", district);
+			return new JsonResult(new { isValid = false, html = html });
 		}
 
 		[HttpPost]
@@ -161,7 +156,7 @@ namespace WebUI.Areas.Entities.Controllers
 				if (deleteCommand.Data != default)
 					_notify.Error("Помилка видалення");
 				else
-					_notify.Error($"Район {district.Name} використовується");
+					_notify.Error($"{district.Name} район використовується");
 			}
 			return new JsonResult(new { isValid = false });
 		}

@@ -1,13 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FluentValidation;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebUI.Areas.Entities.Models
 {
 	public class DistrictViewModel
 	{
-		[Display(Name = "ІД")]
 		public int Id { get; set; }
 
-		[Display(Name = "Назва")]
+		[Required(ErrorMessage = "Не вказано ім'я району")]
+		[MinLength(2, ErrorMessage = "Не вказано ім'я району")]
 		public string Name { get; set; }
 	}
 }
