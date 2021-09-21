@@ -1,6 +1,17 @@
-﻿<div class="row justify-content-center">
-	<a id="reload" class="btn btn-primary text-white" href="https://github.com/DurkaTechnologies/AdminPanel/blob/master/README.md" target="_blank">
-		<i class="fa fas fa-book"></i>
-		Опис
-	</a>
+﻿@using MarkdownSharp
+@using System.IO
+
+<div class="container">
+    @{
+        string text = File.ReadAllText("../README.md");
+
+        Markdown markdown = new Markdown();
+        string html = markdown.Transform(text);
+    }
+
+    @Html.Raw(html)
+
+    <a id="reload" class="btn text-white" href="~/ReadmeFiles/unknown.png" target="_blank"></a>
+    <a id="reload" class="btn text-white" href="~/ReadmeFiles/giphy.mp4" target="_blank"></a>
+    <a id="reload" class="btn text-white" href="~/ReadmeFiles/nesalo.jpeg" target="_blank"></a>
 </div>

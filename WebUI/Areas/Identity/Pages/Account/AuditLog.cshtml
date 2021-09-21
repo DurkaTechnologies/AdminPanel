@@ -25,7 +25,7 @@
             try
             {
                 var values = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
-                var toDelete = new List<string> { "Created", "LastModified", "ProfilePicture", "Description" };
+                var toDelete = new List<string> { "Created", "LastModified", "ProfilePicture", "Description", "Id"};
 
                 foreach (var item in values)
                     if (String.IsNullOrEmpty(item.Value))

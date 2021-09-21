@@ -99,14 +99,15 @@ namespace WebUI.Areas.Admin
 				{
 					var existingRole = await _roleManager.FindByIdAsync(role.Id);
 
-					Log log = new Log()
-					{
-						UserId = _userService.UserId,
-						Action = "Update",
-						TableName = "Roles",
-						OldValues = _mapper.Map<RoleViewModel>(existingRole),
-						NewValues = role
-					};
+						Log log = new Log()
+						{
+							UserId = _userService.UserId,
+							Action = "Update",
+							TableName = "Roles",
+							Key = result.Id,
+							OldValues = _mapper.Map<RoleViewModel>(existingRole),
+							NewValues = role
+						};
 
 					existingRole.Name = role.Name;
 					existingRole.NormalizedName = role.Name.ToUpper();
@@ -151,13 +152,13 @@ namespace WebUI.Areas.Admin
 				{
 					if ((await _roleManager.DeleteAsync(existingRole)).Succeeded)
 					{
-						Log log = new Log()
-						{
-							UserId = _userService.UserId,
-							Action = "Delete",
-							TableName = "Roles",
-							OldValues = _mapper.Map<RoleViewModel>(existingRole)
-						};
+
+						UserId = _userService.UserId,
+						Key = existingRole.Id,
+						Action = "Delete",
+						TableName = "Roles",
+						OldValues = _mapper.Map<RoleViewModel>(existingRole)
+					};
 
 						await _mediator.Send(new AddLogCommand() { Log = log });
 						_notify.Success($"Роль {existingRole.Name} видалено");

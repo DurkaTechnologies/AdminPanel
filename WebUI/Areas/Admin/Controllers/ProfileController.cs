@@ -92,6 +92,7 @@ namespace WebUI.Areas.Admin
 					UserId = _userService.UserId,
 					Action = "Update",
 					TableName = "Users",
+					Key = appUser.Id,
 					OldValues = new AuditUserModel(_mapper.Map<UserViewModel>(appUser)),
 					NewValues = new AuditUserModel(user)
 				};

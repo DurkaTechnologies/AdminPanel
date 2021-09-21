@@ -8,6 +8,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Infrastructure.AuditModels;
 using Application.Features.Logs.Commands;
+using Application.Features.Districts.Queries;
+using Application.Common.Models;
+using System;
 
 namespace WebUI.Areas.Entities.Controllers
 {
@@ -22,7 +25,8 @@ namespace WebUI.Areas.Entities.Controllers
 
 		public async Task<IActionResult> LoadAll()
 		{
-			var response = await _mediator.Send(new GetAllDistrictsCachedQuery());
+			var response = await _mediator.Send(new GetAllDistrictsQuery());
+
 			if (response.Succeeded)
 			{
 				var viewModel = _mapper.Map<List<DistrictViewModel>>(response.Data);
@@ -93,6 +97,7 @@ namespace WebUI.Areas.Entities.Controllers
 							TableName = "District",
 							OldValues = oldDistrict,
 							NewValues = district,
+							Key = oldDistrict.Id.ToString(),
 						};
 
 						await _mediator.Send(new AddLogCommand() { Log = log });
@@ -101,7 +106,7 @@ namespace WebUI.Areas.Entities.Controllers
 					}
 				}
 
-				var response = await _mediator.Send(new GetAllDistrictsCachedQuery());
+				var response = await _mediator.Send(new GetAllDistrictsQuery());
 
 				if (response.Succeeded)
 				{
@@ -119,6 +124,7 @@ namespace WebUI.Areas.Entities.Controllers
 		public async Task<JsonResult> OnPostDelete(int id)
 		{
 			var byIdResponse = await _mediator.Send(new GetDistrictByIdQuery() { Id = id });
+    
 			if (!byIdResponse.Succeeded)
 			{
 				_notify.Error("Район не знайдено");
@@ -137,12 +143,13 @@ namespace WebUI.Areas.Entities.Controllers
 					Action = "Delete",
 					TableName = "District",
 					OldValues = district,
+					Key = district.Id.ToString()
 				};
 
 				await _mediator.Send(new AddLogCommand() { Log = log });
 
 				_notify.Success($"Район {district.Name} видалений");
-				var response = await _mediator.Send(new GetAllDistrictsCachedQuery());
+				var response = await _mediator.Send(new GetAllDistrictsQuery());
 
 				if (response.Succeeded)
 				{
