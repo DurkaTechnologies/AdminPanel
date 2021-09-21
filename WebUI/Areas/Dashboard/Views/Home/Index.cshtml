@@ -1,81 +1,17 @@
 ﻿@using MarkdownSharp
-@using System.IO 
+@using System.IO
 
 <div class="container">
-    @*<a id="reload" class="btn btn-primary text-white" href="https://github.com/DurkaTechnologies/AdminPanel/blob/master/README.md" target="_blank">
-        <i class="fa fas fa-book"></i>
-        Опис
-    </a>*@
-
     @{
-            string text = File.ReadAllText("../README.md");
+        string text = File.ReadAllText("../README.md");
 
-            Markdown markdown = new Markdown();
-            string html = markdown.Transform(text);
-        }
+        Markdown markdown = new Markdown();
+        string html = markdown.Transform(text);
+    }
 
-        @Html.Raw(html)
+    @Html.Raw(html)
 
-    @*<h3 id="-h3-">Посібник по користуванню панеллю адміністратора бази поліцейських ювенальної поліції</h3></h3>
-    <h3 id="-">Українська версія</h3>
-    <hr>
-    <h3 id="0-">0. Насамперед потрібно ознайомитись з базовим функціоналом таблиць.</h3>
-    <p><img src="ReadmeFiles/datatable.png" alt="datatable example"></p>
-    <p>Кнопка виділена червоним дозволяє сортувати всю таблицю за окремим полем по зростанню, або спаданню.</p>
-    <p>Пошук виділений зеленою лінією шукає зразу по всіх полях таблиці.</p>
-    <hr>
-    <h3 id="1-">1. Таблиця користувачів</h3>
-    <p>Користувачі є як поліцейськими, так і базовими користувачами. (Тобто мають змогу входити в аккаунт, та адмінуструвати базу, якщо мають для цього ролі у яких є дозволи для адміністрування.</p>
-    <p><img src="ReadmeFiles/users.png" alt="datatable example"></p>
-    <h5 id="-">Для кожного користувача можна:</h5>
-    <ul>
-        <li>Подивитись профіль та редагувати його.</li>
-        <li>Продивитись чати користувача.</li>
-        <li>Керувати ролями для користувача.</li>
-        <li>Переглянути історію користувача (А саме дії, які він робив в панелі керування).</li>
-        <li>Видалити.</li>
-        <li>Деактивувати та Активувати (При деактивації користувач не зможе зайти в систему).</li>
-    </ul>
-    <hr>
-    <h3 id="2-">2. Базові ролі</h3>
-    <ul>
-        <li>SuperAdmin - базова роль зі всіма дозволами, користувач з даною роллю має права абсолютно на все. Видавати Ролі має право тільки користувач з даною роллю.</li>
-        <li>Admin - базова роль, яку може налаштовувати користувач з роллю SuperAdmin.</li>
-        <li>Worker - роль яка дається при створенні користувача, не має дозволів. Використовується тільки для працівників, які не будуть редагувати базу. (Тобто для Поліцейських, дані яких підтягує бот).</li>
-    </ul>
-    <p>Також можна створювати ролі та налаштовувати їх.</p>
-    <hr>
-    <h3 id="3-">3. Дозволи для ролей</h3>
-    <p><img src="ReadmeFiles/roles.png" alt="datatable example"></p>
-    <p>Право налаштовувати дозволи має тільки користувач з роллю SuperAdmin.</p>
-    <p><img src="ReadmeFiles/rolespermissions.png" alt="datatable example"></p>
-    <h5 id="communities-community-">Communities (Community) - Громади</h5>
-    <h5 id="users-user-">Users (User) - Користувачі</h5>
-    <h5 id="districts-district-">Districts (District) - Райони</h5>
-    <h5 id="roles-role-">Roles (Role) - Ролі</h5>
-    <h5 id="permissions-permission-">Permissions (Permission) - Дозволи</h5>
-    <hr>
-    <h3 id="4-">4. Райони</h3>
-    <p>Можна додавати, видаляти та редагувати.</p>
-    <p><img src="ReadmeFiles/districts.png" alt="datatable example"></p>
-    <h3 id="5-">5. Громади</h3>
-    <p>Мають зв&#39;язок з таблицею Райони. Можна редагувати, додавати, видаляти, змінювати район. В таблиці також є сортування по районам для зручності (виділено червоним).</p>
-    <p><img src="ReadmeFiles/community.png" alt="datatable example"></p>
-    <hr>
-    <h3 id="6-">6. Історія</h3>
-    <p>
-        Зміна будь-якого об&#39;єкта користувачем буде додаватись в історію
-        При редагуванні виводяться нові та старі значення.
-    </p>
-    <p>При редагуванні виводяться нові та старі значення.</p>
-    <p><img src="ReadmeFiles/history1.png" alt="datatable example"></p>
-    <p>При створенні виводяться лише нові значення</p>
-    <p><img src="ReadmeFiles/history2.png" alt="datatable example"></p>
-    <p>При видаленні випадковому старі значення всерівно запишуться в історію</p>
-    <p><img src="ReadmeFiles/history3.png" alt="datatable example"></p>
-    <p>Вхід та вихід користувачів також записується в історію</p>
-    <p><img src="ReadmeFiles/history4.png" alt="datatable example"></p>
-    <p>При зміні ролей для користувачів, або ж дозволів для ролей записується старі та нові значення</p>
-    <p><img src="ReadmeFiles/history5.png" alt="datatable example"></p>*@
-
+    <a id="reload" class="btn text-white" href="~/ReadmeFiles/unknown.png" target="_blank"></a>
+    <a id="reload" class="btn text-white" href="~/ReadmeFiles/giphy.mp4" target="_blank"></a>
+    <a id="reload" class="btn text-white" href="~/ReadmeFiles/nesalo.jpeg" target="_blank"></a>
 </div>
