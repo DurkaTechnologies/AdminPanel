@@ -17,7 +17,6 @@ namespace WebUI.Areas.Entities.Controllers
 	[Area("Entities")]
 	public class DistrictController : BaseController<DistrictController>
 	{
-		// GET: DistrictController
 		public IActionResult Index()
 		{
 			var model = new DistrictViewModel();
@@ -27,6 +26,7 @@ namespace WebUI.Areas.Entities.Controllers
 		public async Task<IActionResult> LoadAll()
 		{
 			var response = await _mediator.Send(new GetAllDistrictsQuery());
+
 			if (response.Succeeded)
 			{
 				var viewModel = _mapper.Map<List<DistrictViewModel>>(response.Data);
@@ -55,9 +55,10 @@ namespace WebUI.Areas.Entities.Controllers
 		}
 
 		[HttpPost]
+		[ValidateAntiForgeryToken]
 		public async Task<JsonResult> OnPostCreateOrEdit(int id, DistrictViewModel district)
 		{
-			if (ModelState.IsValid)
+			if (ModelState.IsValid && !string.IsNullOrEmpty(district.Name))
 			{
 				if (id == 0)
 				{
@@ -66,8 +67,6 @@ namespace WebUI.Areas.Entities.Controllers
 
 					if (result.Succeeded)
 					{
-						id = result.Data;
-
 						Log log = new Log()
 						{
 							UserId = _userService.UserId,
@@ -112,67 +111,61 @@ namespace WebUI.Areas.Entities.Controllers
 				if (response.Succeeded)
 				{
 					var viewModel = _mapper.Map<List<DistrictViewModel>>(response.Data);
-					var html = await _viewRenderer.RenderViewToStringAsync("_ViewAll", viewModel);
-					return new JsonResult(new { isValid = true, html = html });
-				}
-				else
-				{
-					_notify.Error("Помилка створення");
-					return null;
+					var htmlTable = await _viewRenderer.RenderViewToStringAsync("_ViewAll", viewModel);
+					return new JsonResult(new { isValid = true, html = htmlTable });
 				}
 			}
-			else
-			{
-
-
-				var html = await _viewRenderer.RenderViewToStringAsync("_CreateOrEdit", district);
-				return new JsonResult(new { isValid = false, html = html });
-			}
+			_notify.Error("Не вказано ім'я району");
+			var html = await _viewRenderer.RenderViewToStringAsync("_CreateOrEdit", district);
+			return new JsonResult(new { isValid = false, html = html });
 		}
 
 		[HttpPost]
 		public async Task<JsonResult> OnPostDelete(int id)
 		{
 			var byIdResponse = await _mediator.Send(new GetDistrictByIdQuery() { Id = id });
+    
+			if (!byIdResponse.Succeeded)
+			{
+				_notify.Error("Район не знайдено");
+				return null;
+			}
+
 			var district = _mapper.Map<DistrictViewModel>(byIdResponse.Data);
-			Result<int> deleteCommand;
 
-			try
+			var deleteCommand = await _mediator.Send(new DeleteDistrictCommand { Id = id });
+
+			if (deleteCommand.Succeeded)
 			{
-				deleteCommand = await _mediator.Send(new DeleteDistrictCommand { Id = id });
-
-				if (deleteCommand.Succeeded)
+				Log log = new Log()
 				{
-					Log log = new Log()
-					{
-						UserId = _userService.UserId,
-						Action = "Delete",
-						TableName = "District",
-						OldValues = district,
-						Key = district.Id.ToString()
-					};
+					UserId = _userService.UserId,
+					Action = "Delete",
+					TableName = "District",
+					OldValues = district,
+					Key = district.Id.ToString()
+				};
 
-					await _mediator.Send(new AddLogCommand() { Log = log });
+				await _mediator.Send(new AddLogCommand() { Log = log });
 
-					_notify.Success($"Район {district.Name} видалений");
-					var response = await _mediator.Send(new GetAllDistrictsQuery());
+				_notify.Success($"Район {district.Name} видалений");
+				var response = await _mediator.Send(new GetAllDistrictsQuery());
 
-					if (response.Succeeded)
-					{
-						var viewModel = _mapper.Map<List<DistrictViewModel>>(response.Data);
-						var html = await _viewRenderer.RenderViewToStringAsync("_ViewAll", viewModel);
-						return new JsonResult(new { isValid = true, html = html });
-					}
+				if (response.Succeeded)
+				{
+					var viewModel = _mapper.Map<List<DistrictViewModel>>(response.Data);
+					var html = await _viewRenderer.RenderViewToStringAsync("_ViewAll", viewModel);
+					return new JsonResult(new { isValid = true, html = html });
 				}
-
-				_notify.Error("Помилка видалення");
-				return null;
 			}
-			catch (Exception)
+			else
 			{
-				_notify.Error("Помилка видалення. Район має зв'язки");
-				return null;
+				if (deleteCommand.Data != default)
+					_notify.Error("Помилка видалення");
+				else
+					_notify.Error($"{district.Name} район використовується");
 			}
+			return new JsonResult(new { isValid = false });
 		}
 	}
 }

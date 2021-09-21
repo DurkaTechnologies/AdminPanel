@@ -9,12 +9,22 @@ using System.Threading.Tasks;
 using Application.Features.Logs.Commands;
 using Infrastructure.AuditModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Identity;
+using Infrastructure.Identity.Models;
+using Microsoft.EntityFrameworkCore;
+using WebUI.Areas.Admin.Models;
 
 namespace WebUI.Areas.Entities.Controllers
 {
 	[Area("Entities")]
 	public class CommunityController : BaseController<CommunityController>
 	{
+		private readonly UserManager<ApplicationUser> userManager;
+        public CommunityController(UserManager<ApplicationUser> userManager)
+        {
+			this.userManager = userManager;
+        }
+
 		public IActionResult Index()
 		{
 			var model = new CommunityViewModel();
@@ -26,7 +36,7 @@ namespace WebUI.Areas.Entities.Controllers
 			var response = await _mediator.Send(new GetAllCommunitiesCachedQuery());
 			if (response.Succeeded)
 			{
-				var viewModel = _mapper.Map<List<CommunityViewModel>>(response.Data);
+				var viewModel = _mapper.Map<List<CommunityViewModel>>(await FillUserName(response.Data));
 				return PartialView("_ViewAll", viewModel);
 			}
 			return null;
@@ -41,9 +51,14 @@ namespace WebUI.Areas.Entities.Controllers
 				var data = _mapper.Map<IEnumerable<DistrictViewModel>>(result.Data);
 				var districts = new SelectList(data, nameof(DistrictViewModel.Id), nameof(DistrictViewModel.Name), null, null);
 
+				var appUsers = await userManager.Users.ToListAsync();
+				appUsers.Insert(0, new ApplicationUser() { Id = ""});
+				var usersData = _mapper.Map<IEnumerable<UserViewModel>>(appUsers);
+				var users = new SelectList(usersData, nameof(UserViewModel.Id), nameof(UserViewModel.FullName), null, null);
+
 				if (id == 0)
 				{
-					var communityViewModel = new CommunityViewModel() { Districts = districts };
+					var communityViewModel = new CommunityViewModel() { Districts = districts, Users = users };
 					return new JsonResult(new { isValid = true, html = await _viewRenderer.RenderViewToStringAsync("_CreateOrEdit", communityViewModel) });
 				}
 				else
@@ -53,6 +68,7 @@ namespace WebUI.Areas.Entities.Controllers
 					{
 						var communityViewModel = _mapper.Map<CommunityViewModel>(response.Data);
 						communityViewModel.Districts = districts;
+						communityViewModel.Users = users;
 						return new JsonResult(new { isValid = true, html = await _viewRenderer.RenderViewToStringAsync("_CreateOrEdit", communityViewModel) });
 					}
 					_notify.Error("Громаду не знайдено");
@@ -67,7 +83,7 @@ namespace WebUI.Areas.Entities.Controllers
 		[HttpPost]
 		public async Task<JsonResult> OnPostCreateOrEdit(int id, CommunityViewModel community)
 		{
-			if (ModelState.IsValid)
+			if (ModelState.IsValid && !string.IsNullOrEmpty(community.Name))
 			{
 				if (id == 0)
 				{
@@ -76,8 +92,6 @@ namespace WebUI.Areas.Entities.Controllers
 
 					if (result.Succeeded)
 					{
-						id = result.Data;
-
 						Log log = new Log()
 						{
 							UserId = _userService.UserId,
@@ -123,20 +137,14 @@ namespace WebUI.Areas.Entities.Controllers
 				if (response.Succeeded)
 				{
 					var viewModel = _mapper.Map<List<CommunityViewModel>>(response.Data);
-					var html = await _viewRenderer.RenderViewToStringAsync("_ViewAll", viewModel);
-					return new JsonResult(new { isValid = true, html = html });
+					var htmlTable = await _viewRenderer.RenderViewToStringAsync("_ViewAll", viewModel);
+					return new JsonResult(new { isValid = true, html = htmlTable });
 				}
-				else
-				{
-					_notify.Error("Помилка створення");
-					return null;
-				}
+				
 			}
-			else
-			{
-				var html = await _viewRenderer.RenderViewToStringAsync("_CreateOrEdit", community);
-				return new JsonResult(new { isValid = false, html = html });
-			}
+			_notify.Error("Не вказано ім'я громади");
+			var html = await _viewRenderer.RenderViewToStringAsync("_CreateOrEdit", community);
+			return new JsonResult(new { isValid = false, html = html });
 		}
 
 		[HttpPost]
@@ -169,17 +177,22 @@ namespace WebUI.Areas.Entities.Controllers
 					var html = await _viewRenderer.RenderViewToStringAsync("_ViewAll", viewModel);
 					return new JsonResult(new { isValid = true, html = html });
 				}
-				else
-				{
-					_notify.Error("Помилка видалення");
-					return null;
-				}
 			}
-			else
+			_notify.Error("Помилка видалення");
+			return new JsonResult(new { isValid = false });
+		}
+
+		private async Task<List<GetAllCommunitiesCachedResponse>> FillUserName(List<GetAllCommunitiesCachedResponse> list)
+		{
+			foreach (var el in list)
 			{
-				_notify.Error("Помилка видалення");
-				return null;
+				ApplicationUser user = await userManager.FindByIdAsync(el.ApplicationUserId);
+				if (user == null)
+					el.ApplicationUserName = "Громада вільна";
+				else
+					el.ApplicationUserName = user.LastName + " " + user.FirstName;
 			}
+			return list;
 		}
 	}
 }

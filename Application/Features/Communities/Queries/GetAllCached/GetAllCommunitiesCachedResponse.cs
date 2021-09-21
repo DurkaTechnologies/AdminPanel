@@ -6,6 +6,10 @@
 
 		public string Name { get; set; }
 
-		public GetAllDistrictsCachedResponse District { get; set; }
+        public string ApplicationUserId { get; set; }
+
+        public string ApplicationUserName { get; set; }
+
+        public GetAllDistrictsCachedResponse District { get; set; }
 	}
 }

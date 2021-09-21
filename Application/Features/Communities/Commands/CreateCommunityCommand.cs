@@ -13,6 +13,7 @@ namespace Application.Features.Communities.Commands
 		public string Name { get; set; }
 
 		public int? DistrictId { get; set; }
+		public string ApplicationUserId{ get; set; }
 
 		public class CreateCommunityCommandHandler : IRequestHandler<CreateCommunityCommand, Result<int>>
 		{

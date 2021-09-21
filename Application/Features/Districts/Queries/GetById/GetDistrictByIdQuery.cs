@@ -1,5 +1,6 @@
 ﻿using Application.Common.Models;
 using Application.Interfaces.CacheRepositories;
+using Application.Interfaces.Repositories;
 using AutoMapper;
 using MediatR;
 using System.Threading;
@@ -13,10 +14,10 @@ namespace Application.Features.Communities.Queries.GetById
 
 		public class GetDistrictByIdQueryHandler : IRequestHandler<GetDistrictByIdQuery, Result<GetDistrictByIdResponse>>
 		{
-			private readonly IDistrictCacheRepository districtCache;
+			private readonly IDistrictRepository districtCache;
 			private readonly IMapper mapper;
 
-			public GetDistrictByIdQueryHandler(IDistrictCacheRepository districtCache, IMapper mapper)
+			public GetDistrictByIdQueryHandler(IDistrictRepository districtCache, IMapper mapper)
 			{
 				this.districtCache = districtCache;
 				this.mapper = mapper;
