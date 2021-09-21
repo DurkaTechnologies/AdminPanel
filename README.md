@@ -6,7 +6,7 @@ ___
 
 ### 0. Насамперед потрібно ознайомитись з базовим функціоналом таблиць.
 
-![datatable example](ReadmeFiles/datatable.png)
+![приклад таблиці](ReadmeFiles/datatable.png)
 
 Кнопка виділена червоним дозволяє сортувати всю таблицю за окремим полем по зростанню, або спаданню.
 
@@ -18,7 +18,7 @@ ___
 
 Користувачі є як поліцейськими, так і базовими користувачами. (Тобто мають змогу входити в аккаунт, та адмінуструвати базу, якщо мають для цього ролі у яких є дозволи для адміністрування.
 
-![datatable example](ReadmeFiles/users.png)
+![приклад таблиці користувачів](ReadmeFiles/users.png)
 
 ##### Для кожного користувача можна:
 * Подивитись профіль та редагувати його.
@@ -42,11 +42,11 @@ ___
 
 ### 3. Дозволи для ролей
 
-![datatable example](ReadmeFiles/roles.png)
+![приклад таблиці ролей](ReadmeFiles/roles.png)
 
 Право налаштовувати дозволи має тільки користувач з роллю SuperAdmin.
 
-![datatable example](ReadmeFiles/rolespermissions.png)
+![приклад таблиці дозволів](ReadmeFiles/rolespermissions.png)
 
 ##### Communities (Community) - Громади
 ##### Users (User) - Користувачі
@@ -60,13 +60,13 @@ ___
 
 Можна додавати, видаляти та редагувати.
 
-![datatable example](ReadmeFiles/districts.png)
+![приклад таблиці районів](ReadmeFiles/districts.png)
 
 ### 5. Громади
 
 Мають зв'язок з таблицею Райони. Можна редагувати, додавати, видаляти, змінювати район. В таблиці також є сортування по районам для зручності (виділено червоним).
 
-![datatable example](ReadmeFiles/community.png)
+![приклад таблиці громад](ReadmeFiles/community.png)
 
 ___
 
@@ -77,20 +77,20 @@ ___
 
 При редагуванні виводяться нові та старі значення.
 
-![datatable example](ReadmeFiles/history1.png)
+![приклад історії редагування](ReadmeFiles/history1.png)
 
 При створенні виводяться лише нові значення
 
-![datatable example](ReadmeFiles/history2.png)
+![приклад історії створення](ReadmeFiles/history2.png)
 
 При видаленні випадковому старі значення всерівно запишуться в історію
 
-![datatable example](ReadmeFiles/history3.png)
+![приклад історії видалення](ReadmeFiles/history3.png)
 
 Вхід та вихід користувачів також записується в історію
 
-![datatable example](ReadmeFiles/history4.png)
+![приклад історії входу](ReadmeFiles/history4.png)
 
 При зміні ролей для користувачів, або ж дозволів для ролей записується старі та нові значення
 
-![datatable example](ReadmeFiles/history5.png)
+![приклад історії зміни ролей](ReadmeFiles/history5.png)
