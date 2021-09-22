@@ -63,7 +63,7 @@ namespace WebUI.Areas.Entities.Controllers
 				}
 				else
 				{
-					var response = await _mediator.Send(new GetCommunityByIdQuery() { Id = id });
+					var response = await _mediator.Send(new GetCommunityByIdNotCacheQuery() { Id = id });
 					if (response.Succeeded)
 					{
 						var communityViewModel = _mapper.Map<CommunityViewModel>(response.Data);
@@ -136,7 +136,7 @@ namespace WebUI.Areas.Entities.Controllers
 
 				if (response.Succeeded)
 				{
-					var viewModel = _mapper.Map<List<CommunityViewModel>>(response.Data);
+					var viewModel = _mapper.Map<List<CommunityViewModel>>(await FillUserName(response.Data));
 					var htmlTable = await _viewRenderer.RenderViewToStringAsync("_ViewAll", viewModel);
 					return new JsonResult(new { isValid = true, html = htmlTable });
 				}
@@ -173,7 +173,7 @@ namespace WebUI.Areas.Entities.Controllers
 
 					await _mediator.Send(new AddLogCommand() { Log = log });
 
-					var viewModel = _mapper.Map<List<CommunityViewModel>>(response.Data);
+					var viewModel = _mapper.Map<List<CommunityViewModel>>(await FillUserName(response.Data));
 					var html = await _viewRenderer.RenderViewToStringAsync("_ViewAll", viewModel);
 					return new JsonResult(new { isValid = true, html = html });
 				}

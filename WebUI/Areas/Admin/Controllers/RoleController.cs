@@ -79,6 +79,7 @@ namespace WebUI.Areas.Admin
 				if (string.IsNullOrEmpty(role.Id))
 				{
 					var result = await _roleManager.CreateAsync(new IdentityRole(role.Name));
+
 					if (result.Succeeded)
 					{
 						Log log = new Log()
@@ -104,7 +105,7 @@ namespace WebUI.Areas.Admin
 							UserId = _userService.UserId,
 							Action = "Update",
 							TableName = "Roles",
-							Key = result.Id,
+							Key = existingRole.Id,
 							OldValues = _mapper.Map<RoleViewModel>(existingRole),
 							NewValues = role
 						};
@@ -153,12 +154,14 @@ namespace WebUI.Areas.Admin
 					if ((await _roleManager.DeleteAsync(existingRole)).Succeeded)
 					{
 
-						UserId = _userService.UserId,
-						Key = existingRole.Id,
-						Action = "Delete",
-						TableName = "Roles",
-						OldValues = _mapper.Map<RoleViewModel>(existingRole)
-					};
+						Log log = new Log()
+						{
+							UserId = _userService.UserId,
+							Key = existingRole.Id,
+							Action = "Delete",
+							TableName = "Roles",
+							OldValues = _mapper.Map<RoleViewModel>(existingRole)
+						};
 
 						await _mediator.Send(new AddLogCommand() { Log = log });
 						_notify.Success($"Роль {existingRole.Name} видалено");

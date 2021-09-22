@@ -17,6 +17,7 @@ using WebUI.Areas.Entities.Models;
 using WebUI.Services;
 using System.Linq;
 using Application.Features.Communities.Commands;
+using Application.Features.Communities.Queries.GetById;
 
 namespace WebUI.Areas.Admin
 {
@@ -257,15 +258,37 @@ namespace WebUI.Areas.Admin
 		{
 			foreach (var command in commands)
 			{
+				var result = await _mediator.Send(new GetCommunityByIdNotCacheQuery() { Id = command.Id });
+				if (!result.Succeeded)
+				{
+					_notify.Error($"Громаду з індексом {command.Id} не знайдено");
+					return false;
+				}
+
+				var community = result.Data;
 				var communityRes = await _mediator.Send(command);
 
 				if (!communityRes.Succeeded)
 				{
-					_notify.Error($"Помилка при редагувані громади: {communityRes.Data}");
+					_notify.Error($"Помилка при редагувані громади: {community.Name}");
 					return false;
 				}
 				else
-					_notify.Information($"Громада {communityRes.Data} змінена");
+				{
+					Log log = new Log()
+					{
+						UserId = _userService.UserId,
+						Action = "Update",
+						TableName = "Community",
+						OldValues = _mapper.Map<CommunityViewModel>(community),
+						NewValues = _mapper.Map<CommunityViewModel>(command),
+						Key = community.Id.ToString()
+					};
+
+					await _mediator.Send(new AddLogCommand() { Log = log });
+
+					_notify.Information($"{community.Name} громада змінена");
+				}
 			}
 			return true;
 		}
