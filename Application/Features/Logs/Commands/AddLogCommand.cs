@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Models;
 using Domain.Common.Interfaces;
+using System;
 
 namespace Application.Features.Logs.Commands
 {
@@ -26,9 +27,19 @@ namespace Application.Features.Logs.Commands
 
 		public async Task<Result<int>> Handle(AddLogCommand request, CancellationToken cancellationToken)
 		{
-			await logRepository.AddLogAsync(request.Log);
-			await unitOfWork.CommitApplicationDb(cancellationToken);
-			return Result<int>.Success(1);
+			try
+			{
+				await logRepository.AddLogAsync(request.Log);
+				var id = await unitOfWork.CommitApplicationDb(cancellationToken);
+				if (id == 0)
+					return Result<int>.Failure();
+				return Result<int>.Success(id);
+			}
+			catch (Exception)
+			{
+				return Result<int>.Failure();
+			}
+
 		}
 	}
 }

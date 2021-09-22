@@ -27,20 +27,11 @@ namespace Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("CreatedBy")
+                    b.Property<string>("ApplicationUserId")
                         .HasColumnType("text");
 
                     b.Property<int?>("DistrictId")
                         .HasColumnType("integer");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -48,6 +39,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("character varying(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("DistrictId");
 
@@ -81,9 +74,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("Chat")
                         .HasColumnType("text");
-
-                    b.Property<int?>("CommunityId")
-                        .HasColumnType("integer");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -156,8 +146,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("character varying(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CommunityId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -351,20 +339,15 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Community", b =>
                 {
+                    b.HasOne("Infrastructure.Identity.Models.ApplicationUser", null)
+                        .WithMany("Communities")
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("Domain.Entities.District", "District")
                         .WithMany()
                         .HasForeignKey("DistrictId");
 
                     b.Navigation("District");
-                });
-
-            modelBuilder.Entity("Infrastructure.Identity.Models.ApplicationUser", b =>
-                {
-                    b.HasOne("Domain.Entities.Community", "Community")
-                        .WithMany()
-                        .HasForeignKey("CommunityId");
-
-                    b.Navigation("Community");
                 });
 
             modelBuilder.Entity("Infrastructure.Identity.Models.Correspondence", b =>
@@ -440,6 +423,8 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Infrastructure.Identity.Models.ApplicationUser", b =>
                 {
+                    b.Navigation("Communities");
+
                     b.Navigation("Correspondences");
                 });
 

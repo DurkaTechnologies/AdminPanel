@@ -59,29 +59,30 @@
                                     <span asp-validation-for="@Model.LastName" class="text-danger"></span>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label asp-for="@Model.Email">Пошта</label>
-                                    <input asp-for="@Model.Email" class="form-control" />
-                                    <span asp-validation-for="@Model.Email" class="text-danger"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label asp-for="@Model.PhoneNumber">Телефон</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                                        </div>
-                                        <input type="text" asp-for="@Model.PhoneNumber" class="form-control ukrainephone" maxlength="14">
-                                        <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label asp-for="@Model.CommunityId">Громада</label>
-                                    <select name="CommunityId" class="form-control select2bs4" id="CommunityId" asp-for="CommunityId" asp-items="@Model.Communities">
-                                    </select>
-                                    <span asp-validation-for="CommunityId" class="text-danger"></span>
-                                </div>
-                            </div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label asp-for="@Model.Email">Пошта</label>
+									<input asp-for="@Model.Email" class="form-control" />
+									<span asp-validation-for="@Model.Email" class="text-danger"></span>
+								</div>
+								<div class="form-group">
+									<label asp-for="@Model.PhoneNumber">Телефон</label>
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text"><i class="fas fa-phone"></i></span>
+										</div>
+										<input type="text" asp-for="@Model.PhoneNumber" class="form-control ukrainephone" maxlength="14">
+										<span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
+									</div>
+								</div>
+								<div class="form-group">
+									<label asp-for="@Model.CommunitiesSelected">Громада</label>
+									<select class="select2" multiple="multiple" id="CommunitiesSelected" name="CommunitiesSelected" style="width: 100%"
+											asp-for="@Model.CommunitiesSelected" asp-items="@Model.CommunitiesList">
+									</select>
+									<span asp-validation-for="CommunitiesSelected" class="text-danger"></span>
+								</div>
+							</div>
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label asp-for="@Model.Chat">Посилання на чат</label>
@@ -119,6 +120,11 @@
 <script src="~/js/summernote.js"></script>
 <script>
 	$(document).ready(function () {
+		$('.select2').select2({
+			language: "uk",
+			minimumResultsForSearch: 5,
+			placeholder: "Виберіть громади"
+		});
 		//registerSummernote('#summernote', 5000, function (max) {
 		//	$('#lenghtContentPost').text(max)
 		//}, 400, 400);d

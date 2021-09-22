@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Authorization;
 using WebUI.Permission;
 using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebUI
 {
@@ -41,6 +42,16 @@ namespace WebUI
 				o.DurationInSeconds = 10;
 				o.IsDismissable = true;
 				o.HasRippleEffect = true;
+			});
+
+			services.Configure<IdentityOptions>(options =>
+			{
+				options.Password.RequireDigit = false;
+				options.Password.RequireLowercase = false;
+				options.Password.RequireNonAlphanumeric = false;
+				options.Password.RequireUppercase = false;
+				options.Password.RequiredLength = 0;
+				options.Password.RequiredUniqueChars = 0;
 			});
 
 			services.AddApplicationLayer();

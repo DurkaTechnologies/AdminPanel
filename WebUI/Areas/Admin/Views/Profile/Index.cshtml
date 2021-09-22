@@ -7,16 +7,16 @@
 @model UserViewModel
 
 @{
-    bool CheckEdit = true;
+	bool CheckEdit = true;
 
-    if (Model.UserName != _userService.Username)
-        CheckEdit = AuthorizationService.AuthorizeAsync(User, Permissions.Users.Edit).Result.Succeeded;
+	if (Model.UserName != _userService.Username)
+		CheckEdit = AuthorizationService.AuthorizeAsync(User, Permissions.Users.Edit).Result.Succeeded;
 }
 
 <div class="container pb-2">
 	<div class="row">
-		<div class="col-xl-5 col-lg-6">
-			<div class="card">
+		<div class="col-xl-5 col-lg-6 p-2">
+			<div class="card mb-0">
 				<div class="row d-flex justify-content-center">
 					<div class="col-sm-4 col-md-4 col-lg-10 position-relative p-4">
 						@if (Model.ProfilePicture != null)
@@ -30,32 +30,42 @@
 						}
 					</div>
 					<div class="col-12 col-sm-8 col-md-8 col-lg-12 d-flex align-items-center justify-content-lg-center justify-content-center justify-content-sm-start">
-						<div class="pb-4">
+						<div class="py-4">
 							<h3 class="profile-username text-center pb-2">@Model.FirstName @Model.MiddleName @Model.LastName</h3>
 							<h5 class="text-muted pb-2"><i class="fas fa-mail-bulk"></i> @Model.Email</h5>
 
-                            @if (!String.IsNullOrEmpty(Model.PhoneNumber))
-                            {
-                                <h5 class="text-muted pb-2">
-                                    <i class="fas fa-phone"></i>
-                                    @Model.PhoneNumber
-                                </h5>
-                            }
-							@if (@Model.Community != null)
+							@if (!String.IsNullOrEmpty(Model.PhoneNumber))
 							{
 								<h5 class="text-muted pb-2">
-									<i class="fas fa-users"></i>
-									@Model.Community.Name
-									Територіальна Громада
+									<i class="fas fa-phone"></i>
+									@Model.PhoneNumber
 								</h5>
 							}
-
-							@if (@Model.Community?.District != null)
+							@if (Model.Communities?.Count != 0)
 							{
-								<h5 class="text-muted pb-2">
-									<i class="fas fa-city"></i>
-									@Model.Community?.District.Name
-									Район
+								<h5 class="text-center pb-2">
+									Територіальні Громади
+								</h5>
+
+								@foreach (var community in Model.Communities)
+								{
+									<h5 class="text-muted m-0 pb-2">
+										@community.Name
+										@if (community?.District != null)
+										{
+											<span class="badge badge-info">
+												<i class="fas fa-city"></i>
+												@community?.District.Name
+												Район
+											</span>
+										}
+									</h5>
+								}
+							}
+							else
+							{
+								<h5 class="text-muted text-center pb-2">
+									Немає територіальних громад
 								</h5>
 							}
 						</div>
@@ -65,23 +75,39 @@
 		</div>
 		@if (!String.IsNullOrEmpty(Model.Description))
 		{
-			<div class="col-xl-7 col-lg-6">
-				<div class="card p-4">
-					<label class="col-form-label text-center d-block">Опис</label>
+			<div class="col-xl-7 col-lg-6 p-2">
+				<div class="card p-4 m-0">
+					<h4 class="text-center d-block">Опис</h4>
+
 					@Html.Raw(Model.Description)
 				</div>
+				@if (CheckEdit)
+				{
+					<div class="d-flex justify-content-end my-3">
+						<a class="btn btn-secondary btn-icon-split" href="#" data-toggle="modal" data-target="#logoutModal">
+							<span class="icon text-white-50">
+								<i class="fas fa-sign-out-alt"></i>
+							</span>
+							<span class="text">Вийти</span>
+						</a>
+
+						<a asp-area="Identity" asp-page="/Account/AuditLog" asp-route-id="current" class="btn btn-primary btn-icon-split ml-3">
+							<span class="icon text-white-50">
+								<i class="fas fa-list"></i>
+							</span>
+							<span class="text">Історія дій</span>
+						</a>
+
+						<a asp-controller="Profile" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success btn-icon-split ml-3">
+							<span class="icon text-white-50">
+								<i class="fas fa-pen"></i>
+							</span>
+							<span class="text">Редагувати</span>
+						</a>
+					</div>
+				}
 			</div>
 		}
 	</div>
-    @if (CheckEdit)
-    {
-        <div class="d-flex justify-content-end">
-            <a id="update-profile-button ml-auto" class="btn btn-success btn-icon-split" asp-controller="Profile" asp-action="Edit" asp-route-id="@Model.Id">
-                <span class="icon text-white-50">
-                    <i class="fas fa-pen"></i>
-                </span>
-                <span class="text">Редагувати</span>
-            </a>
-        </div>
-    }
+
 </div>

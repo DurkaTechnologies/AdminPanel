@@ -31,7 +31,12 @@ namespace Infrastructure.Repositories
 
 		public async Task<District> GetByIdAsync(int districtId)
 		{
-			return await _repository.Entities.Where(p => p.Id == districtId).FirstOrDefaultAsync();
+			return await _repository.Entities.Where(d => d.Id == districtId).FirstOrDefaultAsync();
+		}
+
+		public async Task<District> GetIncludeByIdAsync(int districtId)
+		{
+			return await _repository.Entities.Where(d => d.Id == districtId).Include(d => d.Communities).FirstOrDefaultAsync();
 		}
 
 		public async Task<List<District>> GetListAsync()

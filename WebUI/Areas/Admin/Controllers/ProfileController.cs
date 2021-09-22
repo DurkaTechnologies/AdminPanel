@@ -1,5 +1,4 @@
 ﻿using Application.Features.Communities.Queries.GetAllCached;
-using Application.Features.Communities.Queries.GetById;
 using Infrastructure.AuditModels;
 using WebUI.Abstractions;
 using Application.Features.Logs.Commands;
@@ -16,11 +15,13 @@ using System.Threading.Tasks;
 using WebUI.Areas.Admin.Models;
 using WebUI.Areas.Entities.Models;
 using WebUI.Services;
+using System.Linq;
+using Application.Features.Communities.Commands;
 
 namespace WebUI.Areas.Admin
 {
 	[Area("Admin")]
-	public class ProfileController : BaseController<ProfileController>
+	public class ProfileController : BaseUserController<ProfileController>
 	{
 		private readonly UserManager<ApplicationUser> _userManager;
 		private readonly IWebHostEnvironment _webHostEnvironment;
@@ -37,31 +38,41 @@ namespace WebUI.Areas.Admin
 		public async Task<IActionResult> Index(string id)
 		{
 			UserViewModel user = _mapper.Map<UserViewModel>(await GetCurrentUser(id));
-			var response = await _mediator.Send(new GetCommunityByIdQuery() { Id = user.CommunityId });
+			var response = await _mediator.Send(new GeUserCommunitiesQuery() { UserId = user.Id });
 
 			if (response.Succeeded)
-			{
-				user.Community = _mapper.Map<CommunityViewModel>(response.Data);
-				if (user.Community != null)
-				{
-					var result = await _mediator.Send(new GetDistrictByIdQuery() { Id = (int)user.Community?.DistrictId });
-					if (result.Succeeded)
-						user.Community.District = _mapper.Map<DistrictViewModel>(result.Data);
-				}
-			}
+				user.Communities = _mapper.Map<List<CommunityViewModel>>(response.Data);
+			else
+				_notify.Success($"Помилка при завантажені громад користувача");
+
 			return View(user);
 		}
 
 		public async Task<IActionResult> Edit(string id)
 		{
 			UserViewModel user = _mapper.Map<UserViewModel>(await GetCurrentUser(id));
+			var response = await _mediator.Send(new GeUserCommunitiesQuery() { UserId = user.Id });
 
-			var response = await _mediator.Send(new GetAllCommunitiesCachedQuery());
-			var data = _mapper.Map<IEnumerable<CommunityViewModel>>(response.Data);
-			var communities = new SelectList(data, nameof(CommunityViewModel.Id), nameof(CommunityViewModel.Name), null, null);
-			user.Communities = communities;
+			if (response.Succeeded)
+			{
+				var responseFree = await _mediator.Send(new GetFreeCommunitiesQuery());
+				if (responseFree.Succeeded)
+				{
+					var freeData = _mapper.Map<IEnumerable<CommunityViewModel>>(responseFree.Data).ToList();
+					var data = _mapper.Map<IEnumerable<CommunityViewModel>>(response.Data);
+					freeData.AddRange(data);
+					user.CommunitiesSelected = data.Select(c => c.Id).ToList();
 
-			return View(user);
+					user.CommunitiesList = new SelectList(freeData.OrderBy(x => x.District.Name).ThenBy(x => x.Name),
+						nameof(CommunityViewModel.Id), nameof(CommunityViewModel.Name),
+						null, "District.Name");
+				}
+				// maybe implement notify
+				return View(user);
+			}
+
+			_notify.Error("Помилка завантаження громад");
+			return null;
 		}
 
 		[HttpPost]
@@ -76,28 +87,39 @@ namespace WebUI.Areas.Admin
 					UserId = _userService.UserId,
 					Action = "Update",
 					TableName = "Users",
+					Key = appUser.Id,
 					OldValues = new AuditUserModel(_mapper.Map<UserViewModel>(appUser)),
 					NewValues = new AuditUserModel(user)
 				};
 
-				appUser.CommunityId = user.CommunityId;
 				appUser.Description = user.Description;
 				appUser.Chat = user.Chat;
+				appUser.FirstName = user.FirstName;
+				appUser.MiddleName = user.MiddleName;
+				appUser.LastName = user.LastName;
 
-				if (!String.IsNullOrEmpty(user.FirstName))
-					appUser.FirstName = user.FirstName;
-				else
-					_notify.Error("Ім'я не може бути пустим");
+				var response = await _mediator.Send(new GeUserCommunitiesQuery() { UserId = user.Id });
+				if (response.Succeeded)
+				{
+					if (user.CommunitiesSelected != null)
+					{
+						var currentCommunitiesIds = response.Data.Select(c => c.Id);
 
-				if (!String.IsNullOrEmpty(user.MiddleName))
-					appUser.MiddleName = user.MiddleName;
-				else
-					_notify.Error("Прізвище не може бути пустим");
-
-				if (!String.IsNullOrEmpty(user.LastName))
-					appUser.LastName = user.LastName;
-				else
-					_notify.Error("По Батькові не може бути пустим");
+						var newCommunities = user.CommunitiesSelected.Except(currentCommunitiesIds);
+						var delCommunities = currentCommunitiesIds.Except(user.CommunitiesSelected);
+						await ExecuteUpdateCommands(GenerateUpdate(newCommunities, user.Id));
+						await ExecuteUpdateCommands(GenerateUpdate(delCommunities, null));
+					}
+					else
+					{
+						var delAll = response.Data.Select(c => new UpdateCommunityCommand()
+						{
+							Id = c.Id,
+							ApplicationUserId = null
+						});
+						await ExecuteUpdateCommands(delAll);
+					}
+				}
 
 				try
 				{
@@ -116,6 +138,7 @@ namespace WebUI.Areas.Admin
 					_notify.Success($"Користувач {user.UserName} був успішно змінений");
 
 					await _mediator.Send(new AddLogCommand() { Log = log });
+					return RedirectToAction(nameof(Index), new { Id = user.Id });
 				}
 				catch (Exception ex)
 				{
@@ -123,12 +146,13 @@ namespace WebUI.Areas.Admin
 				}
 			}
 
-			var response = await _mediator.Send(new GetAllCommunitiesCachedQuery());
-			var data = _mapper.Map<IEnumerable<CommunityViewModel>>(response.Data);
-			var communities = new SelectList(data, nameof(CommunityViewModel.Id), nameof(CommunityViewModel.Name), null, null);
-			user.Communities = communities;
+			var freeData = await GetAllFreeData(user.Id);
 
-			return RedirectToAction(nameof(Index), new { Id = user.Id });
+			user.CommunitiesList = new SelectList(freeData.OrderBy(x => x.District.Name).ThenBy(x => x.Name),
+				nameof(CommunityViewModel.Id), nameof(CommunityViewModel.Name),
+				null, "District.Name");
+
+			return View(user);
 		}
 
 		public async Task<IActionResult> DeleteImage(string id)
@@ -137,19 +161,26 @@ namespace WebUI.Areas.Admin
 
 			if (appUser != null && appUser.ProfilePicture != null)
 			{
-				ImageService.RemoveImageFromServer(appUser.ProfilePicture);
+				if (ImageService.RemoveImageFromServer(appUser.ProfilePicture))
+				{
+					appUser.ProfilePicture = null;
 
-				appUser.ProfilePicture = null;
-				await _userManager.UpdateAsync(appUser);
+					if ((await _userManager.UpdateAsync(appUser)).Succeeded)
+						_notify.Success($"Фото профілю успішно змінено");
+					else
+						_notify.Success($"Помилка при видалені фото");
+				}
 			}
-
 			return RedirectToAction(nameof(Index), new { Id = id });
 		}
 
 		public async Task<IActionResult> ChangeProfileImage(string id)
 		{
-			return new JsonResult(new { isValid = true, 
-				html = await _viewRenderer.RenderViewToStringAsync("_ChangeImage", id) });
+			return new JsonResult(new
+			{
+				isValid = true,
+				html = await _viewRenderer.RenderViewToStringAsync("_ChangeImage", id)
+			});
 		}
 
 		[HttpPost]
@@ -159,10 +190,9 @@ namespace WebUI.Areas.Admin
 			{
 				ApplicationUser appUser = await GetCurrentUser(id);
 
-				string imagePath;
 				if (appUser != null)
 				{
-					imagePath = ImageService.UploadImageToServer(blob, Path.GetExtension(fileName));
+					string imagePath = ImageService.UploadImageToServer(blob, Path.GetExtension(fileName));
 					if (!String.IsNullOrEmpty(imagePath))
 					{
 						string oldImage = appUser.ProfilePicture;
@@ -175,8 +205,6 @@ namespace WebUI.Areas.Admin
 						else
 							ImageService.RemoveImageFromServer(imagePath);
 					}
-					else
-						return new JsonResult(new { isValid = false });
 				}
 				return new JsonResult(new { isValid = true });
 			}
@@ -186,11 +214,29 @@ namespace WebUI.Areas.Admin
 			}
 		}
 
-		private async Task<ApplicationUser> GetCurrentUser(string id)
+		private async Task<ApplicationUser> GetCurrentUser(string userId)
 		{
-			if (String.IsNullOrEmpty(id))
+			if (String.IsNullOrEmpty(userId))
 				return await _userManager.GetUserAsync(User);
-			return await _userManager.FindByIdAsync(id);
+			return await _userManager.FindByIdAsync(userId);
+		}
+
+		private async Task<IEnumerable<CommunityViewModel>> GetAllFreeData(string userId)
+		{
+			var response = await _mediator.Send(new GeUserCommunitiesQuery() { UserId = userId });
+
+			if (response.Succeeded)
+			{
+				var responseFree = await _mediator.Send(new GetFreeCommunitiesQuery());
+				if (responseFree.Succeeded)
+				{
+					var freeData = _mapper.Map<IEnumerable<CommunityViewModel>>(responseFree.Data).ToList();
+					var data = _mapper.Map<IEnumerable<CommunityViewModel>>(response.Data);
+					freeData.AddRange(data);
+					return freeData;
+				}
+			}
+			return new List<CommunityViewModel>();
 		}
 	}
 }

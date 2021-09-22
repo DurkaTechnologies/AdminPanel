@@ -20,29 +20,34 @@ using Application.Features.Logs.Commands;
 using Infrastructure.Identity.Models;
 using System.IO;
 using System;
+using Application.Features.Communities.Commands;
+using Application.Features.Communities.Queries.GetById;
 
 namespace WebUI.Areas.Admin
 {
 	[Area("Admin")]
-	public class UserController : BaseController<UserController>
+	public class UserController : BaseUserController<UserController>
 	{
-		private readonly SignInManager<ApplicationUser> _signInManager;
+		#region Fields
+
 		private readonly UserManager<ApplicationUser> _userManager;
-		private readonly RoleManager<IdentityRole> _roleManager;
+
 		private readonly IWebHostEnvironment _webHostEnvironment;
+
 		public object ApplicationUser { get; private set; }
+
+		#endregion
+
 		public UserController(UserManager<ApplicationUser> userManager,
-			SignInManager<ApplicationUser> signInManager,
-			RoleManager<IdentityRole> roleManager,
 			IWebHostEnvironment webHostEnvironment)
 		{
 			_userManager = userManager;
-			_signInManager = signInManager;
-			_roleManager = roleManager;
 			_webHostEnvironment = webHostEnvironment;
 
 			ImageService.RootPass = ENV.RootPath;
 		}
+
+		#region Main Controller Methods
 
 		public IActionResult Index()
 		{
@@ -51,30 +56,29 @@ namespace WebUI.Areas.Admin
 
 		public async Task<IActionResult> LoadAll()
 		{
-			var currentUser = await _userManager.GetUserAsync(HttpContext.User);
-			var allUsersExceptCurrentUser = await _userManager.Users.Where(a => a.Id != currentUser.Id).ToListAsync();
-			var model = _mapper.Map<IEnumerable<UserViewModel>>(allUsersExceptCurrentUser);
-
-			return PartialView("_ViewAll", model);
+			return PartialView("_ViewAll", await GetUsersExceptCurrentAsync());
 		}
 
+		[Authorize(Roles = "SuperAdmin")]
 		public async Task<IActionResult> OnGetCreate()
 		{
-			var response = await _mediator.Send(new GetAllCommunitiesCachedQuery());
+			var response = await _mediator.Send(new GetFreeCommunitiesQuery());
 
 			if (response.Succeeded)
 			{
+				if (response.Data.Count == 0)
+					_notify.Warning("Немає вільних громад");
+
 				var data = _mapper.Map<IEnumerable<CommunityViewModel>>(response.Data);
-				var communities = new SelectList(data, nameof(CommunityViewModel.Id),
-					nameof(CommunityViewModel.Name), null, null);
+
+				var freeCommunities = new SelectList(data.OrderBy(x => x.District.Name).ThenBy(x => x.Name),
+					nameof(CommunityViewModel.Id), nameof(CommunityViewModel.Name), null, "District.Name");
 
 				return new JsonResult(new
 				{
 					isValid = true,
-					html = await _viewRenderer.RenderViewToStringAsync("_Create", new UserViewModel()
-					{
-						Communities = communities
-					})
+					html = await _viewRenderer.RenderViewToStringAsync("_Create",
+					new UserViewModel() { CommunitiesList = freeCommunities })
 				});
 			}
 
@@ -82,22 +86,14 @@ namespace WebUI.Areas.Admin
 			return null;
 		}
 
-		public async Task<JsonResult> FileUploadError(UserViewModel userModel)
-		{
-			_notify.Error("Помилка про завантаженні фото профілю");
-			return new JsonResult(new
-			{
-				isValid = false,
-				html = await _viewRenderer.RenderViewToStringAsync("_Create", userModel)
-			});
-		}
-
 		[HttpPost]
+		[Authorize(Roles = "SuperAdmin")]
 		public async Task<IActionResult> OnPostCreate(UserViewModel userModel, string fileName, IFormFile blob)
 		{
 			if (ModelState.IsValid)
 			{
 				string imagePath;
+				userModel.Password ??= "1";
 
 				try
 				{
@@ -125,7 +121,6 @@ namespace WebUI.Areas.Admin
 					ProfilePicture = imagePath,
 					EmailConfirmed = true,
 					IsActive = true,
-					CommunityId = userModel.CommunityId == 0 ? null : userModel.CommunityId,
 					Description = userModel.Description
 				};
 
@@ -133,16 +128,10 @@ namespace WebUI.Areas.Admin
 
 				if (result.Succeeded)
 				{
-					await _userManager.AddToRoleAsync(user, Roles.Worker.ToString());
-					var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-					var currentUser = await _userManager.GetUserAsync(HttpContext.User);
-					var allUsersExceptCurrentUser = await _userManager.Users.Where(a => a.Id != currentUser.Id).ToListAsync();
-					var users = _mapper.Map<IEnumerable<UserViewModel>>(allUsersExceptCurrentUser);
-					var htmlData = await _viewRenderer.RenderViewToStringAsync("_ViewAll", users);
-
 					_notify.Success($"Аккаунт {user.Email} створено");
 
-					userModel.Id = user.Id;
+					await _userManager.AddToRoleAsync(user, Roles.Worker.ToString());
+					await ExecuteUpdateCommands(GenerateUpdate(userModel.CommunitiesSelected, user.Id));
 
 					Log log = new Log()
 					{
@@ -155,36 +144,50 @@ namespace WebUI.Areas.Admin
 
 					await _mediator.Send(new AddLogCommand() { Log = log });
 
+					var htmlData = await _viewRenderer.RenderViewToStringAsync("_ViewAll", await GetUsersExceptCurrentAsync());
 					return new JsonResult(new { isValid = true, html = htmlData });
 				}
 
 				foreach (var error in result.Errors)
-				{
 					_notify.Error(error.Description);
-				}
 
 				ImageService.RemoveImageFromServer(imagePath);
-				var html = await _viewRenderer.RenderViewToStringAsync("_Create", userModel);
-				return new JsonResult(new { isValid = false, html = html });
 			}
-			return default;
+
+			var html = await _viewRenderer.RenderViewToStringAsync("_Create", userModel);
+			return new JsonResult(new { isValid = false, html = html });
 		}
 
+		[HttpPost]
+		[Authorize(Roles = "SuperAdmin")]
 		public async Task<JsonResult> OnPostDelete(string id)
 		{
 			var user = await _userManager.FindByIdAsync(id);
 
-			if (user != null)
+			if (user == null)
+				_notify.Error($"Користувача не знайдено");
+			else if (user.FirstName != "Super" && user.FirstName != "Default")
 			{
-				if (user.FirstName != "Super" && user.FirstName != "Default")
+				if (ImageService.RemoveImageFromServer(user.ProfilePicture))
 				{
-					_notify.Success($"Користувач {user.FirstName + " " + user.LastName} був успішно видалений");
+					var response = await _mediator.Send(new GeUserCommunitiesQuery() { UserId = user.Id });
 
+					if (response.Succeeded)
+					{
+						await ExecuteUpdateCommands(GenerateUpdate(response.Data.Select(c => c.Id), null));
+					}
+					else
+					{
+						_notify.Error($"Помилка при отримані громад працівника");
+						var htmlData = await _viewRenderer.RenderViewToStringAsync("_ViewAll", await GetUsersExceptCurrentAsync());
+						return new JsonResult(new { isValid = true, html = htmlData });
+					}
+					
 					var result = await _userManager.DeleteAsync(user);
 
 					if (result.Succeeded)
 					{
-						ImageService.RemoveImageFromServer(user.ProfilePicture);
+						_notify.Success($"Користувач {user.FirstName + " " + user.LastName} був успішно видалений");
 
 						Log log = new Log()
 						{
@@ -194,72 +197,80 @@ namespace WebUI.Areas.Admin
 							OldValues = new AuditUserModel(_mapper.Map<UserViewModel>(user)),
 							Key = user.Id
 						};
+
 						await _mediator.Send(new AddLogCommand() { Log = log });
 					}
 					else
 						_notify.Error($"Помилка при видалені користувача");
 				}
 				else
-					_notify.Error($"Не можна видалити базових користувачів");
-
+					_notify.Error($"Помилка при видалені фото профілю з сервера.");
 			}
 			else
-				_notify.Error($"Користувача не знайдено");
+				_notify.Error($"Не можна видалити базових користувачів");
 
-			var currentUser = await _userManager.GetUserAsync(HttpContext.User);
-			var allUsersExceptCurrentUser = await _userManager.Users.Where(a => a.Id != currentUser.Id).ToListAsync();
-			var model = _mapper.Map<IEnumerable<UserViewModel>>(allUsersExceptCurrentUser);
-			var html = await _viewRenderer.RenderViewToStringAsync("_ViewAll", model);
-
+			var html = await _viewRenderer.RenderViewToStringAsync("_ViewAll", await GetUsersExceptCurrentAsync());
 			return new JsonResult(new { isValid = true, html = html });
 		}
 
+		[HttpPost]
 		[Authorize(Roles = "SuperAdmin")]
 		public async Task<JsonResult> OnPostDeactivate(string id)
 		{
 			var user = await _userManager.FindByIdAsync(id);
 
-			if (user != null)
+			if (user == null)
+				_notify.Error($"Користувача не знайдено");
+			else if (user.FirstName != "Super" && user.FirstName != "Default")
 			{
-				if (user.FirstName != "Super" && user.FirstName != "Default")
+				user.IsActive = !user.IsActive;
+				var result = await _userManager.UpdateAsync(user);
+
+				if (result.Succeeded)
 				{
-					user.IsActive = !user.IsActive;
+					_notify.Success($"Користувач {user.FirstName + " " + user.LastName} " +
+					(user.IsActive ? "активований" : "деактивований"));
 
 					Log log = new Log()
 					{
 						UserId = _userService.UserId,
 						Key = user.Id,
 						TableName = "Users",
-						NewValues = new AuditUserModel(_mapper.Map<UserViewModel>(user))
+						NewValues = new AuditUserModel(_mapper.Map<UserViewModel>(user)),
+						Action = user.IsActive ? "Activated" : "Deactivated"
 					};
 
-					if (user.IsActive)
-					{
-						_notify.Success($"Користувач {user.FirstName + " " + user.LastName} активований");
-						log.Action = "Activated";
-					}
-					else
-					{
-						_notify.Success($"Користувач {user.FirstName + " " + user.LastName} деактивований");
-						log.Action = "Deactivated";
-					}
-
-					await _userManager.UpdateAsync(user);
 					await _mediator.Send(new AddLogCommand() { Log = log });
 				}
 				else
-					_notify.Error($"Не можна деактивувати базових користувачів");
-
+					_notify.Error($"Помилка збереження змін.");
 			}
 			else
-				_notify.Error($"Користувача не знайдено");
+				_notify.Error($"Не можна деактивувати базових користувачів");
 
-			var currentUser = await _userManager.GetUserAsync(HttpContext.User);
-			var allUsersExceptCurrentUser = await _userManager.Users.Where(a => a.Id != currentUser.Id).ToListAsync();
-			var model = _mapper.Map<IEnumerable<UserViewModel>>(allUsersExceptCurrentUser);
-			var html = await _viewRenderer.RenderViewToStringAsync("_ViewAll", model);
-
+			var html = await _viewRenderer.RenderViewToStringAsync("_ViewAll", await GetUsersExceptCurrentAsync());
 			return new JsonResult(new { isValid = true, html = html });
 		}
+
+		#endregion
+
+		#region Other Methods
+		private async Task<JsonResult> FileUploadError(UserViewModel userModel)
+		{
+			_notify.Error("Помилка про завантаженні фото профілю");
+			return new JsonResult(new
+			{
+				isValid = false,
+				html = await _viewRenderer.RenderViewToStringAsync("_Create", userModel)
+			});
+		}
+
+		private async Task<IEnumerable<UserViewModel>> GetUsersExceptCurrentAsync()
+		{
+			var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+			var allUsersExceptCurrentUser = await _userManager.Users.Where(a => a.Id != currentUser.Id).ToListAsync();
+			return _mapper.Map<IEnumerable<UserViewModel>>(allUsersExceptCurrentUser);
+		}
+		#endregion
 	}
 }

@@ -24,7 +24,6 @@ namespace Infrastructure.Identity.Seeds
 				FirstName = "Default",
 				MiddleName = "Adminovich",
 				LastName = "Admin",
-				CommunityId = null,
 				EmailConfirmed = true,
 				PhoneNumberConfirmed = true,
 				IsActive = true
