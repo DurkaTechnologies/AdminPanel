@@ -26,7 +26,14 @@ namespace Infrastructure.Repositories
 
 		public async Task<int> CommitApplicationDb(CancellationToken cancellationToken)
 		{
-			return await applicationDbContext.SaveChangesAsync(cancellationToken);
+			try
+			{
+				return await applicationDbContext.SaveChangesAsync(cancellationToken);
+			}
+			catch (Exception)
+			{
+				return 0;
+			}
 		}
 
 		public Task Rollback()

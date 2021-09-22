@@ -26,7 +26,7 @@ using Application.Features.Communities.Queries.GetById;
 namespace WebUI.Areas.Admin
 {
 	[Area("Admin")]
-	public class UserController : BaseController<UserController>
+	public class UserController : BaseUserController<UserController>
 	{
 		#region Fields
 
@@ -128,30 +128,10 @@ namespace WebUI.Areas.Admin
 
 				if (result.Succeeded)
 				{
-					await _userManager.AddToRoleAsync(user, Roles.Worker.ToString());
-
-					var commands = userModel.CommunitiesSelected.Select(id => new UpdateCommunityCommand()
-					{
-						Id = id,
-						ApplicationUserId = user.Id
-					});
-
-					var communities = _mediator.Send(new GetAllCommunitiesCachedQuery()).Result.Data;
-
-					foreach (var command in commands.ToList())
-					{
-						var communityRes = await _mediator.Send(command);
-
-						if (communityRes.Succeeded)
-						{
-							var community = _mediator.Send(new GetCommunityByIdQuery() { Id = communityRes.Data }).Result.Data;
-							_notify.Success($"Громада {community.Name} змінена");
-						}
-					}
-
 					_notify.Success($"Аккаунт {user.Email} створено");
 
-					//userModel.Id = user.Id;
+					await _userManager.AddToRoleAsync(user, Roles.Worker.ToString());
+					await ExecuteUpdateCommands(GenerateUpdate(userModel.CommunitiesSelected, user.Id));
 
 					Log log = new Log()
 					{
@@ -163,11 +143,8 @@ namespace WebUI.Areas.Admin
 					};
 
 					await _mediator.Send(new AddLogCommand() { Log = log });
-					var currentUser = await _userManager.GetUserAsync(HttpContext.User);
-					var allUsersExceptCurrentUser = await _userManager.Users.Where(a => a.Id != currentUser.Id).ToListAsync();
-					var users = _mapper.Map<IEnumerable<UserViewModel>>(allUsersExceptCurrentUser);
-					var htmlData = await _viewRenderer.RenderViewToStringAsync("_ViewAll", users);
-					//var htmlData = await _viewRenderer.RenderViewToStringAsync("_ViewAll", await GetUsersExceptCurrentAsync());
+
+					var htmlData = await _viewRenderer.RenderViewToStringAsync("_ViewAll", await GetUsersExceptCurrentAsync());
 					return new JsonResult(new { isValid = true, html = htmlData });
 				}
 
@@ -195,25 +172,9 @@ namespace WebUI.Areas.Admin
 				{
 					var response = await _mediator.Send(new GeUserCommunitiesQuery() { UserId = user.Id });
 
-					// ?
 					if (response.Succeeded)
 					{
-						var commands = response.Data.Select(c => new UpdateCommunityCommand()
-						{
-							Id = c.Id,
-							ApplicationUserId = null
-						});
-
-
-						foreach (var command in commands.ToList())
-						{
-							var communityRes = await _mediator.Send(command);
-
-							if (communityRes.Succeeded)
-							{
-								_notify.Information($"Громада {communityRes.Data} змінена");
-							}
-						}
+						await ExecuteUpdateCommands(GenerateUpdate(response.Data.Select(c => c.Id), null));
 					}
 					else
 					{
@@ -222,7 +183,6 @@ namespace WebUI.Areas.Admin
 						return new JsonResult(new { isValid = true, html = htmlData });
 					}
 					
-
 					var result = await _userManager.DeleteAsync(user);
 
 					if (result.Succeeded)

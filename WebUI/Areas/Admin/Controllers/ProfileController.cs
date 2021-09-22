@@ -17,12 +17,11 @@ using WebUI.Areas.Entities.Models;
 using WebUI.Services;
 using System.Linq;
 using Application.Features.Communities.Commands;
-using Application.Features.Communities.Queries.GetById;
 
 namespace WebUI.Areas.Admin
 {
 	[Area("Admin")]
-	public class ProfileController : BaseController<ProfileController>
+	public class ProfileController : BaseUserController<ProfileController>
 	{
 		private readonly UserManager<ApplicationUser> _userManager;
 		private readonly IWebHostEnvironment _webHostEnvironment;
@@ -42,15 +41,10 @@ namespace WebUI.Areas.Admin
 			var response = await _mediator.Send(new GeUserCommunitiesQuery() { UserId = user.Id });
 
 			if (response.Succeeded)
-			{
 				user.Communities = _mapper.Map<List<CommunityViewModel>>(response.Data);
-				//if (user.Community != null)
-				//{
-				//	var result = await _mediator.Send(new GetDistrictByIdQuery() { Id = (int)user.Community?.DistrictId });
-				//	if (result.Succeeded)
-				//		user.Community.District = _mapper.Map<DistrictViewModel>(result.Data);
-				//}
-			}
+			else
+				_notify.Success($"Помилка при завантажені громад користувача");
+
 			return View(user);
 		}
 
@@ -243,54 +237,6 @@ namespace WebUI.Areas.Admin
 				}
 			}
 			return new List<CommunityViewModel>();
-		}
-
-		private IEnumerable<UpdateCommunityCommand> GenerateUpdate(IEnumerable<int> communities, string userId)
-		{
-			return communities.Select(id => new UpdateCommunityCommand()
-			{
-				Id = id,
-				ApplicationUserId = userId
-			});
-		}
-
-		private async Task<bool> ExecuteUpdateCommands(IEnumerable<UpdateCommunityCommand> commands)
-		{
-			foreach (var command in commands)
-			{
-				var result = await _mediator.Send(new GetCommunityByIdNotCacheQuery() { Id = command.Id });
-				if (!result.Succeeded)
-				{
-					_notify.Error($"Громаду з індексом {command.Id} не знайдено");
-					return false;
-				}
-
-				var community = result.Data;
-				var communityRes = await _mediator.Send(command);
-
-				if (!communityRes.Succeeded)
-				{
-					_notify.Error($"Помилка при редагувані громади: {community.Name}");
-					return false;
-				}
-				else
-				{
-					Log log = new Log()
-					{
-						UserId = _userService.UserId,
-						Action = "Update",
-						TableName = "Community",
-						OldValues = _mapper.Map<CommunityViewModel>(community),
-						NewValues = _mapper.Map<CommunityViewModel>(command),
-						Key = community.Id.ToString()
-					};
-
-					await _mediator.Send(new AddLogCommand() { Log = log });
-
-					_notify.Information($"{community.Name} громада змінена");
-				}
-			}
-			return true;
 		}
 	}
 }
