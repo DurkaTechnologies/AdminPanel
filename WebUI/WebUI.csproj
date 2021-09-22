@@ -7,18 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\**" />
     <Compile Remove="wwwroot\img\**" />
-    <Content Remove="Controllers\**" />
+    <Compile Remove="wwwroot\lib\jquery-validation\dist\**" />
     <Content Remove="wwwroot\img\**" />
-    <EmbeddedResource Remove="Controllers\**" />
+    <Content Remove="wwwroot\lib\jquery-validation\dist\**" />
     <EmbeddedResource Remove="wwwroot\img\**" />
-    <None Remove="Controllers\**" />
+    <EmbeddedResource Remove="wwwroot\lib\jquery-validation\dist\**" />
     <None Remove="wwwroot\img\**" />
+    <None Remove="wwwroot\lib\jquery-validation\dist\**" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Properties\PublishProfiles\FTPProfile.pubxml.user" />
+    <None Include="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js" />
+    <None Include="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js" />
     <None Include="wwwroot\lib\select2\js\i18n\en.js" />
     <None Include="wwwroot\lib\select2\js\i18n\uk.js" />
     <None Include="wwwroot\lib\select2\js\select2.full.js" />
@@ -40,9 +42,14 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.7" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.3" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\ReadmeFiles\" />
   </ItemGroup>
 </Project>

@@ -23,10 +23,15 @@ namespace Application.Features.Communities.Commands
 
 			public async Task<Result<int>> Handle(DeleteDistrictCommand command, CancellationToken cancellationToken)
 			{
-				var district = await districtRepository.GetByIdAsync(command.Id);
-				await districtRepository.DeleteAsync(district);
-				await unitOfWork.Commit(cancellationToken);
-				return Result<int>.Success(district.Id);
+				var district = await districtRepository.GetIncludeByIdAsync(command.Id);
+				if (district.Communities.Count == 0)
+				{
+					await districtRepository.DeleteAsync(district);
+					await unitOfWork.Commit(cancellationToken);
+					return Result<int>.Success(district.Id);
+				}
+				return Result<int>.Failure();
+
 			}
 		}
 	}

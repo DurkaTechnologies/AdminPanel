@@ -17,7 +17,9 @@ namespace WebUI.Areas.Admin.Models
 
 		public string LastName { get; set; }
 
-		public string ProfilePicture { get; set; }
+        public string FullName { get => FirstName + " " + MiddleName + " " + LastName; }
+
+        public string ProfilePicture { get; set; }
 
 		public string Email { get; set; }
 
