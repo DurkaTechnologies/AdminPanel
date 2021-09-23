@@ -73,41 +73,43 @@
 				</div>
 			</div>
 		</div>
-		@if (!String.IsNullOrEmpty(Model.Description))
-		{
-			<div class="col-xl-7 col-lg-6 p-2">
-				<div class="card p-4 m-0">
+		
+		<div class="col-xl-7 col-lg-6 p-2">
+			@if (!String.IsNullOrEmpty(Model.Description))
+			{
+				<div class="card p-4 m-0 mb-3">
 					<h4 class="text-center d-block">Опис</h4>
 
 					@Html.Raw(Model.Description)
 				</div>
-				@if (CheckEdit)
-				{
-					<div class="d-flex justify-content-end my-3">
-						<a class="btn btn-secondary btn-icon-split" href="#" data-toggle="modal" data-target="#logoutModal">
-							<span class="icon text-white-50">
-								<i class="fas fa-sign-out-alt"></i>
-							</span>
-							<span class="text">Вийти</span>
-						</a>
+			}
+			@if (CheckEdit)
+			{
+				<div class="d-flex justify-content-end mb-3">
+					<a class="btn btn-secondary btn-icon-split" href="#" data-toggle="modal" data-target="#logoutModal">
+						<span class="icon text-white-50">
+							<i class="fas fa-sign-out-alt"></i>
+						</span>
+						<span class="text">Вийти</span>
+					</a>
 
-						<a asp-area="Identity" asp-page="/Account/AuditLog" asp-route-id="current" class="btn btn-primary btn-icon-split ml-3">
-							<span class="icon text-white-50">
-								<i class="fas fa-list"></i>
-							</span>
-							<span class="text">Історія дій</span>
-						</a>
+					<a asp-area="Identity" asp-page="/Account/AuditLog" asp-route-id="current" class="btn btn-primary btn-icon-split ml-3">
+						<span class="icon text-white-50">
+							<i class="fas fa-list"></i>
+						</span>
+						<span class="text">Історія дій</span>
+					</a>
 
-						<a asp-controller="Profile" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success btn-icon-split ml-3">
-							<span class="icon text-white-50">
-								<i class="fas fa-pen"></i>
-							</span>
-							<span class="text">Редагувати</span>
-						</a>
-					</div>
-				}
-			</div>
-		}
+					<a asp-controller="Profile" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success btn-icon-split ml-3">
+						<span class="icon text-white-50">
+							<i class="fas fa-pen"></i>
+						</span>
+						<span class="text">Редагувати</span>
+					</a>
+				</div>
+			}
+		</div>
+		
 	</div>
 
 </div>

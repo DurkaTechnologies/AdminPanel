@@ -190,9 +190,10 @@ namespace WebUI.Areas.Entities.Controllers
 				if (user == null)
 					el.ApplicationUserName = "Громада вільна";
 				else
-					el.ApplicationUserName = user.LastName + " " + user.FirstName;
+					el.ApplicationUserName = user.MiddleName + " " + user.FirstName + " " + user.LastName;
 			}
 			return list;
 		}
 	}
 }
+

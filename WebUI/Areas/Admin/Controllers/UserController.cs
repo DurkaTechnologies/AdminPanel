@@ -78,7 +78,7 @@ namespace WebUI.Areas.Admin
 				{
 					isValid = true,
 					html = await _viewRenderer.RenderViewToStringAsync("_Create",
-					new UserViewModel() { CommunitiesList = freeCommunities })
+					new UserViewModel() { CommunitiesList = freeCommunities }, TempData)
 				});
 			}
 
@@ -90,7 +90,7 @@ namespace WebUI.Areas.Admin
 		[Authorize(Roles = "SuperAdmin")]
 		public async Task<IActionResult> OnPostCreate(UserViewModel userModel, string fileName, IFormFile blob)
 		{
-			if (ModelState.IsValid)
+			if (ModelState.IsValid && !String.IsNullOrEmpty(fileName) && blob != null)
 			{
 				string imagePath;
 				userModel.Password ??= "1";
@@ -144,7 +144,7 @@ namespace WebUI.Areas.Admin
 
 					await _mediator.Send(new AddLogCommand() { Log = log });
 
-					var htmlData = await _viewRenderer.RenderViewToStringAsync("_ViewAll", await GetUsersExceptCurrentAsync());
+					var htmlData = await _viewRenderer.RenderViewToStringAsync("_ViewAll", await GetUsersExceptCurrentAsync(), TempData);
 					return new JsonResult(new { isValid = true, html = htmlData });
 				}
 
@@ -154,7 +154,9 @@ namespace WebUI.Areas.Admin
 				ImageService.RemoveImageFromServer(imagePath);
 			}
 
-			var html = await _viewRenderer.RenderViewToStringAsync("_Create", userModel);
+			_notify.Success($"Фото профілю не вибрано");
+
+			var html = await _viewRenderer.RenderViewToStringAsync("_Create", userModel, TempData);
 			return new JsonResult(new { isValid = false, html = html });
 		}
 
