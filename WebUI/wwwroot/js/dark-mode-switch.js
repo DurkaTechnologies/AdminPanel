@@ -37,6 +37,7 @@ function initTheme() {
 		$('.modal-content').attr('style', 'background-color: #212121!important;');
 		$('.loader-section').attr('style', 'background: #212121!important;');
 		$("#brand-logo").attr("src", "/images/gerb-light.svg");
+		$(".worker-name").removeClass("text-dark");
 		//.form-control
 	}
 	else {
@@ -52,6 +53,7 @@ function initTheme() {
 		$('.modal-content').attr('style', 'background-color: #ffffff!important;');
 		$('.loader-section').attr('style', 'background: #ffffff!important;');
 		$("#brand-logo").attr("src", "/images/gerb-dark.svg");
+		$(".worker-name").add("text-dark");
 	}
 }
 
@@ -75,6 +77,7 @@ function resetTheme() {
 		$('.modal-content').attr('style', 'background-color: #212121!important;');
 		$('.loader-section').attr('style', 'background: #212121!important;');
 		$("#brand-logo").attr("src", "/images/gerb-light.svg");
+		$(".worker-name").removeClass("text-dark");
 		localStorage.setItem('darkSwitch', 'dark');
 	} else {
 		document.body.removeAttribute('data-theme');
@@ -89,6 +92,7 @@ function resetTheme() {
 		$('.modal-content').attr('style', 'background-color: #ffffff!important;');
 		$('.loader-section').attr('style', 'background: #ffffff!important;');
 		$("#brand-logo").attr("src", "/images/gerb-dark.svg");
+		$(".worker-name").addClass("text-dark");
 		localStorage.removeItem('darkSwitch');
 	}
 }

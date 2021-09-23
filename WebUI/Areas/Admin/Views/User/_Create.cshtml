@@ -1,5 +1,7 @@
 @using WebUI.Areas.Admin.Models
 @using Application.Constants
+@using AspNetCoreHero.ToastNotification.Abstractions
+@using AspNetCoreHero.ToastNotification.Notyf
 
 @model UserViewModel
 
@@ -60,9 +62,10 @@
 					<label class="col-md-3 col-form-label">Фото</label>
 					<div class="col-md-9">
 						<div class="custom-file form-image">
-							<input accept=".png,.jpg,.jpeg,.gif,.tif"
+							<input accept=".png,.jpg,.jpeg,.gif"
 								   type="file" class="custom-file-input"
 								   id="customFile">
+
 							<label class="custom-file-label" for="customFile">Виберіть картинку</label>
 						</div>
 					</div>
@@ -133,21 +136,25 @@
 
 			var $uploadCrop;
 			var $blob;
+			var fileName = null;
 
-			$uploadCrop = $('#cropper').croppie({
-				viewport: {
-					width: 300,
-					height: 300,
-					type: 'square'
-				},
-				boundary: {
-					width: 400,
-					height: 400
-				},
-				showZoomer: false,
-				enforceBoundary: true,
-				enableExif: true
-			});
+			function InitCropper() {
+				$uploadCrop = $('#cropper').croppie({
+					viewport: {
+						width: 300,
+						height: 300,
+						type: 'square'
+					},
+					boundary: {
+						width: 400,
+						height: 400
+					},
+					showZoomer: false,
+					enforceBoundary: true,
+					enableExif: true
+				});
+			}
+			InitCropper();
 
 			function readFile(e) {
 				var reader = new FileReader();
@@ -166,7 +173,28 @@
 				$("#profilePicture").addClass("d-none");
 			}
 
-			document.getElementById("customFile").addEventListener("change", readFile);
+			$("#customFile").on("change", function (e) {
+				var noInvalidFiles = true;
+				if (this.files.length == 1) {
+
+					var file = this.files[0];
+					var array = this.getAttribute("accept").split(",");
+					var extension = file.name.substring(file.name.lastIndexOf('.'));
+					noInvalidFiles = array.includes(extension);
+
+					if (!noInvalidFiles) {
+						fileName = null;
+						$blob = null;
+						$('#cropper').croppie('destroy');
+						$("#imageBox").addClass("d-none");
+						InitCropper();
+						$("#mainForm").toggleClass("col-xl-7 col-lg-5");
+						alert("Вибрано не підримуваний файл.");
+					}
+					else
+						readFile(e);
+				}
+			});
 
 			$("#croppImage").on('click', function () {
 				$uploadCrop.croppie('result', {
@@ -179,6 +207,7 @@
 					$blob = blob;
 					var urlCreator = window.URL || window.webkitURL;
 					var imageUrl = urlCreator.createObjectURL(blob);
+					fileName = $('#customFile').val();
 					$("#profilePicture").attr('src', imageUrl);
 					$("#cropperBox").addClass("d-none");
 					$("#profilePicture").removeClass("d-none");
@@ -186,10 +215,9 @@
 			});
 
 			$("#create-form").submit(function (f) {
-				//$("#create-form").css('visibility', 'hidden');
 
 				var formData = new FormData(this);
-				formData.append('fileName', $('#customFile').val());
+				formData.append('fileName', fileName);
 				formData.append('blob', $blob);
 
 				try {

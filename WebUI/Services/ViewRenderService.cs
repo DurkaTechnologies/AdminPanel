@@ -44,7 +44,7 @@ namespace WebUI.Services
 			_activator = activator;
 		}
 
-		public async Task<string> RenderViewToStringAsync<T>(string pageName, T model)
+		public async Task<string> RenderViewToStringAsync<T>(string pageName, T model, ITempDataDictionary data = null)
 		{
 			var actionContext =
 				new ActionContext(
@@ -83,6 +83,12 @@ namespace WebUI.Services
 					sw,
 					new HtmlHelperOptions()
 				);
+
+				if (data != null)
+				{
+					foreach (var item in data)
+						viewContext.TempData.Add(item.Key, item.Value);
+				}
 
 				var page = (result.Page);
 

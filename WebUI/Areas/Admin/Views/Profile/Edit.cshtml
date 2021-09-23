@@ -30,10 +30,9 @@
 								<!-- Dropdown - User Information -->
 								<div class="dropdown-menu dropdown-menu-left shadow animated--grow-in" aria-labelledby="userDropdown">
 									<div class="dropdown-item p-0">
-										<input accept=".png,.jpg,.jpeg,.gif,.tif"
+										<input accept=".png,.jpg,.jpeg,.gif"
 											   asp-for="@Model.ProfilePicture"
 											   type="file" class="custom-file-input"
-											   onchange="jQueryModalGet('/admin/profile/ChangeProfileImage?id=@Model.Id', 'Обріжте нове зображення профілю')"
 											   id="customFile">
 										<label class="my-file-label" for="customFile"><i class="fas fa-upload"></i> Завантажити</label>
 									</div>
@@ -125,11 +124,21 @@
 			minimumResultsForSearch: 5,
 			placeholder: "Виберіть громади"
 		});
-		//registerSummernote('#summernote', 5000, function (max) {
-		//	$('#lenghtContentPost').text(max)
-		//}, 400, 400);d
 
-		//document.getElementById("summernote").hidden = true;
+		$("#customFile").on("change", function (e) {
+			var noInvalidFiles = true;
+			if (this.files.length == 1) {
+				var file = this.files[0];
+				var array = this.getAttribute("accept").split(",");
+				var extension = file.name.substring(file.name.lastIndexOf('.'));
+				noInvalidFiles = array.includes(extension);
+
+				if (!noInvalidFiles)
+					alert("Вибрано не підримуваний файл.");
+				else
+					jQueryModalGet('/admin/profile/ChangeProfileImage?id=@Model.Id', 'Обріжте нове зображення профілю')
+			}
+		});
 
 		$('.ukrainephone').mask("(999) 999-9999");
 	});
