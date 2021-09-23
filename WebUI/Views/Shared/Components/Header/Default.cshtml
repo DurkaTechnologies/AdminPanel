@@ -18,11 +18,30 @@
 			<!-- Nav Item - User Information -->
 			<li class="nav-item dropdown no-arrow">
 				<a class="nav-link" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<span class="mr-2 d-none d-lg-inline text-gray-600 small"> @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName</span>
-					@if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
+					<span class="mr-2 d-none d-lg-inline text-gray-600 small">
+						@{
+							string name = "";
+							try
+							{
+								var appUser = await UserManager.GetUserAsync(User);
+
+								if (appUser != null)
+									name = appUser.FirstName + ' ' + appUser.LastName;
+								else
+									await SignInManager.SignOutAsync();
+							}
+							catch (Exception)
+							{
+								await SignInManager.SignOutAsync();
+								throw;
+							}
+						}
+						@name
+					</span>
+					@if (UserManager.GetUserAsync(User).Result?.ProfilePicture != null)
 					{
 						<img class="img-profile rounded-circle" style="object-fit: cover; width: 30px; height: 30px;"
-							 src="@ENV.ImagePath@(UserManager.GetUserAsync(User).Result.ProfilePicture)"
+							 src="@ENV.ImagePath@(UserManager.GetUserAsync(User).Result?.ProfilePicture)"
 							 onerror="this.onerror = null; this.src = '@Url.Content("~/images/users/default-user.png")';">
 					}
 					else

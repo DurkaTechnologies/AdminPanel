@@ -1,17 +1,30 @@
 ﻿@using MarkdownSharpAdapted
-@using System.IO
+@using System.Net
 
 <div class="container">
-    @{
-        string text = File.ReadAllText("../README.md");
+	@{
+		string text;
+		try
+		{
+			Uri url = new Uri("https://raw.githubusercontent.com/DurkaTechnologies/AdminPanel/master/README.md");
+			using (WebClient client = new WebClient())
+			{
+				text = client.DownloadString(url);
+			}
+			Markdown markdown = new Markdown();
+			text = markdown.Transform(text);
+		}
+		catch (Exception ex)
+		{
+			text = "Файл з інстуркуцією не знайдено";
+		}
+	}
+	@if (!String.IsNullOrEmpty(text))
+	{
+		@Html.Raw(text)
+	}
 
-        Markdown markdown = new Markdown();
-        string html = markdown.Transform(text);
-    }
-
-    @Html.Raw(html)
-
-    <a id="reload" class="btn text-white" href="~/ReadmeFiles/unknown.png" target="_blank"></a>
-    <a id="reload" class="btn text-white" href="~/ReadmeFiles/giphy.mp4" target="_blank"></a>
-    <a id="reload" class="btn text-white" href="~/ReadmeFiles/nesalo.jpeg" target="_blank"></a>
+	<a id="reload" class="btn text-white" href="~/ReadmeFiles/unknown.png" target="_blank"></a>
+	<a id="reload" class="btn text-white" href="~/ReadmeFiles/giphy.mp4" target="_blank"></a>
+	<a id="reload" class="btn text-white" href="~/ReadmeFiles/nesalo.jpeg" target="_blank"></a>
 </div>
