@@ -21,7 +21,7 @@ using Application.Features.Communities.Commands;
 namespace WebUI.Areas.Admin
 {
 	[Area("Admin")]
-	public class ProfileController : BaseUserController<ProfileController>
+	public class ProfileController : BaseController<ProfileController>
 	{
 		private readonly UserManager<ApplicationUser> _userManager;
 		private readonly IWebHostEnvironment _webHostEnvironment;
@@ -32,7 +32,7 @@ namespace WebUI.Areas.Admin
 			_userManager = userManager;
 			_webHostEnvironment = webHostEnvironment;
 
-			ImageService.RootPass = ENV.RootPath;
+			ImageService.RootPass = _webHostEnvironment.WebRootPath;
 		}
 
 		public async Task<IActionResult> Index(string id)
@@ -42,9 +42,6 @@ namespace WebUI.Areas.Admin
 
 			if (response.Succeeded)
 				user.Communities = _mapper.Map<List<CommunityViewModel>>(response.Data);
-			else
-				_notify.Success($"Помилка при завантажені громад користувача");
-
 			return View(user);
 		}
 
@@ -67,7 +64,6 @@ namespace WebUI.Areas.Admin
 						nameof(CommunityViewModel.Id), nameof(CommunityViewModel.Name),
 						null, "District.Name");
 				}
-				// maybe implement notify
 				return View(user);
 			}
 
@@ -87,7 +83,6 @@ namespace WebUI.Areas.Admin
 					UserId = _userService.UserId,
 					Action = "Update",
 					TableName = "Users",
-					Key = appUser.Id,
 					OldValues = new AuditUserModel(_mapper.Map<UserViewModel>(appUser)),
 					NewValues = new AuditUserModel(user)
 				};
@@ -161,7 +156,7 @@ namespace WebUI.Areas.Admin
 
 			if (appUser != null && appUser.ProfilePicture != null)
 			{
-				if (ImageService.RemoveImageFromServer(appUser.ProfilePicture))
+				if (ImageService.DeleteImageLocal(appUser.ProfilePicture))
 				{
 					appUser.ProfilePicture = null;
 
@@ -192,18 +187,18 @@ namespace WebUI.Areas.Admin
 
 				if (appUser != null)
 				{
-					string imagePath = ImageService.UploadImageToServer(blob, Path.GetExtension(fileName));
+					string imagePath = ImageService.SaveImageLocal(blob, Path.GetExtension(fileName));
 					if (!String.IsNullOrEmpty(imagePath))
 					{
 						string oldImage = appUser.ProfilePicture;
 						appUser.ProfilePicture = imagePath;
 						if ((await _userManager.UpdateAsync(appUser)).Succeeded)
 						{
-							ImageService.RemoveImageFromServer(oldImage);
+							ImageService.DeleteImageLocal(oldImage);
 							_notify.Success($"Фото профілю успішно змінено");
 						}
 						else
-							ImageService.RemoveImageFromServer(imagePath);
+							ImageService.DeleteImageLocal(imagePath);
 					}
 				}
 				return new JsonResult(new { isValid = true });
@@ -237,6 +232,32 @@ namespace WebUI.Areas.Admin
 				}
 			}
 			return new List<CommunityViewModel>();
+		}
+
+		private IEnumerable<UpdateCommunityCommand> GenerateUpdate(IEnumerable<int> communities, string userId)
+		{
+			return communities.Select(id => new UpdateCommunityCommand()
+			{
+				Id = id,
+				ApplicationUserId = userId
+			});
+		}
+
+		private async Task<bool> ExecuteUpdateCommands(IEnumerable<UpdateCommunityCommand> commands)
+		{
+			foreach (var command in commands)
+			{
+				var communityRes = await _mediator.Send(command);
+
+				if (!communityRes.Succeeded)
+				{
+					_notify.Error($"Помилка при редагувані громади: {communityRes.Data}");
+					return false;
+				}
+				else
+					_notify.Information($"Громада {communityRes.Data} змінена");
+			}
+			return true;
 		}
 	}
 }

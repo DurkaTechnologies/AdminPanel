@@ -1030,7 +1030,7 @@ namespace MarkdownSharpAdapted
         {
             altText = EscapeImageAltText(AttributeEncode(altText));
             url = AttributeSafeUrl(url);
-            var result = string.Format("<img src=\"{0}\" alt=\"{1}\"", url, altText);
+            var result = string.Format("<img style=\"width: 100%\" src=\"{0}\" alt=\"{1}\"", url, altText);
             if (!string.IsNullOrEmpty(title))
             {
                 title = AttributeEncode(EscapeBoldItalic(title));
