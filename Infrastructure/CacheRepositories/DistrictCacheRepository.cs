@@ -1,13 +1,12 @@
-﻿using Application.Interfaces.CacheRepositories;
-using Application.Interfaces.Repositories;
-using Infrastructure.Extensions;
+﻿using AdminPanel.Application.Interfaces.CacheRepositories;
+using AdminPanel.Application.Interfaces.Repositories;
+using AdminPanel.Infrastructure.Extensions;
 using Domain.Entities;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Infrastructure.CacheKeys;
 
-namespace Infrastructure.CacheRepositories
+namespace AdminPanel.Infrastructure.CacheRepositories
 {
 	public class DistrictCacheRepository : IDistrictCacheRepository
 	{
@@ -22,28 +21,26 @@ namespace Infrastructure.CacheRepositories
 
 		public async Task<District> GetByIdAsync(int districtId)
 		{
-			string cacheKey = DistrictCacheKeys.GetKey(districtId);
-			var district = await distributedCache.GetAsync<District>(cacheKey);
-
-			if (district == null)
+			string cacheKey = CacheKeys.DistrictCacheKeys.GetKey(districtId);
+			var brand = await distributedCache.GetAsync<District>(cacheKey);
+			if (brand == null)
 			{
-				district = await districtRepository.GetByIdAsync(districtId);
-				await distributedCache.SetAsync(cacheKey, district);
+				brand = await districtRepository.GetByIdAsync(districtId);
+				await distributedCache.SetAsync(cacheKey, brand);
 			}
-			return district;
+			return brand;
 		}
 
 		public async Task<List<District>> GetCachedListAsync()
 		{
-			string cacheKey = DistrictCacheKeys.ListKey;
-			var districtList = await distributedCache.GetAsync<List<District>>(cacheKey);
-
-			if (districtList == null)
+			string cacheKey = CacheKeys.DistrictCacheKeys.ListKey;
+			var brandList = await distributedCache.GetAsync<List<District>>(cacheKey);
+			if (brandList == null)
 			{
-				districtList = await districtRepository.GetListAsync();
-				await distributedCache.SetAsync(cacheKey, districtList);
+				brandList = await districtRepository.GetListAsync();
+				await distributedCache.SetAsync(cacheKey, brandList);
 			}
-			return districtList;
+			return brandList;
 		}
 	}
 }

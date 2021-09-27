@@ -18,7 +18,4 @@
     <WebStackScaffolding_DbContextTypeFullName>AdminPanel.Infrastructure.DbContexts.ApplicationDbContext</WebStackScaffolding_DbContextTypeFullName>
     <NameOfLastUsedPublishProfile>C:\Users\ColdForeign\Desktop\AdminPanel\WebUI\Properties\PublishProfiles\FTPProfile.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
-  </PropertyGroup>
 </Project>

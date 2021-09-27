@@ -1,12 +1,12 @@
-﻿using Application.Common.Models;
-using Application.Interfaces.CacheRepositories;
+﻿using AdminPanel.Application.Common.Models;
+using AdminPanel.Application.Interfaces.CacheRepositories;
 using AutoMapper;
 using MediatR;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Features.Communities.Queries.GetAllCached
+namespace AdminPanel.Application.Features.Communities.Queries.GetAllCached
 {
 	public class GetAllDistrictsCachedQuery : IRequest<Result<List<GetAllDistrictsCachedResponse>>>
 	{

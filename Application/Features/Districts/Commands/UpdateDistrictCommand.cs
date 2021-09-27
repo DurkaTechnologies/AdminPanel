@@ -1,15 +1,14 @@
-﻿using Application.Common.Models;
-using Application.Interfaces.Repositories;
+﻿using AdminPanel.Application.Common.Models;
+using AdminPanel.Application.Interfaces.Repositories;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Features.Communities.Commands
+namespace AdminPanel.Application.Features.Communities.Commands
 {
 	public class UpdateDistrictCommand : IRequest<Result<int>>
 	{
 		public int Id { get; set; }
-
 		public string Name { get; set; }
 
 		public class UpdateDistrictCommandHandler : IRequestHandler<UpdateDistrictCommand, Result<int>>
@@ -28,7 +27,9 @@ namespace Application.Features.Communities.Commands
 				var district = await districtRepository.GetByIdAsync(command.Id);
 
 				if (district == null)
+				{
 					return Result<int>.Failure($"Brand Not Found.");
+				}
 				else
 				{
 					district.Name = command.Name ?? district.Name;

@@ -1,10 +1,10 @@
-﻿using Application.Common.Models;
-using Application.Interfaces.Repositories;
+﻿using AdminPanel.Application.Common.Models;
+using AdminPanel.Application.Interfaces.Repositories;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Features.Communities.Commands
+namespace AdminPanel.Application.Features.Communities.Commands
 {
 	public class DeleteCommunityCommand : IRequest<Result<int>>
 	{

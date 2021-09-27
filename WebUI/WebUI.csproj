@@ -4,30 +4,21 @@
     <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>aspnet-WebUI-6DDA7EA6-F8FC-4FAF-81B5-C3E5CFC8CCF4</UserSecretsId>
     <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\**" />
     <Compile Remove="wwwroot\img\**" />
-    <Compile Remove="wwwroot\lib\jquery-validation\dist\**" />
+    <Content Remove="Controllers\**" />
     <Content Remove="wwwroot\img\**" />
-    <Content Remove="wwwroot\lib\jquery-validation\dist\**" />
+    <EmbeddedResource Remove="Controllers\**" />
     <EmbeddedResource Remove="wwwroot\img\**" />
-    <EmbeddedResource Remove="wwwroot\lib\jquery-validation\dist\**" />
+    <None Remove="Controllers\**" />
     <None Remove="wwwroot\img\**" />
-    <None Remove="wwwroot\lib\jquery-validation\dist\**" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Properties\PublishProfiles\FTPProfile.pubxml.user" />
-    <None Include="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js" />
-    <None Include="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js" />
-    <None Include="wwwroot\lib\select2\js\i18n\en.js" />
-    <None Include="wwwroot\lib\select2\js\i18n\uk.js" />
-    <None Include="wwwroot\lib\select2\js\select2.full.js" />
-    <None Include="wwwroot\lib\select2\js\select2.full.min.js" />
-    <None Include="wwwroot\lib\select2\js\select2.js" />
-    <None Include="wwwroot\lib\select2\js\select2.min.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,19 +30,13 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.8" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.7" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.3" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\ReadmeFiles\" />
   </ItemGroup>
 </Project>

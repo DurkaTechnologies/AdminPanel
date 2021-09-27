@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace WebUI.Views.Shared.Components.Footer
+namespace AdminPanel.Web.Views.Shared.Components.Footer
 {
     public class FooterViewComponent : ViewComponent
     {

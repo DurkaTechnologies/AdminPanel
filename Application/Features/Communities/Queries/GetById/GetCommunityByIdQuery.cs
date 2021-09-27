@@ -1,11 +1,11 @@
-﻿using Application.Common.Models;
-using Application.Interfaces.CacheRepositories;
+﻿using AdminPanel.Application.Common.Models;
+using AdminPanel.Application.Interfaces.CacheRepositories;
 using AutoMapper;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Features.Communities.Queries.GetById
+namespace AdminPanel.Application.Features.Communities.Queries.GetById
 {
 	public class GetCommunityByIdQuery : IRequest<Result<GetCommunityByIdResponse>>
 	{

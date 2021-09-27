@@ -1,12 +1,11 @@
-﻿using Application.Common.Models;
-using Application.Interfaces.CacheRepositories;
-using Application.Interfaces.Repositories;
+﻿using AdminPanel.Application.Common.Models;
+using AdminPanel.Application.Interfaces.CacheRepositories;
 using AutoMapper;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Features.Communities.Queries.GetById
+namespace AdminPanel.Application.Features.Communities.Queries.GetById
 {
 	public class GetDistrictByIdQuery : IRequest<Result<GetDistrictByIdResponse>>
 	{
@@ -14,10 +13,10 @@ namespace Application.Features.Communities.Queries.GetById
 
 		public class GetDistrictByIdQueryHandler : IRequestHandler<GetDistrictByIdQuery, Result<GetDistrictByIdResponse>>
 		{
-			private readonly IDistrictRepository districtCache;
+			private readonly IDistrictCacheRepository districtCache;
 			private readonly IMapper mapper;
 
-			public GetDistrictByIdQueryHandler(IDistrictRepository districtCache, IMapper mapper)
+			public GetDistrictByIdQueryHandler(IDistrictCacheRepository districtCache, IMapper mapper)
 			{
 				this.districtCache = districtCache;
 				this.mapper = mapper;
@@ -26,8 +25,8 @@ namespace Application.Features.Communities.Queries.GetById
 			public async Task<Result<GetDistrictByIdResponse>> Handle(GetDistrictByIdQuery query, CancellationToken cancellationToken)
 			{
 				var district = await districtCache.GetByIdAsync(query.Id);
-				var mappedDistrict = mapper.Map<GetDistrictByIdResponse>(district);
-				return Result<GetDistrictByIdResponse>.Success(mappedDistrict);
+				var mappedProduct = mapper.Map<GetDistrictByIdResponse>(district);
+				return Result<GetDistrictByIdResponse>.Success(mappedProduct);
 			}
 		}
 	}

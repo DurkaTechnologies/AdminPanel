@@ -1,4 +1,4 @@
-﻿using WebUI.Abstractions;
+﻿using AdminPanel.Web.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -14,148 +14,106 @@ using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.ViewEngines;
-using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace WebUI.Services
+namespace AdminPanel.Web.Services
 {
-	public class ViewRenderService : IViewRenderService
-	{
-		private readonly IRazorViewEngine _razorViewEngine;
-		private readonly ITempDataProvider _tempDataProvider;
-		private readonly IServiceProvider _serviceProvider;
-		private readonly IHttpContextAccessor _httpContext;
-		private readonly IActionContextAccessor _actionContext;
-		private readonly IRazorPageActivator _activator;
+    public class ViewRenderService : IViewRenderService
+    {
+        private readonly IRazorViewEngine _razorViewEngine;
+        private readonly ITempDataProvider _tempDataProvider;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly IHttpContextAccessor _httpContext;
+        private readonly IActionContextAccessor _actionContext;
+        private readonly IRazorPageActivator _activator;
 
-		public ViewRenderService(IRazorViewEngine razorViewEngine,
-			ITempDataProvider tempDataProvider,
-			IServiceProvider serviceProvider,
-			IHttpContextAccessor httpContext,
-			IRazorPageActivator activator,
-			IActionContextAccessor actionContext)
-		{
-			_razorViewEngine = razorViewEngine;
-			_tempDataProvider = tempDataProvider;
-			_serviceProvider = serviceProvider;
+        public ViewRenderService(IRazorViewEngine razorViewEngine,
+            ITempDataProvider tempDataProvider,
+            IServiceProvider serviceProvider,
+            IHttpContextAccessor httpContext,
+            IRazorPageActivator activator,
+            IActionContextAccessor actionContext)
+        {
+            _razorViewEngine = razorViewEngine;
+            _tempDataProvider = tempDataProvider;
+            _serviceProvider = serviceProvider;
 
-			_httpContext = httpContext;
-			_actionContext = actionContext;
-			_activator = activator;
-		}
+            _httpContext = httpContext;
+            _actionContext = actionContext;
+            _activator = activator;
+        }
 
-		public async Task<string> RenderViewToStringAsync<T>(string pageName, T model, ITempDataDictionary data = null)
-		{
-			var actionContext =
-				new ActionContext(
-					_httpContext.HttpContext,
-					_httpContext.HttpContext.GetRouteData(),
-					_actionContext.ActionContext.ActionDescriptor
-				);
+        public async Task<string> RenderViewToStringAsync<T>(string pageName, T model)
+        {
+            var actionContext =
+                new ActionContext(
+                    _httpContext.HttpContext,
+                    _httpContext.HttpContext.GetRouteData(),
+                    _actionContext.ActionContext.ActionDescriptor
+                );
 
-			using (var sw = new StringWriter())
-			{
-				var result = _razorViewEngine.FindPage(actionContext, pageName);
+            using (var sw = new StringWriter())
+            {
+                var result = _razorViewEngine.FindPage(actionContext, pageName);
 
-				if (result.Page == null)
-				{
-					throw new ArgumentNullException($"The page {pageName} cannot be found.");
-				}
+                if (result.Page == null)
+                {
+                    throw new ArgumentNullException($"The page {pageName} cannot be found.");
+                }
 
-				var view = new RazorView(_razorViewEngine,
-					_activator,
-					new List<IRazorPage>(),
-					result.Page,
-					HtmlEncoder.Default,
-					new DiagnosticListener("ViewRenderService"));
+                var view = new RazorView(_razorViewEngine,
+                    _activator,
+                    new List<IRazorPage>(),
+                    result.Page,
+                    HtmlEncoder.Default,
+                    new DiagnosticListener("ViewRenderService"));
 
-				var viewContext = new ViewContext(
-					actionContext,
-					view,
-					new ViewDataDictionary<T>(new EmptyModelMetadataProvider(), new ModelStateDictionary())
-					{
-						Model = model
-					},
-					new TempDataDictionary(
-						_httpContext.HttpContext,
-						_tempDataProvider
-					),
-					sw,
-					new HtmlHelperOptions()
-				);
+                var viewContext = new ViewContext(
+                    actionContext,
+                    view,
+                    new ViewDataDictionary<T>(new EmptyModelMetadataProvider(), new ModelStateDictionary())
+                    {
+                        Model = model
+                    },
+                    new TempDataDictionary(
+                        _httpContext.HttpContext,
+                        _tempDataProvider
+                    ),
+                    sw,
+                    new HtmlHelperOptions()
+                );
 
-				if (data != null)
-				{
-					foreach (var item in data)
-						viewContext.TempData.Add(item.Key, item.Value);
-				}
+                var page = (result.Page);
 
-				var page = (result.Page);
+                page.ViewContext = viewContext;
 
-				page.ViewContext = viewContext;
+                _activator.Activate(page, viewContext);
 
-				_activator.Activate(page, viewContext);
+                await page.ExecuteAsync();
 
-				await page.ExecuteAsync();
+                return sw.ToString();
+            }
+        }
 
-				return sw.ToString();
-			}
-		}
+        private IRazorPage FindPage(ActionContext actionContext, string pageName)
+        {
+            var getPageResult = _razorViewEngine.GetPage(executingFilePath: null, pagePath: pageName);
+            if (getPageResult.Page != null)
+            {
+                return getPageResult.Page;
+            }
 
-		public string RenderRazorViewToString(Controller controller, string viewName, object model = null)
-		{
-			controller.ViewData.Model = model;
-			using (var sw = new StringWriter())
-			{
-				IViewEngine viewEngine = controller.HttpContext.RequestServices.GetService(typeof(ICompositeViewEngine)) as ICompositeViewEngine;
-				ViewEngineResult viewResult = viewEngine.FindView(controller.ControllerContext, viewName, false);
+            var findPageResult = _razorViewEngine.FindPage(actionContext, pageName);
+            if (findPageResult.Page != null)
+            {
+                return findPageResult.Page;
+            }
 
-				ViewContext viewContext = new ViewContext(
-					controller.ControllerContext,
-					viewResult.View,
-					controller.ViewData,
-					controller.TempData,
-					sw,
-					new HtmlHelperOptions()
-				);
-				viewResult.View.RenderAsync(viewContext);
-				return sw.GetStringBuilder().ToString();
-			}
-		}
+            var searchedLocations = getPageResult.SearchedLocations.Concat(findPageResult.SearchedLocations);
+            var errorMessage = string.Join(
+                Environment.NewLine,
+                new[] { $"Unable to find page '{pageName}'. The following locations were searched:" }.Concat(searchedLocations));
 
-		[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-		public class NoDirectAccessAttribute : ActionFilterAttribute
-		{
-			public override void OnActionExecuting(ActionExecutingContext filterContext)
-			{
-				if (filterContext.HttpContext.Request.GetTypedHeaders().Referer == null ||
-		 filterContext.HttpContext.Request.GetTypedHeaders().Host.Host.ToString() != filterContext.HttpContext.Request.GetTypedHeaders().Referer.Host.ToString())
-				{
-					filterContext.HttpContext.Response.Redirect("/");
-				}
-			}
-		}
-
-		private IRazorPage FindPage(ActionContext actionContext, string pageName)
-		{
-			var getPageResult = _razorViewEngine.GetPage(executingFilePath: null, pagePath: pageName);
-			if (getPageResult.Page != null)
-			{
-				return getPageResult.Page;
-			}
-
-			var findPageResult = _razorViewEngine.FindPage(actionContext, pageName);
-			if (findPageResult.Page != null)
-			{
-				return findPageResult.Page;
-			}
-
-			var searchedLocations = getPageResult.SearchedLocations.Concat(findPageResult.SearchedLocations);
-			var errorMessage = string.Join(
-				Environment.NewLine,
-				new[] { $"Unable to find page '{pageName}'. The following locations were searched:" }.Concat(searchedLocations));
-
-			throw new InvalidOperationException(errorMessage);
-		}
-	}
+            throw new InvalidOperationException(errorMessage);
+        }
+    }
 }

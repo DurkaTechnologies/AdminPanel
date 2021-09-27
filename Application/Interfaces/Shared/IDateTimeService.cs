@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace Application.Interfaces.Shared
+namespace AdminPanel.Application.Interfaces.Shared
 {
-	public interface IDateTimeService
-	{
-		DateTime NowUtc { get; }
-	}
+    public interface IDateTimeService
+    {
+        DateTime NowUtc { get; }
+    }
 }

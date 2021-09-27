@@ -1,6 +1,10 @@
-﻿namespace Domain.Entities
+﻿using AdminPanel.Domain.Common.Interfaces;
+using AdminPanel.Domain.Common.Models;
+using System.Collections.Generic;
+
+namespace Domain.Entities
 {
-	public class Community
+	public class Community : AuditableEntity
 	{
 		public int Id { get; set; }
 
@@ -9,7 +13,5 @@
 		public int? DistrictId { get; set; }
 
 		public virtual District District { get; set; }
-
-		public string ApplicationUserId { get; set; }
 	}
 }

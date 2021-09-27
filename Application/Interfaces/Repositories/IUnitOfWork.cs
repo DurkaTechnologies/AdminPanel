@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Interfaces.Repositories
+namespace AdminPanel.Application.Interfaces.Repositories
 {
 	public interface IUnitOfWork : IDisposable
 	{

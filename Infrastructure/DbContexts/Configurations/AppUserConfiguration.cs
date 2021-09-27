@@ -2,31 +2,30 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Persistence.Configurations
+namespace AdminPanel.Infrastructure.Persistence.Configurations
 {
 	public class AppUserConfiguration : IEntityTypeConfiguration<ApplicationUser>
 	{
 		public void Configure(EntityTypeBuilder<ApplicationUser> builder)
 		{
-			builder.Property(user => user.FirstName)
+			builder.Property(t => t.FirstName)
 				.HasMaxLength(30)
 				.IsRequired();
 
-			builder.Property(user => user.MiddleName)
+			builder.Property(t => t.MiddleName)
 				.HasMaxLength(30)
 				.IsRequired();
 
-			builder.Property(user => user.LastName)
+			builder.Property(t => t.LastName)
 				.HasMaxLength(30)
 				.IsRequired();
 
-			builder.Property(user => user.ProfilePicture)
+			builder.Property(t => t.ProfilePicture)
 				.HasMaxLength(256);
 
-			builder.Property(user => user.Description)
-				.HasMaxLength(5000);
+			builder.Property(t => t.Description)
+				.HasMaxLength(2000);
 
-			builder.HasMany(user => user.Communities);
 		}
 	}
 }

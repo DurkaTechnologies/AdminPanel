@@ -1,12 +1,12 @@
-﻿using Application.Common.Models;
-using Application.Interfaces.Repositories;
+﻿using AdminPanel.Application.Common.Models;
+using AdminPanel.Application.Interfaces.Repositories;
 using AutoMapper;
 using Domain.Entities;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Features.Communities.Commands
+namespace AdminPanel.Application.Features.Communities.Commands
 {
 	public class UpdateCommunityCommand : IRequest<Result<int>>
 	{
@@ -15,8 +15,6 @@ namespace Application.Features.Communities.Commands
 		public string Name { get; set; }
 
 		public int? DistrictId { get; set; }
-
-		public string ApplicationUserId { get; set; }
 
 		public class UpdateCommunityCommandHandler : IRequestHandler<UpdateCommunityCommand, Result<int>>
 		{
@@ -33,34 +31,19 @@ namespace Application.Features.Communities.Commands
 
 			public async Task<Result<int>> Handle(UpdateCommunityCommand command, CancellationToken cancellationToken)
 			{
-				var community = await communityRepository.GetByIdAsync(command.Id);
+				//var community = await communityRepository.GetByIdAsync(command.Id);
 
-				if (community == null)
-				{
-					return Result<int>.Failure($"Brand Not Found.");
-				}
-				else
-				{
-					community.Name = command.Name.NullIfEmpty() ?? community.Name;
-					community.DistrictId = command.DistrictId ?? community.DistrictId;
-					community.ApplicationUserId = command.ApplicationUserId;
+				//if (community == null)
+				//{
+				//	return Result<int>.Failure($"Brand Not Found.");
+				//}
+			
+					//community.Name = command.Name ?? community.Name;
 					await communityRepository.UpdateAsync(mapper.Map<Community>(command));
+				//error ??
 					await unitOfWork.Commit(cancellationToken);
 					return Result<int>.Success(command.Id);
-				}
 			}
-		}
-	}
-
-	public static class StringExtensions
-	{
-		public static string NullIfEmpty(this string s)
-		{
-			return string.IsNullOrEmpty(s) ? null : s;
-		}
-		public static string NullIfWhiteSpace(this string s)
-		{
-			return string.IsNullOrWhiteSpace(s) ? null : s;
 		}
 	}
 }

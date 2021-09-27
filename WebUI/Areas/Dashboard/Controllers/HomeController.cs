@@ -1,7 +1,7 @@
-﻿using WebUI.Abstractions;
+﻿using AdminPanel.Web.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebUI.Areas.Dashboard.Controllers
+namespace AdminPanel.Web.Areas.Dashboard.Controllers
 {
 	[Area("Dashboard")]
 	public class HomeController : BaseController<HomeController>

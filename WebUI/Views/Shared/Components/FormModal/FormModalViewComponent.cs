@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace WebUI.Views.Shared.Components.FormModal
+namespace AdminPanel.Web.Views.Shared.Components.FormModal
 {
     public class FormModalViewComponent : ViewComponent
     {

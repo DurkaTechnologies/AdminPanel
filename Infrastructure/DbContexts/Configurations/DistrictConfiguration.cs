@@ -11,6 +11,7 @@ namespace Infrastructure.DbContexts.Configurations
 			builder.Property(t => t.Name)
 				.HasMaxLength(256)
 				.IsRequired();
+
 		}
 	}
 }

@@ -1,11 +1,11 @@
-﻿using Application.Interfaces.Repositories;
-using Application.Interfaces.Shared;
-using Infrastructure.DbContexts;
+﻿using AdminPanel.Application.Interfaces.Repositories;
+using AdminPanel.Application.Interfaces.Shared;
+using AdminPanel.Infrastructure.DbContexts;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Repositories
+namespace AdminPanel.Infrastructure.Repositories
 {
 	public class UnitOfWork : IUnitOfWork
 	{
@@ -26,14 +26,7 @@ namespace Infrastructure.Repositories
 
 		public async Task<int> CommitApplicationDb(CancellationToken cancellationToken)
 		{
-			try
-			{
-				return await applicationDbContext.SaveChangesAsync(cancellationToken);
-			}
-			catch (Exception)
-			{
-				return 0;
-			}
+			return await applicationDbContext.SaveChangesAsync(cancellationToken);
 		}
 
 		public Task Rollback()

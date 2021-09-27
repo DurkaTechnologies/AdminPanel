@@ -1,9 +1,9 @@
-﻿namespace Application.Enums
+﻿namespace AdminPanel.Application.Enums
 {
 	public enum Roles
-	{
-		SuperAdmin,
-		Admin,
-		Worker
-	}
+    {
+        SuperAdmin,
+        Admin,
+        Worker
+    }
 }

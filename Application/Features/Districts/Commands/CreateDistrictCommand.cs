@@ -1,12 +1,12 @@
-﻿using Application.Interfaces.Repositories;
+﻿using AdminPanel.Application.Interfaces.Repositories;
 using Domain.Entities;
 using AutoMapper;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Common.Models;
+using AdminPanel.Application.Common.Models;
 
-namespace Application.Features.Communities.Commands
+namespace AdminPanel.Application.Features.Communities.Commands
 {
 	public partial class CreateDistrictCommand : IRequest<Result<int>>
 	{

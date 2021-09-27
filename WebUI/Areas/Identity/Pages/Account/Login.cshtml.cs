@@ -2,18 +2,22 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Infrastructure.Identity.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using System.Net.Mail;
-using WebUI.Abstractions;
+using AspNetCoreHero.ToastNotification.Abstractions;
+using AdminPanel.Web.Abstractions;
 using WebUI.Services;
 using Microsoft.AspNetCore.Hosting;
-using Application.Features.ActivityLog.Commands;
+using AdminPanel.Application.Features.ActivityLog.Commands;
 
 namespace WebUI.Areas.Identity.Pages.Account
 {
@@ -89,18 +93,26 @@ namespace WebUI.Areas.Identity.Pages.Account
 				{
 					var userCheck = await _userManager.FindByEmailAsync(Input.Email);
 					if (userCheck != null)
+					{
 						userName = userCheck.UserName;
+					}
 				}
 
 				var user = await _userManager.FindByNameAsync(userName);
+
+				//if (!user.IsActive)
+				//{
+				//	_notyf.Error($"Ваш акаунт деактивовано.");
+				//	return RedirectToPage("./Login");
+				//}
 
 				var result = await _signInManager.PasswordSignInAsync(userName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
 
 				if (result.Succeeded)
 				{
 					string fullName = user.MiddleName + " " + user.FirstName + " " + user.LastName + " увійшов";
-					await _mediator.Send(new AddActivityLogCommand() { userId = user.Id, Action = fullName });
-
+					await _mediator.Send(new AddActivityLogCommand() { userId = user.Id, Action =  fullName});
+					
 					_logger.LogInformation("User logged in.");
 
 					if (user.FirstName == null || user.LastName == null)

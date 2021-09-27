@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.AuditModels
+﻿namespace AdminPanel.Infrastructure.AuditModels
 {
 	public enum AuditType
 	{

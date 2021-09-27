@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace WebUI.Helpers
+namespace AdminPanel.WebUI.Helpers
 {
 	[HtmlTargetElement(Attributes = "is-active-route")]
 	public class ActiveRouteTagHelper : TagHelper

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Application.Interfaces.Repositories
+namespace AdminPanel.Application.Interfaces.Repositories
 {
 	public interface IRepositoryAsync<TEntity, TContext> where TEntity : class where TContext : DbContext
 	{

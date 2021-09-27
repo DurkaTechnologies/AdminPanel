@@ -1,5 +1,5 @@
-using Application.Extensions;
-using Infrastructure.Extensions;
+using AdminPanel.Application.Extensions;
+using AdminPanel.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -10,14 +10,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
-using WebUI.Extensions;
-using WebUI.Abstractions;
-using WebUI.Services;
+using AdminPanel.Web.Extensions;
+using MediatR;
+using AdminPanel.Web.Abstractions;
+using AdminPanel.Web.Services;
 using Microsoft.AspNetCore.Authorization;
-using WebUI.Permission;
+using AdminPanel.WebUI.Permission;
 using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
-using Microsoft.AspNetCore.Identity;
+using WebUI.Services;
 
 namespace WebUI
 {
@@ -42,16 +43,6 @@ namespace WebUI
 				o.DurationInSeconds = 10;
 				o.IsDismissable = true;
 				o.HasRippleEffect = true;
-			});
-
-			services.Configure<IdentityOptions>(options =>
-			{
-				options.Password.RequireDigit = false;
-				options.Password.RequireLowercase = false;
-				options.Password.RequireNonAlphanumeric = false;
-				options.Password.RequireUppercase = false;
-				options.Password.RequiredLength = 0;
-				options.Password.RequiredUniqueChars = 0;
 			});
 
 			services.AddApplicationLayer();

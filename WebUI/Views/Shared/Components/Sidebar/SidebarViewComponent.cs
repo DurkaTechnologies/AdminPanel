@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace WebUI.Views.Shared.Components.Sidebar
+namespace AdminPanel.Web.Views.Shared.Components.Sidebar
 {
     public class SidebarViewComponent : ViewComponent
     {

@@ -13437,7 +13437,7 @@ body:not(.layout-fixed) .main-sidebar .sidebar {
 }
 
 [class*="sidebar-dark-"] {
-    background-color: #212121;
+  background-color: #343a40;
 }
 
 [class*="sidebar-dark-"] .user-panel a:hover {
@@ -18970,8 +18970,8 @@ body.text-sm .control-sidebar {
 }
 
 .dark-mode .navbar-dark {
-    background-color: #212121;
-    border-color: #4b545c;
+  background-color: #343a40;
+  border-color: #4b545c;
 }
 
 .dark-mode .navbar-primary {

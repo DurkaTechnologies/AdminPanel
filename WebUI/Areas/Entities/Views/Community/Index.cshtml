@@ -4,16 +4,16 @@
 }
 
 @using WebUI.Areas.Entities.Models
-@using Application.Constants
+@using AdminPanel.Application.Constants
 @model CommunityViewModel
 
-@{
+@{ 
 	bool view = AuthorizationService.AuthorizeAsync(User, Permissions.Communities.View).Result.Succeeded;
 }
 
 @if (view)
 {
-	<div class="card pb-0">
+    <div class="card">
 		<div class="row">
 			<div class="col-sm-12 col-md-6" style="padding: 20px 0 20px 20px ">
 
@@ -41,37 +41,37 @@
 				</div>
 			</div>
 		</div>
+		
 
-
-		@if (view)
-		{
-			<div id="viewAll" class="card-body table-responsive">
-			</div>
-		}
-	</div>
-
-	@section Scripts
-	{
-		<script src="~/js/site.js"></script>
-		<script>
-			$(document).ready(function () {
-				$("#brandTable").DataTable({
-					language: {
-						url: "//cdn.datatables.net/plug-ins/1.10.18/i18n/Ukrainian.json"
-					},
-				});
-				loadData();
-				$('#reload').on('click', function () {
-					loadData();
-				});
-			});
-			function loadData() {
-				$('#viewAll').load('/entities/community/LoadAll');
-			}
-		</script>
-	}
+        @if (view)
+        {
+            <div id="viewAll" class="card-body table-responsive">
+            </div>
+        }
+    </div>
 }
-else
+else 
 {
-	<h2 class="text-center">Не доступно для вас</h2>
+    <h2 class="text-center">Не доступно для вас</h2>
+}
+
+@section Scripts
+{
+    <script src="~/js/site.js"></script>
+    <script>
+        $(document).ready(function () {
+			$("#brandTable").DataTable({
+				language: {
+					url: "//cdn.datatables.net/plug-ins/1.10.18/i18n/Ukrainian.json"
+				},
+			});
+            loadData();
+            $('#reload').on('click', function () {
+                loadData();
+            });
+        });
+        function loadData() {
+			$('#viewAll').load('/entities/community/LoadAll');
+        }
+    </script>
 }

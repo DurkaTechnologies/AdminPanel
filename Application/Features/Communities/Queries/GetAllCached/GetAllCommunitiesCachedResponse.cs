@@ -1,4 +1,6 @@
-﻿namespace Application.Features.Communities.Queries.GetAllCached
+﻿using Domain.Entities;
+
+namespace AdminPanel.Application.Features.Communities.Queries.GetAllCached
 {
 	public class GetAllCommunitiesCachedResponse
 	{
@@ -6,10 +8,6 @@
 
 		public string Name { get; set; }
 
-        public string ApplicationUserId { get; set; }
-
-        public string ApplicationUserName { get; set; }
-
-        public GetAllDistrictsCachedResponse District { get; set; }
+		public GetAllDistrictsCachedResponse District { get; set; }
 	}
 }

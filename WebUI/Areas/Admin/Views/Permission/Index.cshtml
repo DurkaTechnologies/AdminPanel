@@ -1,13 +1,12 @@
-﻿@using WebUI.Areas.Admin.Models
-@model PermissionViewModel
-
+﻿@model WebUI.Areas.Admin.Models.PermissionViewModel
 <div class="card">
-	<div id="viewAll" class="card-body table-responsive">
-		<form asp-controller="Permission" method="post" asp-action="Update" class="d-inline">
-			<input asp-for="@Model.RoleId" type="hidden" />
-			<table class="table table-striped" id="permissionTable">
-				<thead>
-					<tr>
+
+    <div id="viewAll" class="card-body table-responsive">
+        <form asp-controller="Permission" method="post" asp-action="Update" class="d-inline">
+            <input asp-for="@Model.RoleId" type="hidden" />
+            <table class="table table-striped" id="permissionTable">
+                <thead>
+                    <tr>
 						<th>
 							Тип
 						</th>
@@ -17,50 +16,49 @@
 						<th>
 							Статус
 						</th>
-					</tr>
-				</thead>
-				<tbody>
+                    </tr>
+                </thead>
+                <tbody>
 
-					@for (int i = 0; i < Model.RoleClaims.Count(); i++)
-					{
-						<tr>
-							<td>
-								<input asp-for="@Model.RoleClaims[i].Type" type="hidden" />
-								@Model.RoleClaims[i].Type
-							</td>
-							<td>
-								<input asp-for="@Model.RoleClaims[i].Value" type="hidden" />
-								@Model.RoleClaims[i].Value
-							</td>
-							<td>
-								<div class="form-check m-1">
-									<input asp-for="@Model.RoleClaims[i].Selected" class="form-check-input" />
-								</div>
-							</td>
-						</tr>
-					}
-				</tbody>
-			</table>
+                    @for (int i = 0; i < Model.RoleClaims.Count(); i++)
+                    {
+                        <tr>
+                            <td>
+                                <input asp-for="@Model.RoleClaims[i].Type" type="hidden" />
+                                @Model.RoleClaims[i].Type
+                            </td>
+                            <td>
+                                <input asp-for="@Model.RoleClaims[i].Value" type="hidden" />
+                                @Model.RoleClaims[i].Value
+                            </td>
+                            <td>
+                                <div class="form-check m-1">
+                                    <input asp-for="@Model.RoleClaims[i].Selected" class="form-check-input" />
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
 
-			<div class="col-sm-12" style="padding: 20px 20px 0px 0px">
-				<button type="submit" id="save" class="btn bg-success">
-					<i class="fa fa-check"></i>
-					Зберегти
-				</button>
-			</div>
-		</form>
-	</div>
+            <div class="col-sm-12" style="padding: 20px 20px 0px 0px">
+                <button type="submit" id="save" class="btn bg-success">
+                    <i class="fa fa-check"></i>
+                    Зберегти
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
-
 @section Scripts
 {
-	<script>
-		$(document).ready(function () {
-			$("#permissionTable").DataTable({
-				language: {
-					url: "//cdn.datatables.net/plug-ins/1.10.18/i18n/Ukrainian.json"
-				},
-			});;
-		});
-	</script>
+    <script>
+        $(document).ready(function () {
+            $("#permissionTable").DataTable({
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/1.10.18/i18n/Ukrainian.json"
+                },
+            });;
+        });
+    </script>
 }

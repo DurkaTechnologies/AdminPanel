@@ -1,8 +1,9 @@
-﻿using Application.Enums;
+﻿using AdminPanel.Application.Enums;
 using Microsoft.AspNetCore.Identity;
+using System.Linq;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Identity.Seeds
+namespace AdminPanel.Infrastructure.Identity.Seeds
 {
 	public static class DefaultRoles
 	{

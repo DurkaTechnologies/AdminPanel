@@ -1,69 +1,70 @@
-﻿<aside id="sideBar" class="main-sidebar sidebar-light-primary elevation-4">
-    <a href="~/" class="brand-link">
-        <img src="~/images/gerb-dark.svg" id="brand-logo" alt="logo" class="brand-image" style="width: 33px !important; object-fit: contain; ">
-        <span class="brand-text font-weight-light">Панель керування</span>
-    </a>
-    <div class="sidebar">
-        <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                <li class="nav-item">
-                    <a href="/" class="nav-link">
-                        <i class="nav-icon fas fa-th"></i>
-                        <p>Панель</p>
-                    </a>
-                </li>
-                @if (User.Identity.IsAuthenticated)
-                {
-                    @if (User.IsInRole("SuperAdmin"))
-                    {
-                        <li class="nav-header">Адміністратор</li>
-                        <li is-active-route class="nav-item has-treeview">
-                            <a is-active-route class="nav-link">
-                                <i class="nav-icon fas fa-tools"></i>
-                                <p>
-                                    Керування
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-
-
-                                <li class="nav-item">
-                                    <a is-active-route asp-area="Admin" asp-controller="Role" asp-action="Index" class="nav-link">
-                                        <i class="fas fa-user-tag nav-icon"></i>
-                                        <p>Ролі</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a is-active-route asp-area="Identity" asp-page="/Account/AuditLog" class="nav-link">
-                                        <i class="fas fa-list nav-icon"></i>
-                                        <p>Логування</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                    }
-                    <li class="nav-header">Редактор</li>
-                    <li class="nav-item">
-                        <a is-active-route asp-area="Admin" asp-controller="User" asp-action="Index" class="nav-link">
-                            <i class="fas fa-users nav-icon "></i>
-                            <p>Користувачі</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a is-active-route asp-area="Entities" asp-controller="Community" asp-action="Index" class="nav-link">
-                            <i class="fas fa-table nav-icon"></i>
-                            <p>Громади</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a is-active-route asp-area="Entities" asp-controller="District" asp-action="Index" class="nav-link">
-                            <i class="fas fa-table nav-icon"></i>
-                            <p>Райони</p>
-                        </a>
-                    </li>
-                }
-            </ul>
-        </nav>
-    </div>
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using AdminPanel.Application.Constants
+@using WebUI.Areas.Entities.Models
+<aside id="sideBar" class="main-sidebar sidebar-light-primary elevation-4">
+	<a href="~/" class="brand-link">
+		<img src="~/images/gerb-dark.svg" id="brand-logo" alt="logo" class="brand-image" style="width: 33px !important; object-fit: contain; ">
+		<span class="brand-text font-weight-light">Панель керування</span>
+	</a>
+	<div class="sidebar">
+		<nav class="mt-2">
+			<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+				<li class="nav-item">
+					<a href="/" class="nav-link">
+						<i class="nav-icon fas fa-th"></i>
+						<p>Панель</p>
+					</a>
+				</li>
+				@if (User.Identity.IsAuthenticated)
+				{
+					<li class="nav-header">Адміністратор</li>
+					<li is-active-route class="nav-item has-treeview">
+						<a is-active-route class="nav-link">
+							<i class="nav-icon fas fa-tools"></i>
+							<p>
+								Керування
+								<i class="fas fa-angle-left right"></i>
+							</p>
+						</a>
+						<ul class="nav nav-treeview">
+							<li class="nav-item">
+								<a is-active-route asp-area="Admin" asp-controller="User" asp-action="Index" class="nav-link">
+									<i class="fas fa-users nav-icon "></i>
+									<p>Користувачі</p>
+								</a>
+							</li>
+							@if (User.IsInRole("SuperAdmin"))
+							{
+								<li class="nav-item">
+									<a is-active-route asp-area="Admin" asp-controller="Role" asp-action="Index" class="nav-link">
+										<i class="fas fa-user-tag nav-icon"></i>
+										<p>Ролі</p>
+									</a>
+								</li>
+							}
+							<li class="nav-item">
+								<a is-active-route asp-controller="Identity" asp-action="Log" class="nav-link">
+									<i class="fas fa-list nav-icon"></i>
+									<p>Логування</p>
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li class="nav-header">Редактор</li>
+					<li class="nav-item">
+						<a is-active-route asp-area="Entities" asp-controller="Community" asp-action="Index" class="nav-link">
+							<i class="fas fa-table nav-icon"></i>
+							<p>Громади</p>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a is-active-route asp-area="Entities" asp-controller="District" asp-action="Index" class="nav-link">
+							<i class="fas fa-table nav-icon"></i>
+							<p>Райони</p>
+						</a>
+					</li>
+				}
+			</ul>
+		</nav>
+	</div>
 </aside>

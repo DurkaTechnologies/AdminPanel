@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Application.Interfaces.CacheRepositories
+namespace AdminPanel.Application.Interfaces.CacheRepositories
 {
 	public interface IDistrictCacheRepository
 	{

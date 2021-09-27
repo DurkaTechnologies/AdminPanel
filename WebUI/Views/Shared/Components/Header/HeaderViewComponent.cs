@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace WebUI.Views.Shared.Components.Header
+namespace AdminPanel.Web.Views.Shared.Components.Header
 {
     public class HeaderViewComponent : ViewComponent
     {

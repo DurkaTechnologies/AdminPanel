@@ -1,9 +1,13 @@
-﻿namespace WebUI.Areas.Admin.Models
-{
-	public class RoleViewModel
-	{
-		public string Name { get; set; }
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-		public string Id { get; set; }
-	}
+namespace WebUI.Areas.Admin.Models
+{
+    public class RoleViewModel
+    {
+        public string Name { get; set; }
+        public string Id { get; set; }
+    }
 }

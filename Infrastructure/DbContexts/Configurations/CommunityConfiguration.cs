@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Persistence.Configurations
+namespace AdminPanel.Infrastructure.Persistence.Configurations
 {
 	public class CommunityConfiguration : IEntityTypeConfiguration<Community>
 	{

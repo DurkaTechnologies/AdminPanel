@@ -1,10 +1,10 @@
-﻿using Application.Features.Communities.Commands;
-using Application.Features.Communities.Queries.GetAllCached;
-using Application.Features.Communities.Queries.GetById;
+﻿using AdminPanel.Application.Features.Communities.Commands;
+using AdminPanel.Application.Features.Communities.Queries.GetAllCached;
+using AdminPanel.Application.Features.Communities.Queries.GetById;
 using Domain.Entities;
 using AutoMapper;
 
-namespace Application.Mappings
+namespace AdminPanel.Application.Mappings
 {
 	internal class DistrictProfile : Profile
 	{

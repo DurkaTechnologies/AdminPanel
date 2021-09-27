@@ -1,8 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
+using System.Threading.Tasks;
+using WebUI.Extensions;
 
 namespace WebUI.Services
 {
@@ -10,43 +15,113 @@ namespace WebUI.Services
 	{
 		public static string RootPass { get; set; }
 
-		public static string SaveImageLocal(IFormFile formFile, string extension = null)
+		public static string SaveImage(IFormFileCollection files)
 		{
 			if (RootPass != null)
 			{
-				try
-				{
-					string name = Guid.NewGuid().ToString();
-					if (String.IsNullOrEmpty(extension))
-						extension = Path.GetExtension(formFile.FileName);
+				IFormFile file = files.FirstOrDefault();
 
-					string path = Path.Combine(RootPass + ENV.UploadPath, name + extension);
+				string name = Guid.NewGuid().ToString();
+				string extension = Path.GetExtension(file.FileName);
+				string path = Path.Combine(RootPass + ENV.ImagePath, name + extension);
 
-					using (var fileStream = File.Create(path))
-					{
-						formFile.CopyTo(fileStream);
-					}
-					return name + extension;
-				}
-				catch (Exception)
+				using (var fileStream = System.IO.File.Create(path))
 				{
-					return null;
+					file.CopyTo(fileStream);
 				}
+
+				return name + extension;
+			}
+			return null;
+		}
+		public static string SaveImage(IFormFile file, string extension = null)
+		{
+			if (RootPass != null)
+			{
+				string name = Guid.NewGuid().ToString();
+				if (String.IsNullOrEmpty(extension))
+					extension = Path.GetExtension(file.FileName);
+
+				string path = Path.Combine(RootPass + ENV.ImagePath, name + extension);
+
+				using (var fileStream = System.IO.File.Create(path))
+				{
+					file.CopyTo(fileStream);
+				}
+
+				return name + extension;
 			}
 			return null;
 		}
 
-		public static bool DeleteImageLocal(string name)
+		public static void DeleteImage(string name)
 		{
 			if (name == "default-user.png")
-				return false;
+				return;
 
-			string path = Path.Combine(RootPass + ENV.UploadPath, name);
+			string path = Path.Combine(RootPass + ENV.ImagePath, name);
+
+			if (File.Exists(path))
+				File.Delete(path);
+		}
+
+		public static string UploadImageToServer(IFormFile formFile, string extension = null)
+		{
+			string name = Guid.NewGuid().ToString();
+			if (String.IsNullOrEmpty(extension))
+				extension = Path.GetExtension(formFile.FileName);
+
+			Uri serverUri = new Uri(Path.Combine(RootPass + ENV.UploadPath, name + extension));
+
+			if ((serverUri.Scheme != Uri.UriSchemeFtp) || (formFile.Length > 3000000))
+				return null;
 
 			try
 			{
-				if (File.Exists(path))
-					File.Delete(path);
+				FtpWebRequest request = (FtpWebRequest)WebRequest.Create(serverUri);
+				request.Credentials = new NetworkCredential(ENV.FTPLogin, ENV.FTPPass);
+				request.Method = WebRequestMethods.Ftp.UploadFile;
+				
+				byte[] fileContents;
+				using (var ms = new MemoryStream())
+				{
+					formFile.CopyTo(ms);
+					fileContents = ms.ToArray();
+				}
+
+				request.ContentLength = fileContents.Length;
+
+				using (Stream requestStream = request.GetRequestStream())
+				{
+					requestStream.Write(fileContents, 0, fileContents.Length);
+				}
+
+				using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
+				{
+					return response.StatusCode == FtpStatusCode.ClosingData ? name + extension : null;
+				}
+			}
+			catch (Exception)
+			{
+				return null;
+			}
+		}
+
+		public static bool RemoveImageFromServer(string name)
+		{
+			try
+			{
+				Uri serverUri = new Uri(Path.Combine(RootPass + ENV.UploadPath, name));
+
+				if (serverUri.Scheme != Uri.UriSchemeFtp)
+					return false;
+
+				FtpWebRequest request = (FtpWebRequest)WebRequest.Create(serverUri);
+				request.Credentials = new NetworkCredential(ENV.FTPLogin, ENV.FTPPass);
+				request.Method = WebRequestMethods.Ftp.DeleteFile;
+
+				FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+				response.Close();
 				return true;
 			}
 			catch (Exception)

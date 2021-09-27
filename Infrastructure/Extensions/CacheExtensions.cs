@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Extensions
+namespace AdminPanel.Infrastructure.Extensions
 {
 	public static class CacheExtensions
 	{

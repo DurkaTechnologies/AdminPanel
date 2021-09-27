@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Identity.Models
 {
@@ -12,8 +15,10 @@ namespace Infrastructure.Identity.Models
 
 		public DateTime Date { get; set; }
 
+		//foreign
 		public int CorrespondenceId { get; set; }
 
+		//navigation
 		public virtual Correspondence Correspondence { get; set; }
 	}
 }

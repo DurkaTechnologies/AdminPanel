@@ -1,5 +1,5 @@
 ﻿@using WebUI.Areas.Entities.Models
-@using Application.Constants
+@using AdminPanel.Application.Constants
 
 @model IEnumerable<DistrictViewModel>
 
@@ -17,7 +17,7 @@
 	</style>
 	<table id="districtTable" class="table table-striped" width="100%" cellspacing="0">
 		<thead>
-			<tr>
+			<tr >
 				<th>ІД</th>
 				<th>Ім'я</th>
 				@if (delete || edit)
@@ -62,18 +62,13 @@
 			}
 		</tbody>
 	</table>
-
-	<script>
-		$(document).ready(function () {
-			$("#districtTable").DataTable({
-				language: {
-					url: "//cdn.datatables.net/plug-ins/1.10.18/i18n/Ukrainian.json"
-				},
-			});;
-		});
-	</script>
 }
-else
-{
-	<h2 class="text-center">Не доступно для вас</h2>
-}
+<script>
+	$(document).ready(function () {
+		$("#districtTable").DataTable({
+			language: {
+				url: "//cdn.datatables.net/plug-ins/1.10.18/i18n/Ukrainian.json"
+			},
+		});;
+	});
+</script>

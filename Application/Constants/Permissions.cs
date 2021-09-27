@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Application.Constants
+namespace AdminPanel.Application.Constants
 {
 	public static class Permissions
 	{
@@ -30,7 +30,7 @@ namespace Application.Constants
 			public const string Edit = "Permissions.Communities.Edit";
 			public const string Delete = "Permissions.Communities.Delete";
 		}
-
+		
 		public static class Districts
 		{
 			public const string View = "Permissions.Districts.View";

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Domain.Common.Models
+namespace AdminPanel.Domain.Common.Models
 {
 	public interface IHasDomainEvent
 	{
