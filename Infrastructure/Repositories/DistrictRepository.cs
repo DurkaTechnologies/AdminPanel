@@ -1,5 +1,5 @@
-﻿using AdminPanel.Application.Interfaces.Repositories;
-using AdminPanel.Infrastructure.DbContexts;
+﻿using Application.Interfaces.Repositories;
+using Infrastructure.DbContexts;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AdminPanel.Infrastructure.Repositories
+namespace Infrastructure.Repositories
 {
 	public class DistrictRepository : IDistrictRepository
 	{
@@ -31,7 +31,12 @@ namespace AdminPanel.Infrastructure.Repositories
 
 		public async Task<District> GetByIdAsync(int districtId)
 		{
-			return await _repository.Entities.Where(p => p.Id == districtId).FirstOrDefaultAsync();
+			return await _repository.Entities.Where(d => d.Id == districtId).FirstOrDefaultAsync();
+		}
+
+		public async Task<District> GetIncludeByIdAsync(int districtId)
+		{
+			return await _repository.Entities.Where(d => d.Id == districtId).Include(d => d.Communities).FirstOrDefaultAsync();
 		}
 
 		public async Task<List<District>> GetListAsync()

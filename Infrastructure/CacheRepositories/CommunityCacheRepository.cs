@@ -1,46 +1,61 @@
-﻿using AdminPanel.Application.Interfaces.CacheRepositories;
-using AdminPanel.Application.Interfaces.Repositories;
-using AdminPanel.Infrastructure.Extensions;
+﻿using Application.Interfaces.CacheRepositories;
+using Application.Interfaces.Repositories;
+using Infrastructure.Extensions;
 using Domain.Entities;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Infrastructure.CacheKeys;
+using Microsoft.AspNetCore.Identity;
+using Application.Features.Communities.Queries.GetAllCached;
+using AutoMapper.QueryableExtensions;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Infrastructure.Identity.Models;
 
-namespace AdminPanel.Infrastructure.CacheRepositories
+namespace Infrastructure.CacheRepositories
 {
 	public class CommunityCacheRepository : ICommunityCacheRepository
 	{
 		private readonly IDistributedCache distributedCache;
 		private readonly ICommunityRepository communityRepository;
+		private readonly IMapper mapper;
 
-		public CommunityCacheRepository(IDistributedCache distributedCache, ICommunityRepository communityRepository)
+		public CommunityCacheRepository(IDistributedCache distributedCache,
+			ICommunityRepository communityRepository, IMapper mapper)
 		{
 			this.distributedCache = distributedCache;
 			this.communityRepository = communityRepository;
+			this.mapper = mapper;
 		}
 
 		public async Task<Community> GetByIdAsync(int communityId)
 		{
-			string cacheKey = CacheKeys.CommunityCacheKeys.GetKey(communityId);
-			var brand = await distributedCache.GetAsync<Community>(cacheKey);
-			if (brand == null)
+			string cacheKey = CommunityCacheKeys.GetKey(communityId);
+			var community = await distributedCache.GetAsync<Community>(cacheKey);
+
+			if (community == null)
 			{
-				brand = await communityRepository.GetByIdAsync(communityId);
-				await distributedCache.SetAsync(cacheKey, brand);
+				community = await communityRepository.GetByIdAsync(communityId);
+				await distributedCache.SetAsync(cacheKey, community);
 			}
-			return brand;
+			return community;
 		}
 
-		public async Task<List<Community>> GetCachedListAsync()
+		public async Task<List<GetAllCommunitiesCachedResponse>> GetCachedListAsync()
 		{
-			string cacheKey = CacheKeys.CommunityCacheKeys.ListKey;
-			var brandList = await distributedCache.GetAsync<List<Community>>(cacheKey);
-			if (brandList == null)
+			string cacheKey = CommunityCacheKeys.ListKey;
+			var communityList = await distributedCache.GetAsync<List<GetAllCommunitiesCachedResponse>>(cacheKey);
+
+			if (communityList == null)
 			{
-				brandList = await communityRepository.GetListAsync();
-				await distributedCache.SetAsync(cacheKey, brandList);
+				communityList = await communityRepository.GetIncludentListAsync()
+					.ProjectTo<GetAllCommunitiesCachedResponse>(mapper.ConfigurationProvider)
+					.ToListAsync();
+
+				await distributedCache.SetAsync(cacheKey, communityList);
 			}
-			return brandList;
+			return communityList;
 		}
 	}
 }

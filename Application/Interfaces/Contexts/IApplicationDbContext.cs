@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AdminPanel.Application.Interfaces.Contexts
+namespace Application.Interfaces.Contexts
 {
 	public interface IApplicationDbContext
 	{
@@ -11,5 +11,5 @@ namespace AdminPanel.Application.Interfaces.Contexts
 		EntityEntry Entry(object entity);
 
 		Task<int> SaveChangesAsync(CancellationToken cancellationToken);
-    }
+	}
 }

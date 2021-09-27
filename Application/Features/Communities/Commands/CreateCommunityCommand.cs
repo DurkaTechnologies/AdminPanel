@@ -1,18 +1,19 @@
-﻿using AdminPanel.Application.Interfaces.Repositories;
+﻿using Application.Interfaces.Repositories;
 using Domain.Entities;
 using AutoMapper;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
-using AdminPanel.Application.Common.Models;
+using Application.Common.Models;
 
-namespace AdminPanel.Application.Features.Communities.Commands
+namespace Application.Features.Communities.Commands
 {
 	public partial class CreateCommunityCommand : IRequest<Result<int>>
 	{
 		public string Name { get; set; }
 
 		public int? DistrictId { get; set; }
+		public string ApplicationUserId{ get; set; }
 
 		public class CreateCommunityCommandHandler : IRequestHandler<CreateCommunityCommand, Result<int>>
 		{

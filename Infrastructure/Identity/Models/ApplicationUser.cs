@@ -1,4 +1,4 @@
-﻿using AdminPanel.Domain.Common.Interfaces;
+﻿using Domain.Common.Interfaces;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
@@ -10,6 +10,7 @@ namespace Infrastructure.Identity.Models
 		public ApplicationUser()
 		{
 			Correspondences = new HashSet<Correspondence>();
+			Communities = new HashSet<Community>();
 		}
 
 		#region Worker fields
@@ -21,15 +22,15 @@ namespace Infrastructure.Identity.Models
 
 		public string ProfilePicture { get; set; }
 
-		public int? CommunityId { get; set; }
-
 		public string Description { get; set; }
 
-		public Community Community { get; set; }
+		public string Chat { get; set; }
+
+		public virtual ICollection<Community> Communities { get; set; }
 		#endregion
 
 		public bool IsActive { get; set; } = false;
 
-        public virtual ICollection<Correspondence> Correspondences { get; set; }
-    }
+		public virtual ICollection<Correspondence> Correspondences { get; set; }
+	}
 }

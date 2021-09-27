@@ -1,42 +1,69 @@
 ﻿@using WebUI.Areas.Entities.Models
-@model CommunityViewModel
-@using AdminPanel.Application.Constants
+@using Application.Constants
 
-@*@if (AuthorizationService.AuthorizeAsync(User, Permissions.Communities.Edit).Result.Succeeded || AuthorizationService.AuthorizeAsync(User, Permissions.Communities.Create).Result.Succeeded)
-	{*@
-<form id="create-form" method="post" asp-controller="Community" asp-action="OnPostCreateOrEdit" asp-route-id="@Model.Id" onsubmit="return jQueryModalPost(this);" enctype="multipart/form-data">
-	<div class="row">
-		<div class="col-md-12">
-			<div class="form-group row">
-				<label class="col-md-3 col-form-label">Ім'я громади</label>
-				<div class="col-md-9">
-					<input type="text" asp-for="Name" name="Name" class="form-control">
-					<span asp-validation-for="Name" class="text-danger"></span>
-				</div>
-			</div>
-			<div class="form-group row">
-				<label class="col-md-3 col-form-label">Район</label>
-				<div class="col-md-9">
-					<div class="input-group">
-						<select name="DistrictId" class="form-control select2bs4" id="DistrictId" asp-for="DistrictId" asp-items="@Model.Districts">
-						</select>
+@model CommunityViewModel
+
+@if (AuthorizationService.AuthorizeAsync(User, Permissions.Communities.Edit).Result.Succeeded || AuthorizationService.AuthorizeAsync(User, Permissions.Communities.Create).Result.Succeeded)
+{
+	<form id="create-form" asp-action="OnPostCreateOrEdit" asp-route-id="@Model.Id" onsubmit="return jQueryModalPost(this);">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-group row">
+					<label asp-for="Name" class="col-md-3 col-form-label">Ім'я громади</label>
+					<div class="col-md-9">
+						<input asp-for="Name" class="form-control">
+						<span asp-validation-for="Name" class="text-danger"></span>
 					</div>
-					<span asp-validation-for="DistrictId" class="text-danger"></span>
 				</div>
-			</div>
-			<div class="form-group row">
-				<div class="col-md-3">
+				<div class="form-group row">
+					<label asp-for="DistrictId" class="col-md-3 col-form-label">Район</label>
+					<div class="col-md-9">
+						<div class="input-group">
+							<select asp-for="DistrictId" asp-items="@Model.Districts" class="form-control select2bs4">
+							</select>
+						</div>
+						<span asp-validation-for="DistrictId" class="text-danger"></span>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label asp-for="ApplicationUserId" class="col-md-3 col-form-label">Працівник</label>
+					<div class="col-md-9">
+						<div class="input-group">
+							<select asp-for="ApplicationUserId" asp-items="@Model.Users" class="select2" style="width: 100%" id="#userSelector">
+							</select>
+						</div>
+						<span asp-validation-for="ApplicationUserId" class="text-danger"></span>
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col-md-3">
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="form-group justify-content-between" style="margin-bottom: 0px !important">
-		<button type="submit" class="btn btn-success">Зберегти</button>
-		<button type="submit" class="btn btn-default close-button" data-dismiss="modal">Відмінити</button>
-	</div>
-</form>
+		<div class="form-group justify-content-between" style="margin-bottom: 0px !important">
+			<button type="submit" class="btn btn-success">Зберегти</button>
+			<button type="button" class="btn btn-default close-button" data-dismiss="modal">Відмінити</button>
+		</div>
+	</form>
 
-<script type="text/javascript" language=javascript>
-	$.validator.unobtrusive.parse(document);
-</script>
-@*}*@
+	<script>
+		$(document).ready(function () {
+			$.validator.unobtrusive.parse(document);
+			$('#userSelector')
+				.end()
+				.append('<option value=""></option>')
+				.val('');
+			$('.select2').select2({
+				language: "uk",
+				placeholder: "Виберіть працівника",
+				allowClear: true
+			});
+		});
+	</script>
+}
+else
+{
+	<h2 class="text-center">Не доступно для вас</h2>
+}
+

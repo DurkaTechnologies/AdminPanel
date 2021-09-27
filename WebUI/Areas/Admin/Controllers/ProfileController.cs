@@ -1,7 +1,6 @@
-﻿using AdminPanel.Application.Features.Communities.Queries.GetAllCached;
-using AdminPanel.Application.Features.Communities.Queries.GetById;
-using AdminPanel.Infrastructure.AuditModels;
-using AdminPanel.Web.Abstractions;
+﻿using Application.Features.Communities.Queries.GetAllCached;
+using Infrastructure.AuditModels;
+using WebUI.Abstractions;
 using Application.Features.Logs.Commands;
 using Infrastructure.Identity.Models;
 using Microsoft.AspNetCore.Hosting;
@@ -9,7 +8,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,204 +15,249 @@ using System.Threading.Tasks;
 using WebUI.Areas.Admin.Models;
 using WebUI.Areas.Entities.Models;
 using WebUI.Services;
+using System.Linq;
+using Application.Features.Communities.Commands;
 
 namespace WebUI.Areas.Admin
 {
-    [Area("Admin")]
-    public class ProfileController : BaseController<ProfileController>
-    {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IWebHostEnvironment _webHostEnvironment;
+	[Area("Admin")]
+	public class ProfileController : BaseController<ProfileController>
+	{
+		private readonly UserManager<ApplicationUser> _userManager;
+		private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProfileController(UserManager<ApplicationUser> userManager,
-            IWebHostEnvironment webHostEnvironment)
-        {
-            _userManager = userManager;
-            _webHostEnvironment = webHostEnvironment;
+		public ProfileController(UserManager<ApplicationUser> userManager,
+			IWebHostEnvironment webHostEnvironment)
+		{
+			_userManager = userManager;
+			_webHostEnvironment = webHostEnvironment;
 
-            ImageService.RootPass = ENV.RootPath;
-        }
+			ImageService.RootPass = _webHostEnvironment.WebRootPath;
+		}
 
-        public async Task<IActionResult> Index(string id)
-        {
-            UserViewModel user = new UserViewModel();
+		public async Task<IActionResult> Index(string id)
+		{
+			UserViewModel user = _mapper.Map<UserViewModel>(await GetCurrentUser(id));
+			var response = await _mediator.Send(new GeUserCommunitiesQuery() { UserId = user.Id });
 
-            if (id == null)
-                user = _mapper.Map<UserViewModel>(await _userManager.GetUserAsync(User));
-            else
-            {
-                user = _mapper.Map<UserViewModel>(await _userManager.FindByIdAsync(id));
-                user.Id = id;
-            }
+			if (response.Succeeded)
+				user.Communities = _mapper.Map<List<CommunityViewModel>>(response.Data);
+			return View(user);
+		}
 
-            var response = await _mediator.Send(new GetCommunityByIdQuery() { Id = user.СommunityId });
+		public async Task<IActionResult> Edit(string id)
+		{
+			UserViewModel user = _mapper.Map<UserViewModel>(await GetCurrentUser(id));
+			var response = await _mediator.Send(new GeUserCommunitiesQuery() { UserId = user.Id });
 
-            if (response.Succeeded)
-                user.Community = _mapper.Map<CommunityViewModel>(response.Data);
+			if (response.Succeeded)
+			{
+				var responseFree = await _mediator.Send(new GetFreeCommunitiesQuery());
+				if (responseFree.Succeeded)
+				{
+					var freeData = _mapper.Map<IEnumerable<CommunityViewModel>>(responseFree.Data).ToList();
+					var data = _mapper.Map<IEnumerable<CommunityViewModel>>(response.Data);
+					freeData.AddRange(data);
+					user.CommunitiesSelected = data.Select(c => c.Id).ToList();
 
-            return View(user);
-        }
+					user.CommunitiesList = new SelectList(freeData.OrderBy(x => x.District.Name).ThenBy(x => x.Name),
+						nameof(CommunityViewModel.Id), nameof(CommunityViewModel.Name),
+						null, "District.Name");
+				}
+				return View(user);
+			}
 
-        public async Task<IActionResult> Edit(string id)
-        {
-            /*User*/
-            UserViewModel user;
+			_notify.Error("Помилка завантаження громад");
+			return null;
+		}
 
-            if (id == null)
-                user = _mapper.Map<UserViewModel>(await _userManager.GetUserAsync(User));
-            else
-                user = _mapper.Map<UserViewModel>(await _userManager.FindByIdAsync(id));
+		[HttpPost]
+		public async Task<IActionResult> Edit(UserViewModel user)
+		{
+			if (ModelState.IsValid)
+			{
+				ApplicationUser appUser = await GetCurrentUser(user.Id);
 
-            user.Id = id;
+				Log log = new Log()
+				{
+					UserId = _userService.UserId,
+					Action = "Update",
+					TableName = "Users",
+					OldValues = new AuditUserModel(_mapper.Map<UserViewModel>(appUser)),
+					NewValues = new AuditUserModel(user)
+				};
 
+				appUser.Description = user.Description;
+				appUser.Chat = user.Chat;
+				appUser.FirstName = user.FirstName;
+				appUser.MiddleName = user.MiddleName;
+				appUser.LastName = user.LastName;
 
-            /*Communities*/
-            var response = await _mediator.Send(new GetAllCommunitiesCachedQuery());
-            var data = _mapper.Map<IEnumerable<CommunityViewModel>>(response.Data);
-            var communities = new SelectList(data, nameof(CommunityViewModel.Id), nameof(CommunityViewModel.Name), null, null);
-            user.Communities = communities;
+				var response = await _mediator.Send(new GeUserCommunitiesQuery() { UserId = user.Id });
+				if (response.Succeeded)
+				{
+					if (user.CommunitiesSelected != null)
+					{
+						var currentCommunitiesIds = response.Data.Select(c => c.Id);
 
-            return View(user);
-        }
+						var newCommunities = user.CommunitiesSelected.Except(currentCommunitiesIds);
+						var delCommunities = currentCommunitiesIds.Except(user.CommunitiesSelected);
+						await ExecuteUpdateCommands(GenerateUpdate(newCommunities, user.Id));
+						await ExecuteUpdateCommands(GenerateUpdate(delCommunities, null));
+					}
+					else
+					{
+						var delAll = response.Data.Select(c => new UpdateCommunityCommand()
+						{
+							Id = c.Id,
+							ApplicationUserId = null
+						});
+						await ExecuteUpdateCommands(delAll);
+					}
+				}
 
-        [HttpPost]
-        public async Task<IActionResult> Edit(UserViewModel user)
-        {
-            if (ModelState.IsValid)
-            {
-                /*Claims Get*/
-                ApplicationUser appUser;
+				try
+				{
+					await _userManager.UpdateAsync(appUser);
 
-                if (user.Id == null)
-                    appUser = await _userManager.GetUserAsync(User);
-                else
-                    appUser = await _userManager.FindByIdAsync(user.Id);
+					if (user.PhoneNumber != appUser.PhoneNumber)
+						await _userManager.SetPhoneNumberAsync(appUser, user.PhoneNumber);
 
-                Log log = new Log()
-                {
-                    UserId = _userService.UserId,
-                    Action = "Update",
-                    TableName = "Users",
-                    OldValues = new AuditUserModel(_mapper.Map<UserViewModel>(appUser)),
-                    NewValues = new AuditUserModel(user)
-                };
+					if (user.Email.ToLower() != appUser.Email.ToLower())
+					{
+						await _userManager.SetEmailAsync(appUser, user.Email);
+						appUser.EmailConfirmed = true;
+						await _userManager.UpdateAsync(appUser);
+					}
 
-                /*User Set*/
-                appUser.CommunityId = user.CommunityId;
-                appUser.Description = user.Description;
+					_notify.Success($"Користувач {user.UserName} був успішно змінений");
 
-                if (!String.IsNullOrEmpty(user.FirstName))
-                    appUser.FirstName = user.FirstName;
-                else
-                    _notify.Error("Ім'я не може бути пустим");
+					await _mediator.Send(new AddLogCommand() { Log = log });
+					return RedirectToAction(nameof(Index), new { Id = user.Id });
+				}
+				catch (Exception ex)
+				{
+					_notify.Error(ex.Message);
+				}
+			}
 
-                if (!String.IsNullOrEmpty(user.MiddleName))
-                    appUser.MiddleName = user.MiddleName;
-                else
-                    _notify.Error("Прізвище не може бути пустим");
+			var freeData = await GetAllFreeData(user.Id);
 
-                if (!String.IsNullOrEmpty(user.LastName))
-                    appUser.LastName = user.LastName;
-                else
-                    _notify.Error("По Батькові не може бути пустим");
+			user.CommunitiesList = new SelectList(freeData.OrderBy(x => x.District.Name).ThenBy(x => x.Name),
+				nameof(CommunityViewModel.Id), nameof(CommunityViewModel.Name),
+				null, "District.Name");
 
-                try
-                {
-                    await _userManager.UpdateAsync(appUser);
+			return View(user);
+		}
 
-                    if (user.PhoneNumber != appUser.PhoneNumber)
-                        await _userManager.SetPhoneNumberAsync(appUser, user.PhoneNumber);
+		public async Task<IActionResult> DeleteImage(string id)
+		{
+			ApplicationUser appUser = await GetCurrentUser(id);
 
-                    if (user.Email.ToLower() != appUser.Email.ToLower())
-                    {
-                        await _userManager.SetEmailAsync(appUser, user.Email);
-                        appUser.EmailConfirmed = true;
-                        await _userManager.UpdateAsync(appUser);
-                    }
+			if (appUser != null && appUser.ProfilePicture != null)
+			{
+				if (ImageService.DeleteImageLocal(appUser.ProfilePicture))
+				{
+					appUser.ProfilePicture = null;
 
-                    _notify.Success($"Користувач {user.UserName} був успішно змінений");
+					if ((await _userManager.UpdateAsync(appUser)).Succeeded)
+						_notify.Success($"Фото профілю успішно змінено");
+					else
+						_notify.Success($"Помилка при видалені фото");
+				}
+			}
+			return RedirectToAction(nameof(Index), new { Id = id });
+		}
 
-                    await _mediator.Send(new AddLogCommand() { Log = log });
-                }
-                catch (Exception ex)
-                {
-                    _notify.Error(ex.Message);
-                }
-            }
+		public async Task<IActionResult> ChangeProfileImage(string id)
+		{
+			return new JsonResult(new
+			{
+				isValid = true,
+				html = await _viewRenderer.RenderViewToStringAsync("_ChangeImage", id)
+			});
+		}
 
-            /*Communities Get*/
+		[HttpPost]
+		public async Task<IActionResult> ChangeProfileImage(string id, string fileName, IFormFile blob)
+		{
+			try
+			{
+				ApplicationUser appUser = await GetCurrentUser(id);
 
-            var response = await _mediator.Send(new GetAllCommunitiesCachedQuery());
-            var data = _mapper.Map<IEnumerable<CommunityViewModel>>(response.Data);
-            var communities = new SelectList(data, nameof(CommunityViewModel.Id), nameof(CommunityViewModel.Name), null, null);
-            user.Communities = communities;
+				if (appUser != null)
+				{
+					string imagePath = ImageService.SaveImageLocal(blob, Path.GetExtension(fileName));
+					if (!String.IsNullOrEmpty(imagePath))
+					{
+						string oldImage = appUser.ProfilePicture;
+						appUser.ProfilePicture = imagePath;
+						if ((await _userManager.UpdateAsync(appUser)).Succeeded)
+						{
+							ImageService.DeleteImageLocal(oldImage);
+							_notify.Success($"Фото профілю успішно змінено");
+						}
+						else
+							ImageService.DeleteImageLocal(imagePath);
+					}
+				}
+				return new JsonResult(new { isValid = true });
+			}
+			catch (Exception)
+			{
+				return new JsonResult(new { isValid = false });
+			}
+		}
 
-            return RedirectToAction(nameof(Index), new { Id = user.Id });
-        }
+		private async Task<ApplicationUser> GetCurrentUser(string userId)
+		{
+			if (String.IsNullOrEmpty(userId))
+				return await _userManager.GetUserAsync(User);
+			return await _userManager.FindByIdAsync(userId);
+		}
 
-        public async Task<IActionResult> DeleteImage(string id)
-        {
-            ApplicationUser appUser;
+		private async Task<IEnumerable<CommunityViewModel>> GetAllFreeData(string userId)
+		{
+			var response = await _mediator.Send(new GeUserCommunitiesQuery() { UserId = userId });
 
-            if (id == null)
-                appUser = await _userManager.GetUserAsync(User);
-            else
-                appUser = await _userManager.FindByIdAsync(id);
+			if (response.Succeeded)
+			{
+				var responseFree = await _mediator.Send(new GetFreeCommunitiesQuery());
+				if (responseFree.Succeeded)
+				{
+					var freeData = _mapper.Map<IEnumerable<CommunityViewModel>>(responseFree.Data).ToList();
+					var data = _mapper.Map<IEnumerable<CommunityViewModel>>(response.Data);
+					freeData.AddRange(data);
+					return freeData;
+				}
+			}
+			return new List<CommunityViewModel>();
+		}
 
+		private IEnumerable<UpdateCommunityCommand> GenerateUpdate(IEnumerable<int> communities, string userId)
+		{
+			return communities.Select(id => new UpdateCommunityCommand()
+			{
+				Id = id,
+				ApplicationUserId = userId
+			});
+		}
 
-            if (appUser != null && appUser.ProfilePicture != null)
-            {
-                ImageService.RemoveImageFromServer(appUser.ProfilePicture);
+		private async Task<bool> ExecuteUpdateCommands(IEnumerable<UpdateCommunityCommand> commands)
+		{
+			foreach (var command in commands)
+			{
+				var communityRes = await _mediator.Send(command);
 
-                appUser.ProfilePicture = null;
-                await _userManager.UpdateAsync(appUser);
-            }
-
-            return RedirectToAction(nameof(Index), new { Id = id });
-        }
-
-        public async Task<IActionResult> ChangeProfileImage(string id)
-        {
-            return new JsonResult(new { isValid = true, html = await _viewRenderer.RenderViewToStringAsync("_ChangeImage", id) });
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> ChangeProfileImage(string id, string fileName, IFormFile blob)
-        {
-            try
-            {
-                ApplicationUser user;
-
-                if (id == null)
-                    user = await _userManager.GetUserAsync(User);
-                else
-                    user = await _userManager.FindByIdAsync(id);
-
-                string imagePath;
-                if (user != null)
-                {
-                    imagePath = ImageService.UploadImageToServer(blob, Path.GetExtension(fileName));
-                    if (!String.IsNullOrEmpty(imagePath))
-                    {
-                        string oldImage = user.ProfilePicture;
-                        user.ProfilePicture = imagePath;
-                        if ((await _userManager.UpdateAsync(user)).Succeeded)
-                        {
-                            ImageService.RemoveImageFromServer(oldImage);
-                            _notify.Success($"Фото профілю успішно змінено");
-                        }
-                        else
-                            ImageService.RemoveImageFromServer(imagePath);
-                    }
-                    else
-                        return new JsonResult(new { isValid = false });
-                }
-                return new JsonResult(new { isValid = true });
-            }
-            catch (Exception)
-            {
-                return new JsonResult(new { isValid = false });
-            }
-        }
-    }
+				if (!communityRes.Succeeded)
+				{
+					_notify.Error($"Помилка при редагувані громади: {communityRes.Data}");
+					return false;
+				}
+				else
+					_notify.Information($"Громада {communityRes.Data} змінена");
+			}
+			return true;
+		}
+	}
 }

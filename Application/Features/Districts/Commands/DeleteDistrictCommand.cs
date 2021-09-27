@@ -1,10 +1,10 @@
-﻿using AdminPanel.Application.Common.Models;
-using AdminPanel.Application.Interfaces.Repositories;
+﻿using Application.Common.Models;
+using Application.Interfaces.Repositories;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AdminPanel.Application.Features.Communities.Commands
+namespace Application.Features.Communities.Commands
 {
 	public class DeleteDistrictCommand : IRequest<Result<int>>
 	{
@@ -23,10 +23,15 @@ namespace AdminPanel.Application.Features.Communities.Commands
 
 			public async Task<Result<int>> Handle(DeleteDistrictCommand command, CancellationToken cancellationToken)
 			{
-				var product = await districtRepository.GetByIdAsync(command.Id);
-				await districtRepository.DeleteAsync(product);
-				await unitOfWork.Commit(cancellationToken);
-				return Result<int>.Success(product.Id);
+				var district = await districtRepository.GetIncludeByIdAsync(command.Id);
+				if (district.Communities.Count == 0)
+				{
+					await districtRepository.DeleteAsync(district);
+					await unitOfWork.Commit(cancellationToken);
+					return Result<int>.Success(district.Id);
+				}
+				return Result<int>.Failure();
+
 			}
 		}
 	}

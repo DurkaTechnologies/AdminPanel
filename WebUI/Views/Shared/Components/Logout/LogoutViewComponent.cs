@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace AdminPanel.Web.Views.Shared.Components.Logout
+namespace WebUI.Views.Shared.Components.Logout
 {
     public class LogoutViewComponent : ViewComponent
     {

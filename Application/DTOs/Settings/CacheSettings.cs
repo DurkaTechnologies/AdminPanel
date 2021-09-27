@@ -1,8 +1,8 @@
-﻿namespace AdminPanel.Application.DTOs.Settings
+﻿namespace Application.DTOs.Settings
 {
-    public class CacheSettings
-    {
-        public int AbsoluteExpirationInHours { get; set; }
-        public int SlidingExpirationInMinutes { get; set; }
-    }
+	public class CacheSettings
+	{
+		public int AbsoluteExpirationInHours { get; set; }
+		public int SlidingExpirationInMinutes { get; set; }
+	}
 }

@@ -1,4 +1,4 @@
-﻿namespace AdminPanel.Infrastructure.CacheKeys
+﻿namespace Infrastructure.CacheKeys
 {
 	public static class CommunityCacheKeys
 	{
