@@ -21,12 +21,11 @@ using Infrastructure.Identity.Models;
 using System.IO;
 using System;
 using Application.Features.Communities.Commands;
-using Application.Features.Communities.Queries.GetById;
 
 namespace WebUI.Areas.Admin
 {
 	[Area("Admin")]
-	public class UserController : BaseUserController<UserController>
+	public class UserController : BaseController<UserController>
 	{
 		#region Fields
 
@@ -44,7 +43,7 @@ namespace WebUI.Areas.Admin
 			_userManager = userManager;
 			_webHostEnvironment = webHostEnvironment;
 
-			ImageService.RootPass = ENV.RootPath;
+			ImageService.RootPass = _webHostEnvironment.WebRootPath;
 		}
 
 		#region Main Controller Methods
@@ -78,7 +77,7 @@ namespace WebUI.Areas.Admin
 				{
 					isValid = true,
 					html = await _viewRenderer.RenderViewToStringAsync("_Create",
-					new UserViewModel() { CommunitiesList = freeCommunities }, TempData)
+					new UserViewModel() { CommunitiesList = freeCommunities })
 				});
 			}
 
@@ -90,14 +89,14 @@ namespace WebUI.Areas.Admin
 		[Authorize(Roles = "SuperAdmin")]
 		public async Task<IActionResult> OnPostCreate(UserViewModel userModel, string fileName, IFormFile blob)
 		{
-			if (ModelState.IsValid && !String.IsNullOrEmpty(fileName) && blob != null)
+			if (ModelState.IsValid)
 			{
 				string imagePath;
 				userModel.Password ??= "1";
 
 				try
 				{
-					imagePath = ImageService.UploadImageToServer(blob, Path.GetExtension(fileName));
+					imagePath = ImageService.SaveImageLocal(blob, Path.GetExtension(fileName));
 				}
 				catch (Exception)
 				{
@@ -128,10 +127,28 @@ namespace WebUI.Areas.Admin
 
 				if (result.Succeeded)
 				{
+					await _userManager.AddToRoleAsync(user, Roles.Worker.ToString());
+
+					var commands = userModel.CommunitiesSelected.Select(id => new UpdateCommunityCommand()
+					{
+						Id = id,
+						ApplicationUserId = user.Id
+					});
+
+					// ?
+					foreach (var command in commands.ToList())
+					{
+						var communityRes = await _mediator.Send(command);
+
+						if (communityRes.Succeeded)
+						{
+							_notify.Information($"Громада {communityRes.Data} змінена");
+						}
+					}
+
 					_notify.Success($"Аккаунт {user.Email} створено");
 
-					await _userManager.AddToRoleAsync(user, Roles.Worker.ToString());
-					await ExecuteUpdateCommands(GenerateUpdate(userModel.CommunitiesSelected, user.Id));
+					//userModel.Id = user.Id;
 
 					Log log = new Log()
 					{
@@ -144,20 +161,18 @@ namespace WebUI.Areas.Admin
 
 					await _mediator.Send(new AddLogCommand() { Log = log });
 
-					var htmlData = await _viewRenderer.RenderViewToStringAsync("_ViewAll", await GetUsersExceptCurrentAsync(), TempData);
+					var htmlData = await _viewRenderer.RenderViewToStringAsync("_ViewAll", await GetUsersExceptCurrentAsync());
 					return new JsonResult(new { isValid = true, html = htmlData });
 				}
 
 				foreach (var error in result.Errors)
 					_notify.Error(error.Description);
 
-				ImageService.RemoveImageFromServer(imagePath);
+				ImageService.DeleteImageLocal(imagePath);
+				var html = await _viewRenderer.RenderViewToStringAsync("_Create", userModel);
+				return new JsonResult(new { isValid = false, html = html });
 			}
-
-			_notify.Success($"Фото профілю не вибрано");
-
-			var html = await _viewRenderer.RenderViewToStringAsync("_Create", userModel, TempData);
-			return new JsonResult(new { isValid = false, html = html });
+			return default;
 		}
 
 		[HttpPost]
@@ -170,13 +185,29 @@ namespace WebUI.Areas.Admin
 				_notify.Error($"Користувача не знайдено");
 			else if (user.FirstName != "Super" && user.FirstName != "Default")
 			{
-				if (ImageService.RemoveImageFromServer(user.ProfilePicture))
+				if (ImageService.DeleteImageLocal(user.ProfilePicture))
 				{
 					var response = await _mediator.Send(new GeUserCommunitiesQuery() { UserId = user.Id });
 
+					// ?
 					if (response.Succeeded)
 					{
-						await ExecuteUpdateCommands(GenerateUpdate(response.Data.Select(c => c.Id), null));
+						var commands = response.Data.Select(c => new UpdateCommunityCommand()
+						{
+							Id = c.Id,
+							ApplicationUserId = null
+						});
+
+
+						foreach (var command in commands.ToList())
+						{
+							var communityRes = await _mediator.Send(command);
+
+							if (communityRes.Succeeded)
+							{
+								_notify.Information($"Громада {communityRes.Data} змінена");
+							}
+						}
 					}
 					else
 					{
@@ -185,6 +216,7 @@ namespace WebUI.Areas.Admin
 						return new JsonResult(new { isValid = true, html = htmlData });
 					}
 					
+
 					var result = await _userManager.DeleteAsync(user);
 
 					if (result.Succeeded)

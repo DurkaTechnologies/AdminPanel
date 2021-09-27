@@ -8,6 +8,7 @@ using System;
 using Infrastructure.Identity.Seeds;
 using System.Threading.Tasks;
 using Infrastructure.DbContexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebUI
 {
@@ -22,18 +23,26 @@ namespace WebUI
 				var services = scope.ServiceProvider;
 				var loggerFactory = services.GetRequiredService<ILoggerFactory>();
 				var logger = loggerFactory.CreateLogger("app");
+
 				try
 				{
 					var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 					var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-					var context = services.GetRequiredService<IdentityContext>();
+					var identityContext = services.GetRequiredService<IdentityContext>();
+					var applicationDbContext = services.GetRequiredService<ApplicationDbContext>();
+
+					if (identityContext.Database.IsNpgsql())
+						await identityContext.Database.MigrateAsync();
+
+					if (applicationDbContext.Database.IsNpgsql())
+						await applicationDbContext.Database.MigrateAsync();
 
 					await DefaultRoles.SeedAsync(roleManager);
 					await DefaultSuperAdminUser.SeedAsync(userManager, roleManager);
 					await DefaultAdminUser.SeedAsync(userManager, roleManager);
 					await DefaultUser.SeedAsync(userManager);
 
-					await DefaultSeed.SeedAsync(context);
+					await DefaultSeed.SeedAsync(identityContext);
 
 					logger.LogInformation("Finished Seeding Default Data");
 					logger.LogInformation("Application Starting");

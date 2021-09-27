@@ -18,30 +18,11 @@
 			<!-- Nav Item - User Information -->
 			<li class="nav-item dropdown no-arrow">
 				<a class="nav-link" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<span class="mr-2 d-none d-lg-inline text-gray-600 small">
-						@{
-							string name = "";
-							try
-							{
-								var appUser = await UserManager.GetUserAsync(User);
-
-								if (appUser != null)
-									name = appUser.FirstName + ' ' + appUser.LastName;
-								else
-									await SignInManager.SignOutAsync();
-							}
-							catch (Exception)
-							{
-								await SignInManager.SignOutAsync();
-								throw;
-							}
-						}
-						@name
-					</span>
-					@if (UserManager.GetUserAsync(User).Result?.ProfilePicture != null)
+					<span class="mr-2 d-none d-lg-inline text-gray-600 small"> @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName</span>
+					@if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
 					{
 						<img class="img-profile rounded-circle" style="object-fit: cover; width: 30px; height: 30px;"
-							 src="@ENV.ImagePath@(UserManager.GetUserAsync(User).Result?.ProfilePicture)"
+							 src="@ENV.ImagePath@(UserManager.GetUserAsync(User).Result.ProfilePicture)"
 							 onerror="this.onerror = null; this.src = '@Url.Content("~/images/users/default-user.png")';">
 					}
 					else
@@ -51,7 +32,7 @@
 				</a>
 				<!-- Dropdown - User Information -->
 				<div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-					<a class="dropdown-item" asp-area="Admin" asp-controller="Profile" asp-action="Index">
+					<a class="dropdown-item" asp-area="Admin" asp-controller="Profile" asp-action="Index" asp-route-id="@UserManager.GetUserAsync(User).Result.Id">
 						<i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
 						Профіль
 					</a>
@@ -59,10 +40,10 @@
 						<i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
 						Історія
 					</a>
-					@*<a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">
+					<a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">
 						<i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
 						Налаштування
-					</a>*@
+					</a>
 					<div class="dropdown-divider"></div>
 					<a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
 						<i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
