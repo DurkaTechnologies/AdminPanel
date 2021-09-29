@@ -38,6 +38,9 @@ namespace WebUI.Services
 
 		public static bool DeleteImageLocal(string name)
 		{
+			if (String.IsNullOrEmpty(name))
+				return true;
+
 			if (name == "default-user.png")
 				return false;
 

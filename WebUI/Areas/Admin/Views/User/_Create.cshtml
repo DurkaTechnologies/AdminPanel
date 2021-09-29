@@ -1,5 +1,7 @@
 @using WebUI.Areas.Admin.Models
 @using Application.Constants
+@using AspNetCoreHero.ToastNotification.Abstractions
+@using AspNetCoreHero.ToastNotification.Notyf
 
 @model UserViewModel
 
@@ -9,50 +11,50 @@
 		<div class="row">
 			<div class="col" id="mainForm">
 				<div class="form-group row">
-					<label class="col-md-3 col-form-label">Ім'я</label>
+					<label class="col-md-3 col-form-label" asp-for="FirstName">Ім'я</label>
 					<div class="col-md-9">
-						<input type="text" asp-for="FirstName" name="FirstName" class="form-control">
+						<input asp-for="FirstName" class="form-control">
 						<span asp-validation-for="FirstName" class="text-danger"></span>
 					</div>
 				</div>
 				<div class="form-group row">
-					<label class="col-md-3 col-form-label">Прізвище</label>
+					<label class="col-md-3 col-form-label" asp-for="MiddleName">Прізвище</label>
 					<div class="col-md-9">
-						<input type="text" asp-for="MiddleName" name="MiddleName" class="form-control">
+						<input asp-for="MiddleName" class="form-control">
 						<span asp-validation-for="MiddleName" class="text-danger"></span>
 					</div>
 				</div>
 				<div class="form-group row">
-					<label class="col-md-3 col-form-label">По Батькові</label>
+					<label class="col-md-3 col-form-label" asp-for="LastName">По Батькові</label>
 					<div class="col-md-9">
-						<input type="text" asp-for="LastName" name="LastName" class="form-control">
+						<input asp-for="LastName" class="form-control">
 						<span asp-validation-for="LastName" class="text-danger"></span>
 					</div>
 				</div>
 				<div class="form-group row">
-					<label class="col-md-3 col-form-label">Пошта</label>
+					<label class="col-md-3 col-form-label" asp-for="Email">Пошта</label>
 					<div class="col-md-9">
-						<input type="email" asp-for="Email" name="Email" class="form-control">
+						<input asp-for="Email" class="form-control">
 						<span asp-validation-for="Email" class="text-danger"></span>
 					</div>
 				</div>
 				<div class="form-group row">
-					<label class="col-md-3 col-form-label">Телефон</label>
-
+					<label class="col-md-3 col-form-label" asp-for="PhoneNumber">Телефон</label>
 					<div class="col-md-9">
 						<div class="input-group">
 							<div class="input-group-prepend">
 								<span class="input-group-text"><i class="fas fa-phone"></i></span>
 							</div>
-							<input type="text" asp-for="PhoneNumber" name="PhoneNumber" class="form-control ukrainephone" maxlength="14">
+							<input asp-for="PhoneNumber" class="form-control ukrainephone" maxlength="14">
+							<span asp-validation-for="PhoneNumber" class="text-danger"></span>
 						</div>
 					</div>
 					<!-- /.input group -->
 				</div>
 				<div class="form-group row">
-					<label class="col-md-3 col-form-label">Посилання на чат</label>
+					<label class="col-md-3 col-form-label" asp-for="Chat">Посилання на чат</label>
 					<div class="col-md-9">
-						<input type="text" asp-for="Chat" name="Chat" class="form-control" value="https://t.me/joinchat/PfiB9kKtS8Y1OTMy">
+						<input asp-for="Chat" class="form-control" value="https://t.me/joinchat/PfiB9kKtS8Y1OTMy">
 						<span asp-validation-for="Chat" class="text-danger"></span>
 					</div>
 				</div>
@@ -60,9 +62,10 @@
 					<label class="col-md-3 col-form-label">Фото</label>
 					<div class="col-md-9">
 						<div class="custom-file form-image">
-							<input accept=".png,.jpg,.jpeg,.gif,.tif"
+							<input accept=".png,.jpg,.jpeg,.gif"
 								   type="file" class="custom-file-input"
 								   id="customFile">
+
 							<label class="custom-file-label" for="customFile">Виберіть картинку</label>
 						</div>
 					</div>
@@ -70,9 +73,8 @@
 				<div class="form-group row">
 					<label class="col-md-3 col-form-label">Громада</label>
 					<div class="col-md-9">
-						<select class="select2" multiple="multiple" name="CommunitiesSelected" style="width: 100%"
-								asp-for="@Model.CommunitiesSelected" asp-items="@Model.CommunitiesList"
-								data-placeholder="Виберіть громади">
+						<select class="select2" multiple="multiple" style="width: 100%" data-placeholder="Виберіть громади"
+								asp-for="CommunitiesSelected" asp-items="@Model.CommunitiesList">
 						</select>
 						<span asp-validation-for="CommunitiesSelected" class="text-danger"></span>
 					</div>
@@ -92,7 +94,7 @@
 						</a>
 					</div>
 				</div>
-				<div class="position-relative p-4">
+				<div class="position-relative px-4 pb-4">
 					<img id="profilePicture" class="brand-image d-none" style="width: 100%; object-fit: cover;" type="file"
 						 onerror="this.onerror = null; this.src = '@Url.Content("~/images/users/default-user.png")';">
 				</div>
@@ -101,7 +103,7 @@
 
 		<div class="form-group">
 			<label class="col-form-label text-center d-block">Опис</label>
-			<textarea asp-for="Description" name="Description" class="form-control" rows="3"></textarea>
+			<textarea asp-for="Description" class="form-control" rows="3"></textarea>
 			<span asp-validation-for="Description" class="text-danger"></span>
 			<div class="col-xs-12 text-right p-2 h6 m-0">
 				<span id="lenghtContentPost"></span>
@@ -134,21 +136,25 @@
 
 			var $uploadCrop;
 			var $blob;
+			var fileName = null;
 
-			$uploadCrop = $('#cropper').croppie({
-				viewport: {
-					width: 600,
-					height: 600,
-					type: 'square'
-				},
-				boundary: {
-					width: 800,
-					height: 800
-				},
-				showZoomer: false,
-				enforceBoundary: true,
-				enableExif: true
-			});
+			function InitCropper() {
+				$uploadCrop = $('#cropper').croppie({
+					viewport: {
+						width: 300,
+						height: 300,
+						type: 'square'
+					},
+					boundary: {
+						width: 400,
+						height: 400
+					},
+					showZoomer: false,
+					enforceBoundary: true,
+					enableExif: true
+				});
+			}
+			InitCropper();
 
 			function readFile(e) {
 				var reader = new FileReader();
@@ -167,22 +173,51 @@
 				$("#profilePicture").addClass("d-none");
 			}
 
-			document.getElementById("customFile").addEventListener("change", readFile);
+			$("#customFile").on("change", function (e) {
+				var noInvalidFiles = true;
+				if (this.files.length == 1) {
+
+					var file = this.files[0];
+					var array = this.getAttribute("accept").split(",");
+					var extension = file.name.substring(file.name.lastIndexOf('.'));
+					noInvalidFiles = array.includes(extension);
+
+					if (!noInvalidFiles) {
+						fileName = null;
+						$blob = null;
+						$('#cropper').croppie('destroy');
+						$("#imageBox").addClass("d-none");
+						InitCropper();
+						$("#mainForm").toggleClass("col-xl-7 col-lg-5");
+						alert("Вибрано не підримуваний файл.");
+					}
+					else
+						readFile(e);
+				}
+			});
 
 			$("#croppImage").on('click', function () {
-				$uploadCrop.croppie('result', 'blob').then(function (blob) {
+				$uploadCrop.croppie('result', {
+					type: 'blob',
+					size: {
+						width: 640,
+						height: 640
+					}
+				}).then(function (blob) {
 					$blob = blob;
 					var urlCreator = window.URL || window.webkitURL;
 					var imageUrl = urlCreator.createObjectURL(blob);
+					fileName = $('#customFile').val();
 					$("#profilePicture").attr('src', imageUrl);
 					$("#cropperBox").addClass("d-none");
 					$("#profilePicture").removeClass("d-none");
 				});
 			});
 
-			$("#create-form").submit(function () {
+			$("#create-form").submit(function (f) {
+
 				var formData = new FormData(this);
-				formData.append('fileName', $('#customFile').val());
+				formData.append('fileName', fileName);
 				formData.append('blob', $blob);
 
 				try {

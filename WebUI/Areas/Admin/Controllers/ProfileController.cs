@@ -166,7 +166,7 @@ namespace WebUI.Areas.Admin
 						_notify.Success($"Помилка при видалені фото");
 				}
 			}
-			return RedirectToAction(nameof(Index), new { Id = id });
+			return RedirectToAction(nameof(Edit), new { Id = id });
 		}
 
 		public async Task<IActionResult> ChangeProfileImage(string id)
