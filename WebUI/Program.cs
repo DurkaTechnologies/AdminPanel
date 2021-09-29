@@ -23,6 +23,7 @@ namespace WebUI
 				var services = scope.ServiceProvider;
 				var loggerFactory = services.GetRequiredService<ILoggerFactory>();
 				var logger = loggerFactory.CreateLogger("app");
+
 				try
 				{
 					var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();

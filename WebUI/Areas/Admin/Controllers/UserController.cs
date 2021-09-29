@@ -1,4 +1,4 @@
-﻿using Application.Enums;
+using Application.Enums;
 using Application.Features.Communities.Queries.GetAllCached;
 using WebUI.Abstractions;
 using Microsoft.AspNetCore.Authorization;
