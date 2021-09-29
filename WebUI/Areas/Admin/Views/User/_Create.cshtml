@@ -11,51 +11,51 @@
 		<div class="row">
 			<div class="col" id="mainForm">
 				<div class="form-group row">
-					<label class="col-md-3 col-form-label" asp-for="@Model.FirstName">Ім'я</label>
+					<label class="col-md-3 col-form-label" asp-for="FirstName">Ім'я</label>
 					<div class="col-md-9">
-						<input asp-for="@Model.FirstName" class="form-control">
-						<span asp-validation-for="@Model.FirstName" class="text-danger"></span>
+						<input asp-for="FirstName" class="form-control">
+						<span asp-validation-for="FirstName" class="text-danger"></span>
 					</div>
 				</div>
 				<div class="form-group row">
-					<label class="col-md-3 col-form-label" asp-for="@Model.MiddleName">Прізвище</label>
+					<label class="col-md-3 col-form-label" asp-for="MiddleName">Прізвище</label>
 					<div class="col-md-9">
-						<input asp-for="@Model.MiddleName" class="form-control">
-						<span asp-validation-for="@Model.MiddleName" class="text-danger"></span>
+						<input asp-for="MiddleName" class="form-control">
+						<span asp-validation-for="MiddleName" class="text-danger"></span>
 					</div>
 				</div>
 				<div class="form-group row">
-					<label class="col-md-3 col-form-label" asp-for="@Model.LastName">По Батькові</label>
+					<label class="col-md-3 col-form-label" asp-for="LastName">По Батькові</label>
 					<div class="col-md-9">
-						<input asp-for="@Model.LastName" class="form-control">
-						<span asp-validation-for="@Model.LastName" class="text-danger"></span>
+						<input asp-for="LastName" class="form-control">
+						<span asp-validation-for="LastName" class="text-danger"></span>
 					</div>
 				</div>
 				<div class="form-group row">
-					<label class="col-md-3 col-form-label" asp-for="@Model.Email">Пошта</label>
+					<label class="col-md-3 col-form-label" asp-for="Email">Пошта</label>
 					<div class="col-md-9">
-						<input asp-for="@Model.Email" class="form-control">
-						<span asp-validation-for="@Model.Email" class="text-danger"></span>
+						<input asp-for="Email" class="form-control">
+						<span asp-validation-for="Email" class="text-danger"></span>
 					</div>
 				</div>
 				<div class="form-group row">
-					<label class="col-md-3 col-form-label" asp-for="@Model.PhoneNumber">Телефон</label>
+					<label class="col-md-3 col-form-label" asp-for="PhoneNumber">Телефон</label>
 					<div class="col-md-9">
 						<div class="input-group">
 							<div class="input-group-prepend">
 								<span class="input-group-text"><i class="fas fa-phone"></i></span>
 							</div>
-							<input asp-for="@Model.PhoneNumber" class="form-control ukrainephone" maxlength="14">
-							<span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
+							<input asp-for="PhoneNumber" class="form-control ukrainephone" maxlength="14">
+							<span asp-validation-for="PhoneNumber" class="text-danger"></span>
 						</div>
 					</div>
 					<!-- /.input group -->
 				</div>
 				<div class="form-group row">
-					<label class="col-md-3 col-form-label" asp-for="@Model.Chat">Посилання на чат</label>
+					<label class="col-md-3 col-form-label" asp-for="Chat">Посилання на чат</label>
 					<div class="col-md-9">
-						<input asp-for="@Model.Chat" class="form-control">
-						<span asp-validation-for="@Model.Chat" class="text-danger"></span>
+						<input asp-for="Chat" class="form-control" value="https://t.me/joinchat/PfiB9kKtS8Y1OTMy">
+						<span asp-validation-for="Chat" class="text-danger"></span>
 					</div>
 				</div>
 				<div class="form-group row">
@@ -74,7 +74,7 @@
 					<label class="col-md-3 col-form-label">Громада</label>
 					<div class="col-md-9">
 						<select class="select2" multiple="multiple" style="width: 100%" data-placeholder="Виберіть громади"
-								asp-for="@Model.CommunitiesSelected" asp-items="@Model.CommunitiesList">
+								asp-for="CommunitiesSelected" asp-items="@Model.CommunitiesList">
 						</select>
 						<span asp-validation-for="CommunitiesSelected" class="text-danger"></span>
 					</div>

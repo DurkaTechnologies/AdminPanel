@@ -32,7 +32,7 @@ namespace WebUI.Areas.Admin
 			_userManager = userManager;
 			_webHostEnvironment = webHostEnvironment;
 
-			ImageService.RootPass = ENV.RootPath;
+			ImageService.RootPass = _webHostEnvironment.WebRootPath;
 		}
 
 		public async Task<IActionResult> Index(string id)
@@ -67,7 +67,6 @@ namespace WebUI.Areas.Admin
 						nameof(CommunityViewModel.Id), nameof(CommunityViewModel.Name),
 						null, "District.Name");
 				}
-				// maybe implement notify
 				return View(user);
 			}
 
@@ -161,7 +160,7 @@ namespace WebUI.Areas.Admin
 
 			if (appUser != null && appUser.ProfilePicture != null)
 			{
-				if (ImageService.RemoveImageFromServer(appUser.ProfilePicture))
+				if (ImageService.DeleteImageLocal(appUser.ProfilePicture))
 				{
 					appUser.ProfilePicture = null;
 
@@ -171,7 +170,7 @@ namespace WebUI.Areas.Admin
 						_notify.Success($"Помилка при видалені фото");
 				}
 			}
-			return RedirectToAction(nameof(Index), new { Id = id });
+			return RedirectToAction(nameof(Edit), new { Id = id });
 		}
 
 		public async Task<IActionResult> ChangeProfileImage(string id)
@@ -192,18 +191,18 @@ namespace WebUI.Areas.Admin
 
 				if (appUser != null)
 				{
-					string imagePath = ImageService.UploadImageToServer(blob, Path.GetExtension(fileName));
+					string imagePath = ImageService.SaveImageLocal(blob, Path.GetExtension(fileName));
 					if (!String.IsNullOrEmpty(imagePath))
 					{
 						string oldImage = appUser.ProfilePicture;
 						appUser.ProfilePicture = imagePath;
 						if ((await _userManager.UpdateAsync(appUser)).Succeeded)
 						{
-							ImageService.RemoveImageFromServer(oldImage);
+							ImageService.DeleteImageLocal(oldImage);
 							_notify.Success($"Фото профілю успішно змінено");
 						}
 						else
-							ImageService.RemoveImageFromServer(imagePath);
+							ImageService.DeleteImageLocal(imagePath);
 					}
 				}
 				return new JsonResult(new { isValid = true });

@@ -44,7 +44,7 @@ namespace WebUI.Areas.Admin
 			_userManager = userManager;
 			_webHostEnvironment = webHostEnvironment;
 
-			ImageService.RootPass = ENV.RootPath;
+			ImageService.RootPass = _webHostEnvironment.WebRootPath;
 		}
 
 		#region Main Controller Methods
@@ -97,7 +97,7 @@ namespace WebUI.Areas.Admin
 
 				try
 				{
-					imagePath = ImageService.UploadImageToServer(blob, Path.GetExtension(fileName));
+					imagePath = ImageService.SaveImageLocal(blob, Path.GetExtension(fileName));
 				}
 				catch (Exception)
 				{
@@ -151,7 +151,7 @@ namespace WebUI.Areas.Admin
 				foreach (var error in result.Errors)
 					_notify.Error(error.Description);
 
-				ImageService.RemoveImageFromServer(imagePath);
+				ImageService.DeleteImageLocal(imagePath);
 			}
 
 			_notify.Success($"Фото профілю не вибрано");
@@ -170,7 +170,7 @@ namespace WebUI.Areas.Admin
 				_notify.Error($"Користувача не знайдено");
 			else if (user.FirstName != "Super" && user.FirstName != "Default")
 			{
-				if (ImageService.RemoveImageFromServer(user.ProfilePicture))
+				if (ImageService.DeleteImageLocal(user.ProfilePicture))
 				{
 					var response = await _mediator.Send(new GeUserCommunitiesQuery() { UserId = user.Id });
 
