@@ -36,7 +36,7 @@
 							</button>
 
 							<div class="dropdown-menu shadow animated--grow-in">
-								<a onclick="jQueryModalGet('/admin/role/OnGetCreate?id=@role.Id','Редагувати Роль')" class="dropdown-item">
+								<a onclick="jQueryModalGet('/admin/role/OnGetCreateOrEdit?id=@role.Id','Редагувати Роль')" class="dropdown-item">
 									<i class="fas fa-pencil-alt"></i> Редагувати
 								</a>
 								<form id="form_delete_@role.Id" asp-controller="Role" method="post" asp-action="OnPostDelete" asp-route-id="@role.Id" onsubmit="return jQueryModalDelete(this)" class="d-inline">

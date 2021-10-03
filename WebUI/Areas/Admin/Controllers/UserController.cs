@@ -20,8 +20,6 @@ using Application.Features.Logs.Commands;
 using Infrastructure.Identity.Models;
 using System.IO;
 using System;
-using Application.Features.Communities.Commands;
-using Application.Features.Communities.Queries.GetById;
 
 namespace WebUI.Areas.Admin
 {

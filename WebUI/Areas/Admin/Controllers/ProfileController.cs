@@ -21,7 +21,7 @@ using Application.Features.Communities.Commands;
 namespace WebUI.Areas.Admin
 {
 	[Area("Admin")]
-	public class ProfileController : BaseController<ProfileController>
+	public class ProfileController : BaseUserController<ProfileController>
 	{
 		private readonly UserManager<ApplicationUser> _userManager;
 		private readonly IWebHostEnvironment _webHostEnvironment;
@@ -42,6 +42,9 @@ namespace WebUI.Areas.Admin
 
 			if (response.Succeeded)
 				user.Communities = _mapper.Map<List<CommunityViewModel>>(response.Data);
+			else
+				_notify.Error($"Помилка при завантажені громад користувача");
+
 			return View(user);
 		}
 
@@ -83,6 +86,7 @@ namespace WebUI.Areas.Admin
 					UserId = _userService.UserId,
 					Action = "Update",
 					TableName = "Users",
+					Key = appUser.Id,
 					OldValues = new AuditUserModel(_mapper.Map<UserViewModel>(appUser)),
 					NewValues = new AuditUserModel(user)
 				};
@@ -163,7 +167,7 @@ namespace WebUI.Areas.Admin
 					if ((await _userManager.UpdateAsync(appUser)).Succeeded)
 						_notify.Success($"Фото профілю успішно змінено");
 					else
-						_notify.Success($"Помилка при видалені фото");
+						_notify.Error($"Помилка при видалені фото");
 				}
 			}
 			return RedirectToAction(nameof(Edit), new { Id = id });
@@ -232,32 +236,6 @@ namespace WebUI.Areas.Admin
 				}
 			}
 			return new List<CommunityViewModel>();
-		}
-
-		private IEnumerable<UpdateCommunityCommand> GenerateUpdate(IEnumerable<int> communities, string userId)
-		{
-			return communities.Select(id => new UpdateCommunityCommand()
-			{
-				Id = id,
-				ApplicationUserId = userId
-			});
-		}
-
-		private async Task<bool> ExecuteUpdateCommands(IEnumerable<UpdateCommunityCommand> commands)
-		{
-			foreach (var command in commands)
-			{
-				var communityRes = await _mediator.Send(command);
-
-				if (!communityRes.Succeeded)
-				{
-					_notify.Error($"Помилка при редагувані громади: {communityRes.Data}");
-					return false;
-				}
-				else
-					_notify.Information($"Громада {communityRes.Data} змінена");
-			}
-			return true;
 		}
 	}
 }
